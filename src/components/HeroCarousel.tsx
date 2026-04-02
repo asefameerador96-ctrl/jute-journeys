@@ -7,38 +7,60 @@ const slides = [T6, T7, T8];
 
 const HeroCarousel = () => {
   const [current, setCurrent] = useState(0);
+  const [previous, setPrevious] = useState(-1);
   const [loaded, setLoaded] = useState(false);
 
   useEffect(() => {
     setLoaded(true);
     const interval = setInterval(() => {
-      setCurrent((prev) => (prev + 1) % slides.length);
-    }, 4500);
+      setCurrent((prev) => {
+        setPrevious(prev);
+        return (prev + 1) % slides.length;
+      });
+    }, 5000);
     return () => clearInterval(interval);
   }, []);
 
   return (
     <section className="relative w-full h-screen overflow-hidden">
-      {/* Images */}
-      {slides.map((src, i) => (
-        <div
-          key={i}
-          className="absolute inset-0 transition-opacity duration-[2000ms] ease-in-out"
-          style={{ opacity: current === i ? 1 : 0 }}
-        >
-          <img
-            src={src}
-            alt={`Jute field ${i + 1}`}
-            className="w-full h-full object-cover"
+      {/* Images with split/reveal effect */}
+      {slides.map((src, i) => {
+        const isActive = current === i;
+        const isPrev = previous === i;
+        return (
+          <div
+            key={i}
+            className="absolute inset-0"
             style={{
-              animation: current === i ? 'kenburns 8s ease-out forwards' : 'none',
+              zIndex: isActive ? 2 : isPrev ? 1 : 0,
+              clipPath: isActive
+                ? 'polygon(0 0, 100% 0, 100% 100%, 0 100%)'
+                : isPrev
+                ? 'polygon(0 0, 0 0, 0 100%, 0 100%)'
+                : 'polygon(0 0, 0 0, 0 100%, 0 100%)',
+              transition: isActive
+                ? 'clip-path 1.4s cubic-bezier(0.77, 0, 0.175, 1)'
+                : isPrev
+                ? 'clip-path 1.4s cubic-bezier(0.77, 0, 0.175, 1)'
+                : 'none',
             }}
-          />
-        </div>
-      ))}
+          >
+            <img
+              src={src}
+              alt={`Jute field ${i + 1}`}
+              className="w-full h-full object-cover"
+              style={{
+                transform: isActive ? 'scale(1.05)' : 'scale(1.12)',
+                filter: isActive ? 'brightness(1)' : 'brightness(0.8)',
+                transition: 'transform 6s ease-out, filter 1.5s ease-out',
+              }}
+            />
+          </div>
+        );
+      })}
 
       {/* Overlay */}
-      <div className="absolute inset-0 bg-primary/40" />
+      <div className="absolute inset-0 bg-primary/40 z-[3]" />
 
       {/* Content */}
       <div className="absolute inset-0 flex flex-col items-center justify-center text-center px-6 z-10">
@@ -79,7 +101,10 @@ const HeroCarousel = () => {
         {slides.map((_, i) => (
           <button
             key={i}
-            onClick={() => setCurrent(i)}
+            onClick={() => {
+              setPrevious(current);
+              setCurrent(i);
+            }}
             className={`w-2 h-2 rounded-full transition-all duration-500 ${
               current === i ? 'bg-accent w-8' : 'bg-primary-foreground/40'
             }`}
