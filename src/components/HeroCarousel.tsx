@@ -64,17 +64,7 @@ const HeroCarousel = () => {
 
       {/* Content */}
       <div className="absolute inset-0 flex flex-col items-center justify-center text-center px-6 z-10">
-        
-        <button
-          onClick={() => document.getElementById('process')?.scrollIntoView({ behavior: 'smooth' })}
-          className="border border-accent text-accent hover:bg-accent hover:text-primary px-8 py-3 text-sm tracking-[0.25em] uppercase transition-all duration-500"
-          style={{
-            opacity: loaded ? 1 : 0,
-            transition: 'opacity 1s ease-out 0.9s, background-color 0.3s, color 0.3s',
-          }}
-        >
-          Explore Our Process
-        </button>
+        {/* CTA button removed as requested */}
       </div>
 
       {/* Slide indicators */}
