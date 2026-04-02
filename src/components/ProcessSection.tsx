@@ -10,42 +10,36 @@ import Pack2 from '@/assets/Pack2.png';
 const stages = [
   {
     image: S5,
-    step: 'Step 01',
     title: 'Seeding',
     description:
       'Carefully selected jute seeds are sown across the fertile Ganges Delta, where the tropical climate and rich alluvial soil create ideal growing conditions for the world\'s finest golden fiber.',
   },
   {
     image: H3,
-    step: 'Step 02',
     title: 'Harvesting',
     description:
       'At peak maturity, jute stalks are hand-harvested by skilled farmers, ensuring each fiber retains its natural luster, strength, and exceptional length — the hallmark of Bangladeshi jute.',
   },
   {
     image: C5,
-    step: 'Step 03',
     title: 'Curing & Retting',
     description:
       'The harvested stalks undergo a traditional retting process in slow-moving waterways. This natural curing separates the precious fibers from the woody core, producing soft, workable strands.',
   },
   {
     image: B3,
-    step: 'Step 04',
     title: 'Buying & Grading',
     description:
       'Our expert graders meticulously inspect and classify raw jute fibers according to international standards — evaluating strength, color, fineness, and fiber length at every stage.',
   },
   {
     image: M3,
-    step: 'Step 05',
     title: 'Manufacturing',
     description:
       'State-of-the-art machinery combined with generations of craftsmanship transforms raw jute fiber into premium yarn, sliver, and finished products — meeting global export specifications.',
   },
   {
     image: Pack2,
-    step: 'Step 06',
     title: 'Packing & Export',
     description:
       'Finished products are precision-packed in export-grade bales and containerized for worldwide shipment. Every bale carries the Shah Agro seal of quality and traceability.',

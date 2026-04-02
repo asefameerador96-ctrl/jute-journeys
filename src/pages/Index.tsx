@@ -5,6 +5,8 @@ import HeroCarousel from '@/components/HeroCarousel';
 import FactsFigures from '@/components/FactsFigures';
 import ProcessSection from '@/components/ProcessSection';
 import ProductShowcase from '@/components/ProductShowcase';
+import GlobalReach from '@/components/GlobalReach';
+import Gallery from '@/components/Gallery';
 import Footer from '@/components/Footer';
 
 const Index = () => (
@@ -16,6 +18,8 @@ const Index = () => (
     <FactsFigures />
     <ProcessSection />
     <ProductShowcase />
+    <GlobalReach />
+    <Gallery />
     <Footer />
   </div>
 );
