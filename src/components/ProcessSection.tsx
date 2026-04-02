@@ -6,7 +6,6 @@ import C5 from '@/assets/C5.png';
 import B3 from '@/assets/B3.png';
 import M3 from '@/assets/M3.png';
 import Pack2 from '@/assets/Pack2.png';
-import FloatingSeed from '@/assets/Floating_3d_Jute_seed.png';
 
 const stages = [
   {
@@ -54,11 +53,11 @@ const stages = [
 ];
 
 const ProcessSection = () => {
-  const { ref: headingRef, isVisible: headingVisible } = useScrollAnimation({ threshold: 0.5 });
+  const { ref: headingRef, isVisible: headingVisible } = useScrollAnimation({ threshold: 0.3 });
 
   return (
     <section id="process" className="relative bg-background">
-      {/* Section heading with scroll-triggered reveal */}
+      {/* Section heading */}
       <div ref={headingRef} className="text-center pt-24 pb-8 px-6 overflow-hidden">
         <span
           className="text-accent text-sm tracking-[0.3em] uppercase font-medium inline-block"
@@ -82,7 +81,6 @@ const ProcessSection = () => {
             Our Process
           </h2>
         </div>
-        {/* Decorative line under heading */}
         <div
           className="mt-6 mx-auto h-px bg-accent/40 transition-all duration-1000 ease-out"
           style={{
@@ -92,36 +90,10 @@ const ProcessSection = () => {
         />
       </div>
 
-      {/* Floating seed - desktop only */}
-      <div className="hidden lg:block fixed top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 z-[5] pointer-events-none opacity-[0.07]">
-        <img
-          src={FloatingSeed}
-          alt=""
-          className="w-64 h-64 object-contain"
-          style={{ animation: 'float 6s ease-in-out infinite' }}
-        />
-      </div>
-
       {/* Stages */}
       {stages.map((stage, i) => (
         <ProcessStage key={i} {...stage} index={i} />
       ))}
-
-      {/* Particles - decorative */}
-      <div className="absolute inset-0 pointer-events-none overflow-hidden">
-        {[...Array(6)].map((_, i) => (
-          <div
-            key={i}
-            className="absolute w-1 h-1 rounded-full bg-accent/30"
-            style={{
-              left: `${15 + i * 15}%`,
-              bottom: '-5%',
-              animation: `particleFloat ${8 + i * 2}s linear infinite`,
-              animationDelay: `${i * 1.5}s`,
-            }}
-          />
-        ))}
-      </div>
     </section>
   );
 };
