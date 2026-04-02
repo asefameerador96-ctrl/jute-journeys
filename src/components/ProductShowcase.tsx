@@ -26,9 +26,22 @@ const ProductShowcase = () => {
               transition: 'all 0.7s cubic-bezier(0.16, 1, 0.3, 1)',
             }}
           >What We Export</span>
-          <h2 className="font-['Playfair_Display'] text-4xl md:text-6xl font-bold text-primary mt-4">
-            Our Products
-          </h2>
+          <div className="overflow-hidden mt-4">
+            <h2
+              className="font-['Playfair_Display'] text-4xl md:text-6xl font-bold text-primary"
+              style={{
+                opacity: headingVisible ? 1 : 0,
+                transform: headingVisible ? 'translateY(0)' : 'translateY(100%)',
+                transition: 'all 0.9s cubic-bezier(0.16, 1, 0.3, 1) 0.15s',
+              }}
+            >
+              Our Products
+            </h2>
+          </div>
+          <div
+            className="mt-6 mx-auto h-px bg-accent/40 transition-all duration-1000 ease-out"
+            style={{ width: headingVisible ? '80px' : '0px', transitionDelay: '0.4s' }}
+          />
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8 md:gap-10">
