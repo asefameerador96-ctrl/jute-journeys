@@ -12,15 +12,36 @@ const products = [
 
 const ProductShowcase = () => {
   const { ref, isVisible } = useScrollAnimation({ threshold: 0.1 });
+  const { ref: headingRef, isVisible: headingVisible } = useScrollAnimation({ threshold: 0.5 });
 
   return (
     <section id="products" className="py-28 md:py-40 bg-background" ref={ref}>
       <div className="max-w-7xl mx-auto px-6">
-        <div className="text-center mb-16 md:mb-24">
-          <span className="text-accent text-sm tracking-[0.3em] uppercase font-medium">What We Export</span>
-          <h2 className="font-['Playfair_Display'] text-4xl md:text-6xl font-bold text-primary mt-4">
-            Our Products
-          </h2>
+        <div ref={headingRef} className="text-center mb-16 md:mb-24 overflow-hidden">
+          <span
+            className="text-accent text-sm tracking-[0.3em] uppercase font-medium inline-block"
+            style={{
+              opacity: headingVisible ? 1 : 0,
+              transform: headingVisible ? 'translateY(0)' : 'translateY(20px)',
+              transition: 'all 0.7s cubic-bezier(0.16, 1, 0.3, 1)',
+            }}
+          >What We Export</span>
+          <div className="overflow-hidden mt-4">
+            <h2
+              className="font-['Playfair_Display'] text-4xl md:text-6xl font-bold text-primary"
+              style={{
+                opacity: headingVisible ? 1 : 0,
+                transform: headingVisible ? 'translateY(0)' : 'translateY(100%)',
+                transition: 'all 0.9s cubic-bezier(0.16, 1, 0.3, 1) 0.15s',
+              }}
+            >
+              Our Products
+            </h2>
+          </div>
+          <div
+            className="mt-6 mx-auto h-px bg-accent/40 transition-all duration-1000 ease-out"
+            style={{ width: headingVisible ? '80px' : '0px', transitionDelay: '0.4s' }}
+          />
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8 md:gap-10">
