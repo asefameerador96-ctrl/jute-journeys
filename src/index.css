@@ -1,0 +1,97 @@
+@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;0,700;0,900;1,400;1,600&family=DM+Sans:wght@300;400;500;600&display=swap');
+
+:root {
+  --c-dark:     #0D1409;
+  --c-green:    #1C3A16;
+  --c-green2:   #2A5020;
+  --c-green3:   #3D7033;
+  --c-gold:     #C9A84C;
+  --c-gold2:    #E8C96A;
+  --c-brown:    #8B6914;
+  --c-ivory:    #F5F0E8;
+  --c-cream:    #FAF7F2;
+  --c-white:    #FFFFFF;
+  --c-text:     #1A1A18;
+  --c-muted:    #6B6B60;
+  --font-h:     'Playfair Display', Georgia, serif;
+  --font-b:     'DM Sans', system-ui, sans-serif;
+  --ease-silk:  cubic-bezier(0.16, 1, 0.3, 1);
+  --ease-back:  cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html { scroll-behavior: smooth; font-size: 16px; }
+body {
+  font-family: var(--font-b);
+  background: var(--c-cream);
+  color: var(--c-text);
+  overflow-x: hidden;
+  -webkit-font-smoothing: antialiased;
+}
+img { display: block; max-width: 100%; }
+a { text-decoration: none; color: inherit; }
+button { cursor: pointer; border: none; background: none; font-family: var(--font-b); }
+
+.container { width: min(1280px, 92vw); margin-inline: auto; }
+
+::-webkit-scrollbar { width: 5px; }
+::-webkit-scrollbar-track { background: var(--c-dark); }
+::-webkit-scrollbar-thumb { background: var(--c-gold); border-radius: 4px; }
+
+/* Shared reveal animation */
+.section-eyebrow {
+  font-size: 0.72rem; font-weight: 600;
+  letter-spacing: 0.2em; text-transform: uppercase;
+  color: var(--c-gold);
+  display: flex; align-items: center; gap: 0.8rem;
+  margin-bottom: 1rem;
+}
+.section-eyebrow.center { justify-content: center; }
+.section-eyebrow.center::before { display: none; }
+.section-eyebrow.center::after {
+  content: ''; display: block; width: 32px; height: 1px; background: var(--c-gold);
+}
+.section-eyebrow::before {
+  content: ''; display: block; width: 32px; height: 1px; background: var(--c-gold);
+}
+
+.section-title {
+  font-family: var(--font-h);
+  font-size: clamp(2rem, 4vw, 3.4rem);
+  font-weight: 700; line-height: 1.12;
+  letter-spacing: -0.02em;
+}
+.gold { color: var(--c-gold); }
+
+.btn-primary {
+  display: inline-flex; align-items: center; gap: 0.6rem;
+  padding: 1rem 2.2rem;
+  background: var(--c-gold);
+  color: var(--c-dark);
+  border-radius: 100px;
+  font-weight: 600; font-size: 0.95rem;
+  letter-spacing: 0.04em;
+  transition: background 0.3s, transform 0.3s var(--ease-back), box-shadow 0.3s;
+  box-shadow: 0 8px 32px rgba(201,168,76,0.35);
+  cursor: pointer;
+}
+.btn-primary:hover {
+  background: var(--c-gold2);
+  transform: translateY(-3px) scale(1.02);
+  box-shadow: 0 16px 48px rgba(201,168,76,0.5);
+}
+.btn-ghost {
+  display: inline-flex; align-items: center; gap: 0.5rem;
+  padding: 1rem 2rem;
+  border: 1.5px solid rgba(255,255,255,0.35);
+  color: var(--c-white);
+  border-radius: 100px;
+  font-size: 0.9rem; font-weight: 500;
+  transition: border-color 0.3s, background 0.3s, transform 0.3s;
+  cursor: pointer;
+}
+.btn-ghost:hover {
+  border-color: var(--c-gold);
+  background: rgba(201,168,76,0.1);
+  transform: translateY(-2px);
+}

@@ -1,0 +1,161 @@
+.section {
+  background: #FAF7F2;
+  padding-top: 6rem;
+  overflow: hidden;
+  position: relative;
+}
+
+.intro {
+  text-align: center;
+  padding-bottom: 5rem;
+}
+.introTitle { color: #1C3A16; max-width: 16ch; margin-inline: auto; }
+.introSub {
+  font-size: 1.05rem; line-height: 1.75; color: #6B6B60;
+  max-width: 54ch; margin: 1.5rem auto 0;
+}
+
+/* Sticky layout wrapper */
+.stickWrap {
+  position: relative;
+  display: grid;
+}
+.canvasSticky,
+.stages {
+  grid-area: 1 / 1;
+}
+.canvasSticky {
+  position: sticky; top: 0;
+  height: 100vh;
+  z-index: 2;
+  pointer-events: none;
+  display: flex; align-items: center; justify-content: center;
+}
+.stages {
+  z-index: 3;
+  pointer-events: none;
+}
+.stages > * { pointer-events: all; }
+
+/* Stage label overlay */
+.stageLabel {
+  position: absolute; bottom: 3rem; left: 50%;
+  transform: translateX(-50%);
+  text-align: center;
+  display: flex; flex-direction: column; gap: 0.2rem;
+  pointer-events: none;
+}
+.stageLabelStep {
+  font-size: 0.68rem; font-weight: 700;
+  letter-spacing: 0.2em; text-transform: uppercase;
+  color: #C9A84C; opacity: 0.8;
+}
+.stageLabelName {
+  font-family: 'Playfair Display', serif;
+  font-size: 1.1rem; color: rgba(0,0,0,0.3);
+  font-weight: 600;
+}
+
+/* Progress dots */
+.progressDots {
+  position: absolute; right: 2.5rem; top: 50%;
+  transform: translateY(-50%);
+  display: flex; flex-direction: column; gap: 0.75rem;
+  z-index: 5;
+}
+.dot {
+  width: 8px; height: 8px; border-radius: 50%;
+  background: rgba(0,0,0,0.18);
+  border: none; cursor: pointer;
+  transition: background 0.3s, transform 0.3s;
+}
+.dotActive { background: #C9A84C; transform: scale(1.6); }
+
+/* Individual stage panels */
+.stage {
+  display: grid;
+  grid-template-columns: 1fr auto 1fr;
+  align-items: center;
+  min-height: 100vh;
+  padding: 4rem 8vw;
+}
+.stageReverse .stageText { order: 3; padding-left: 3.5rem; padding-right: 0; }
+.stageReverse .stageSpacer { order: 2; }
+.stageReverse .stageImageWrap { order: 1; padding-right: 3.5rem; padding-left: 0; }
+
+.stage:nth-child(odd)  { background: rgba(250,247,242,0.9); }
+.stage:nth-child(even) { background: rgba(242,237,228,0.9); }
+
+.stageText { padding-right: 3.5rem; }
+.stageSpacer { width: clamp(280px, 36vw, 460px); }
+
+.stageStep {
+  font-size: 0.7rem; font-weight: 700;
+  letter-spacing: 0.2em; text-transform: uppercase;
+  color: #C9A84C; margin-bottom: 0.8rem;
+}
+.stageTagline {
+  font-family: 'Playfair Display', serif;
+  font-size: clamp(1.6rem, 2.6vw, 2.5rem);
+  font-weight: 700; line-height: 1.15;
+  color: #1C3A16; margin-bottom: 1rem;
+}
+.stageDesc {
+  font-size: 0.95rem; line-height: 1.8;
+  color: #6B6B60; max-width: 40ch;
+}
+.stageLink {
+  display: inline-flex; align-items: center; gap: 0.5rem;
+  margin-top: 2rem;
+  font-size: 0.8rem; font-weight: 600;
+  letter-spacing: 0.08em; text-transform: uppercase;
+  color: #1C3A16;
+  border-bottom: 1px solid #3D7033;
+  padding-bottom: 4px;
+  transition: color 0.3s, border-color 0.3s, gap 0.3s;
+  text-decoration: none;
+}
+.stageLink:hover { color: #C9A84C; border-color: #C9A84C; gap: 0.85rem; }
+
+.stageImageWrap { padding-left: 3.5rem; }
+.imageCard {
+  display: block;
+  width: clamp(200px, 22vw, 300px);
+  height: clamp(160px, 18vw, 220px);
+  border-radius: 18px; overflow: hidden;
+  position: relative;
+  box-shadow: 0 24px 56px rgba(0,0,0,0.16);
+  text-decoration: none;
+  cursor: pointer;
+}
+.imageCard img {
+  width: 100%; height: 100%; object-fit: cover;
+  transition: transform 0.8s cubic-bezier(0.16,1,0.3,1);
+}
+.imageCard:hover img { transform: scale(1.07); }
+.imageOverlay {
+  position: absolute; inset: 0;
+  background: linear-gradient(to top, rgba(13,20,9,0.65), transparent);
+}
+.imageBadge {
+  position: absolute; bottom: 1rem; left: 1.2rem;
+  font-size: 0.72rem; font-weight: 600;
+  letter-spacing: 0.1em; text-transform: uppercase;
+  color: #C9A84C;
+}
+
+@media (max-width: 900px) {
+  .stage {
+    grid-template-columns: 1fr;
+    padding: 5rem 6vw 3rem;
+    gap: 2.5rem;
+    min-height: auto;
+  }
+  .stageSpacer { display: none; }
+  .stageReverse .stageText { order: 0; padding: 0; }
+  .stageReverse .stageImageWrap { order: 2; padding: 0; }
+  .stageImageWrap, .stageText { padding: 0; }
+  .imageCard { width: 100%; height: 220px; }
+  .progressDots { display: none; }
+  .stageLabel { display: none; }
+}
