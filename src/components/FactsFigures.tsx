@@ -19,7 +19,7 @@ const FactsFigures = () => {
             transform: isVisible ? 'scale(1)' : 'scale(0.9)',
           }}
         >
-          <span className="font-['Playfair_Display'] font-bold text-primary leading-none"
+          <span className="font-['Monument_Valley'] font-bold text-primary leading-none"
             style={{ fontSize: 'clamp(4rem, 12vw, 10rem)' }}
           >
             {count}K MT

@@ -58,7 +58,7 @@ const ProcessStage = ({ image, title, description, index }: ProcessStageProps) =
           <div className={`${isEven ? 'md:order-2' : 'md:order-1'}`}>
             <div className="overflow-hidden mb-6">
               <h3
-                className="font-['Playfair_Display'] text-3xl md:text-5xl font-bold text-primary"
+                className="font-['Monument_Valley'] text-3xl md:text-5xl font-bold text-primary"
                 style={{
                   opacity: isVisible ? 1 : 0,
                   transform: isVisible ? 'translateY(0)' : 'translateY(100%)',

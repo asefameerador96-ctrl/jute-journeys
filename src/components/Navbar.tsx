@@ -27,7 +27,7 @@ const Navbar = () => {
       <div className="max-w-7xl mx-auto px-6 py-4 flex items-center justify-between">
         <button onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })} className="flex items-center gap-3">
           <img src={logo} alt="Shah Agro Limited" className="h-10 w-auto" />
-          <span className="font-['Playfair_Display'] text-lg font-semibold text-primary-foreground tracking-wide hidden sm:inline">
+          <span className="font-['Monument_Valley'] text-lg font-semibold text-primary-foreground tracking-wide hidden sm:inline">
             Shah Agro
           </span>
         </button>

@@ -60,7 +60,7 @@ const Gallery = () => {
           </span>
           <div className="overflow-hidden mt-4">
             <h2
-              className="font-['Playfair_Display'] text-4xl md:text-6xl font-bold text-primary"
+              className="font-['Monument_Valley'] text-4xl md:text-6xl font-bold text-primary"
               style={{
                 opacity: headingVisible ? 1 : 0,
                 transform: headingVisible ? 'translateY(0)' : 'translateY(100%)',

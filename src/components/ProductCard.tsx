@@ -31,7 +31,7 @@ const ProductCard = ({ image, title, tagline }: ProductCardProps) => {
         />
       </div>
       <div className="p-6 text-center">
-        <h3 className="font-['Playfair_Display'] text-xl md:text-2xl font-semibold text-primary mb-2">
+        <h3 className="font-['Monument_Valley'] text-xl md:text-2xl font-semibold text-primary mb-2">
           {title}
         </h3>
         <p className="text-muted-foreground text-sm leading-relaxed">{tagline}</p>
