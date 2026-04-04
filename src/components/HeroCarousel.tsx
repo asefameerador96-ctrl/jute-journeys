@@ -53,13 +53,10 @@ const HeroCarousel = () => {
               alt={slide.alt}
               className="h-full w-full object-cover"
               style={{
-                transition: 'opacity 1.2s cubic-bezier(0.4, 0, 0.2, 1), transform 1.2s cubic-bezier(0.4, 0, 0.2, 1)',
+                transition: 'opacity 1.2s cubic-bezier(0.4, 0, 0.2, 1)',
                 opacity: isActive ? 1 : 0,
-                transform: isActive
-                  ? 'scale(1) translateX(0)'
-                  : isPrev
-                    ? 'scale(1.03) translateX(-3%)'
-                    : 'scale(1.03) translateX(3%)',
+                animation: isActive ? 'kenburns 5s ease-in-out forwards' : 'none',
+                transform: isActive ? undefined : 'scale(1)',
               }}
             />
           </div>
