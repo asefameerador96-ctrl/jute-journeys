@@ -22,7 +22,7 @@ const ProcessStage = ({ image, title, description, index }: ProcessStageProps) =
   );
 
   return (
-    <div ref={setRefs} className="py-16 md:py-28 relative overflow-hidden">
+    <div ref={setRefs} className="py-8 md:py-14 relative overflow-hidden">
       <div className="max-w-7xl mx-auto px-6 w-full relative z-10">
         <div className="grid md:grid-cols-2 gap-10 md:gap-20 items-center">
           {/* Image — full aspect ratio, parallax movement */}
