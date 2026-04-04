@@ -1,33 +1,215 @@
 import { useScrollAnimation } from '@/hooks/useScrollAnimation';
-import { useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
+
+const GOOGLE_MAPS_API_KEY = 'AIzaSyCASgr43b8xNNMjC7JCY4EFkv5-RATGEIk';
 
 const countries = [
-  { name: 'Belgium', x: 49.5, y: 28 },
-  { name: 'Germany', x: 51, y: 27 },
-  { name: 'Iran', x: 60, y: 33 },
-  { name: 'Turkey', x: 56, y: 31 },
-  { name: 'Uzbekistan', x: 62, y: 28 },
-  { name: 'Indonesia', x: 76, y: 52 },
-  { name: 'Egypt', x: 53, y: 36 },
-  { name: 'Jordan', x: 56, y: 34 },
-  { name: 'Saudi Arabia', x: 58, y: 38 },
-  { name: 'Ivory Coast', x: 44, y: 47 },
-  { name: 'Sudan', x: 54, y: 42 },
-  { name: 'Morocco', x: 44, y: 33 },
-  { name: 'China', x: 74, y: 32 },
-  { name: 'Pakistan', x: 64, y: 35 },
-  { name: 'India', x: 67, y: 39 },
-  { name: 'Nepal', x: 68, y: 35 },
+  { name: 'Belgium', lat: 50.85, lng: 4.35 },
+  { name: 'Germany', lat: 51.16, lng: 10.45 },
+  { name: 'Iran', lat: 32.43, lng: 53.69 },
+  { name: 'Turkey', lat: 38.96, lng: 35.24 },
+  { name: 'Uzbekistan', lat: 41.38, lng: 64.59 },
+  { name: 'Indonesia', lat: -0.79, lng: 113.92 },
+  { name: 'Egypt', lat: 26.82, lng: 30.80 },
+  { name: 'Jordan', lat: 30.59, lng: 36.24 },
+  { name: 'Saudi Arabia', lat: 23.89, lng: 45.08 },
+  { name: 'Ivory Coast', lat: 7.54, lng: -5.55 },
+  { name: 'Sudan', lat: 12.86, lng: 30.22 },
+  { name: 'Morocco', lat: 31.79, lng: -7.09 },
+  { name: 'China', lat: 35.86, lng: 104.20 },
+  { name: 'Pakistan', lat: 30.38, lng: 69.35 },
+  { name: 'India', lat: 20.59, lng: 78.96 },
+  { name: 'Nepal', lat: 28.39, lng: 84.12 },
 ];
+
+// Bangladesh origin
+const ORIGIN = { lat: 23.68, lng: 90.36 };
+
+const mapStyles = [
+  { elementType: 'geometry', stylers: [{ color: '#1a2e1a' }] },
+  { elementType: 'labels', stylers: [{ visibility: 'off' }] },
+  { featureType: 'water', elementType: 'geometry', stylers: [{ color: '#0f1f0f' }] },
+  { featureType: 'landscape', elementType: 'geometry', stylers: [{ color: '#1a2e1a' }] },
+  { featureType: 'road', stylers: [{ visibility: 'off' }] },
+  { featureType: 'poi', stylers: [{ visibility: 'off' }] },
+  { featureType: 'transit', stylers: [{ visibility: 'off' }] },
+  { featureType: 'administrative.country', elementType: 'geometry.stroke', stylers: [{ color: '#3a5a3a' }, { weight: 0.5 }] },
+  { featureType: 'administrative.country', elementType: 'labels.text.fill', stylers: [{ color: '#5a7a5a' }, { visibility: 'on' }] },
+  { featureType: 'administrative.country', elementType: 'labels.text.stroke', stylers: [{ visibility: 'off' }] },
+];
+
+let mapsLoadPromise: Promise<void> | null = null;
+
+function loadGoogleMaps(): Promise<void> {
+  if (mapsLoadPromise) return mapsLoadPromise;
+  if (window.google?.maps?.Map) return Promise.resolve();
+
+  mapsLoadPromise = new Promise((resolve, reject) => {
+    const script = document.createElement('script');
+    script.src = `https://maps.googleapis.com/maps/api/js?key=${GOOGLE_MAPS_API_KEY}&libraries=marker&v=weekly`;
+    script.async = true;
+    script.defer = true;
+    script.onload = () => resolve();
+    script.onerror = () => reject(new Error('Failed to load Google Maps'));
+    document.head.appendChild(script);
+  });
+
+  return mapsLoadPromise;
+}
 
 const GlobalReach = () => {
   const { ref: headingRef, isVisible: headingVisible } = useScrollAnimation({ threshold: 0.3 });
   const { ref: mapRef, isVisible: mapVisible } = useScrollAnimation({ threshold: 0.1 });
+  const mapContainerRef = useRef<HTMLDivElement>(null);
+  const mapInstanceRef = useRef<google.maps.Map | null>(null);
   const [hoveredCountry, setHoveredCountry] = useState<string | null>(null);
+  const [mapLoaded, setMapLoaded] = useState(false);
+  const markersRef = useRef<Map<string, google.maps.marker.AdvancedMarkerElement>>(new Map());
+  const linesRef = useRef<google.maps.Polyline[]>([]);
+  const infoWindowRef = useRef<google.maps.InfoWindow | null>(null);
+
+  // Initialize map when visible
+  useEffect(() => {
+    if (!mapVisible || mapInstanceRef.current || !mapContainerRef.current) return;
+
+    let cancelled = false;
+
+    loadGoogleMaps().then(() => {
+      if (cancelled || !mapContainerRef.current) return;
+
+      const map = new google.maps.Map(mapContainerRef.current, {
+        center: { lat: 25, lng: 50 },
+        zoom: 2.5,
+        minZoom: 2,
+        maxZoom: 6,
+        mapId: 'DEMO_MAP_ID',
+        gestureHandling: 'cooperative',
+        disableDefaultUI: true,
+        zoomControl: true,
+        styles: mapStyles,
+        backgroundColor: '#0f1f0f',
+      });
+
+      mapInstanceRef.current = map;
+      const infoWindow = new google.maps.InfoWindow();
+      infoWindowRef.current = infoWindow;
+
+      // Draw connection lines from Bangladesh
+      countries.forEach((country) => {
+        const line = new google.maps.Polyline({
+          path: [ORIGIN, { lat: country.lat, lng: country.lng }],
+          geodesic: true,
+          strokeColor: '#C9A96E',
+          strokeOpacity: 0.25,
+          strokeWeight: 1.5,
+          map,
+        });
+        linesRef.current.push(line);
+
+        // Custom marker
+        const markerEl = document.createElement('div');
+        markerEl.style.cssText = `
+          width: 14px; height: 14px; background: #C9A96E; border-radius: 50%;
+          border: 2px solid #fff; cursor: pointer; transition: transform 0.2s, box-shadow 0.2s;
+          box-shadow: 0 0 8px rgba(201,169,110,0.5);
+        `;
+
+        const marker = new google.maps.marker.AdvancedMarkerElement({
+          map,
+          position: { lat: country.lat, lng: country.lng },
+          title: country.name,
+          content: markerEl,
+        });
+
+        markersRef.current.set(country.name, marker);
+
+        const showInfo = () => {
+          infoWindow.setContent(`
+            <div style="font-family:'Playfair Display',serif;padding:4px 8px;">
+              <strong style="font-size:14px;color:#2F3E2C;">${country.name.toUpperCase()}</strong>
+              <p style="margin:4px 0 0;font-size:12px;color:#666;">Jute Export Destination</p>
+            </div>
+          `);
+          infoWindow.open({ anchor: marker, map });
+          markerEl.style.transform = 'scale(1.5)';
+          markerEl.style.boxShadow = '0 0 16px rgba(201,169,110,0.9)';
+        };
+
+        const hideInfo = () => {
+          infoWindow.close();
+          markerEl.style.transform = 'scale(1)';
+          markerEl.style.boxShadow = '0 0 8px rgba(201,169,110,0.5)';
+        };
+
+        markerEl.addEventListener('mouseenter', showInfo);
+        markerEl.addEventListener('mouseleave', hideInfo);
+        marker.addListener('gmp-click', showInfo);
+      });
+
+      // Origin marker (Bangladesh)
+      const originEl = document.createElement('div');
+      originEl.style.cssText = `
+        width: 20px; height: 20px; background: #C9A96E; border-radius: 50%;
+        border: 3px solid #fff; box-shadow: 0 0 20px rgba(201,169,110,0.8);
+        animation: pulse-origin 2s infinite;
+      `;
+
+      new google.maps.marker.AdvancedMarkerElement({
+        map,
+        position: ORIGIN,
+        title: 'Bangladesh (Origin)',
+        content: originEl,
+      });
+
+      setMapLoaded(true);
+    });
+
+    return () => { cancelled = true; };
+  }, [mapVisible]);
+
+  // Sync hover state from country tags to map markers
+  useEffect(() => {
+    if (!mapInstanceRef.current || !infoWindowRef.current) return;
+
+    // Reset all
+    linesRef.current.forEach((line) => {
+      line.setOptions({ strokeOpacity: 0.25, strokeWeight: 1.5 });
+    });
+    markersRef.current.forEach((marker) => {
+      const el = marker.content as HTMLElement;
+      if (el) {
+        el.style.transform = 'scale(1)';
+        el.style.boxShadow = '0 0 8px rgba(201,169,110,0.5)';
+      }
+    });
+
+    if (hoveredCountry) {
+      const idx = countries.findIndex(c => c.name === hoveredCountry);
+      if (idx >= 0 && linesRef.current[idx]) {
+        linesRef.current[idx].setOptions({ strokeOpacity: 0.9, strokeWeight: 3 });
+      }
+      const marker = markersRef.current.get(hoveredCountry);
+      if (marker) {
+        const el = marker.content as HTMLElement;
+        if (el) {
+          el.style.transform = 'scale(1.5)';
+          el.style.boxShadow = '0 0 16px rgba(201,169,110,0.9)';
+        }
+        infoWindowRef.current.setContent(`
+          <div style="font-family:'Playfair Display',serif;padding:4px 8px;">
+            <strong style="font-size:14px;color:#2F3E2C;">${hoveredCountry.toUpperCase()}</strong>
+            <p style="margin:4px 0 0;font-size:12px;color:#666;">Jute Export Destination</p>
+          </div>
+        `);
+        infoWindowRef.current.open({ anchor: marker, map: mapInstanceRef.current });
+      }
+    } else {
+      infoWindowRef.current.close();
+    }
+  }, [hoveredCountry]);
 
   return (
     <section className="py-28 md:py-40 bg-primary relative overflow-hidden">
-      {/* Subtle pattern overlay */}
       <div className="absolute inset-0 opacity-5">
         <div className="w-full h-full" style={{
           backgroundImage: 'radial-gradient(circle at 1px 1px, hsl(var(--primary-foreground)) 1px, transparent 0)',
@@ -66,103 +248,23 @@ const GlobalReach = () => {
           />
         </div>
 
-        {/* Map */}
+        {/* Google Map */}
         <div
           ref={mapRef}
-          className="relative max-w-5xl mx-auto"
+          className="relative max-w-6xl mx-auto"
           style={{
             opacity: mapVisible ? 1 : 0,
             transform: mapVisible ? 'translateY(0) scale(1)' : 'translateY(40px) scale(0.95)',
             transition: 'all 1s cubic-bezier(0.16, 1, 0.3, 1) 0.2s',
           }}
         >
-          {/* World map SVG outline */}
-          <div className="relative w-full" style={{ paddingBottom: '50%' }}>
-            <svg
-              viewBox="0 0 100 50"
-              className="absolute inset-0 w-full h-full"
-              xmlns="http://www.w3.org/2000/svg"
-            >
-              {/* Simplified world map continents */}
-              {/* North America */}
-              <path d="M10,12 Q15,8 22,10 L25,14 Q26,18 24,22 L20,26 Q16,28 14,24 L12,20 Q8,16 10,12Z" fill="hsl(var(--primary-foreground))" opacity="0.08" />
-              {/* South America */}
-              <path d="M22,32 Q25,30 27,34 L28,40 Q27,46 24,48 L22,46 Q20,42 20,38 Q19,35 22,32Z" fill="hsl(var(--primary-foreground))" opacity="0.08" />
-              {/* Europe */}
-              <path d="M46,10 Q50,8 54,10 L55,14 Q54,18 52,20 L48,22 Q45,20 44,16 Q44,12 46,10Z" fill="hsl(var(--primary-foreground))" opacity="0.08" />
-              {/* Africa */}
-              <path d="M46,24 Q50,22 54,24 L56,30 Q58,36 56,42 L52,48 Q48,50 46,46 L44,38 Q43,30 46,24Z" fill="hsl(var(--primary-foreground))" opacity="0.08" />
-              {/* Asia */}
-              <path d="M56,8 Q65,6 76,10 L82,16 Q84,22 80,28 L74,34 Q68,38 62,36 L58,30 Q54,24 54,18 Q54,12 56,8Z" fill="hsl(var(--primary-foreground))" opacity="0.08" />
-              {/* Australia */}
-              <path d="M78,42 Q82,40 86,42 L88,46 Q86,50 82,50 L78,48 Q76,46 78,42Z" fill="hsl(var(--primary-foreground))" opacity="0.08" />
-
-              {/* Connection lines from Bangladesh (approx 68, 37) */}
-              {countries.map((country) => (
-                <line
-                  key={`line-${country.name}`}
-                  x1="68"
-                  y1="37"
-                  x2={country.x}
-                  y2={country.y}
-                  stroke="hsl(var(--accent))"
-                  strokeWidth="0.15"
-                  opacity={hoveredCountry === country.name ? 0.8 : 0.15}
-                  style={{ transition: 'opacity 0.3s ease' }}
-                />
-              ))}
-
-              {/* Bangladesh origin dot */}
-              <circle cx="68" cy="37" r="1" fill="hsl(var(--accent))" opacity="0.9" />
-              <circle cx="68" cy="37" r="1.8" fill="none" stroke="hsl(var(--accent))" strokeWidth="0.2" opacity="0.4">
-                <animate attributeName="r" values="1.8;3;1.8" dur="3s" repeatCount="indefinite" />
-                <animate attributeName="opacity" values="0.4;0;0.4" dur="3s" repeatCount="indefinite" />
-              </circle>
-
-              {/* Country dots */}
-              {countries.map((country) => (
-                <g key={country.name}>
-                  <circle
-                    cx={country.x}
-                    cy={country.y}
-                    r={hoveredCountry === country.name ? 1.2 : 0.6}
-                    fill="hsl(var(--accent))"
-                    opacity={hoveredCountry === country.name ? 1 : 0.6}
-                    style={{ transition: 'all 0.3s ease', cursor: 'pointer' }}
-                    onMouseEnter={() => setHoveredCountry(country.name)}
-                    onMouseLeave={() => setHoveredCountry(null)}
-                  />
-                  {/* Hover circle */}
-                  <circle
-                    cx={country.x}
-                    cy={country.y}
-                    r="2.5"
-                    fill="transparent"
-                    style={{ cursor: 'pointer' }}
-                    onMouseEnter={() => setHoveredCountry(country.name)}
-                    onMouseLeave={() => setHoveredCountry(null)}
-                  />
-                </g>
-              ))}
-            </svg>
-
-            {/* Hover tooltip */}
-            {hoveredCountry && (() => {
-              const c = countries.find(c => c.name === hoveredCountry);
-              if (!c) return null;
-              return (
-                <div
-                  className="absolute pointer-events-none z-20 bg-accent text-primary px-3 py-1.5 text-xs font-semibold tracking-wider uppercase rounded-sm shadow-lg"
-                  style={{
-                    left: `${c.x}%`,
-                    top: `${c.y * 2}%`,
-                    transform: 'translate(-50%, -140%)',
-                  }}
-                >
-                  {c.name}
-                </div>
-              );
-            })()}
+          <div className="relative w-full rounded-lg overflow-hidden shadow-2xl border border-accent/10" style={{ height: '500px' }}>
+            <div ref={mapContainerRef} className="w-full h-full" />
+            {!mapLoaded && mapVisible && (
+              <div className="absolute inset-0 flex items-center justify-center bg-primary">
+                <div className="text-accent/60 text-sm tracking-widest uppercase animate-pulse">Loading Map...</div>
+              </div>
+            )}
           </div>
         </div>
 
@@ -195,6 +297,15 @@ const GlobalReach = () => {
           ))}
         </div>
       </div>
+
+      <style>{`
+        @keyframes pulse-origin {
+          0%, 100% { box-shadow: 0 0 20px rgba(201,169,110,0.8); }
+          50% { box-shadow: 0 0 40px rgba(201,169,110,0.4), 0 0 60px rgba(201,169,110,0.2); }
+        }
+        .gm-style .gm-style-iw-c { border-radius: 4px !important; }
+        .gm-style .gm-style-iw-d { overflow: hidden !important; }
+      `}</style>
     </section>
   );
 };
