@@ -59,9 +59,6 @@ const HeroCarousel = () => {
         );
       })}
 
-      {/* Overlay */}
-      <div className="absolute inset-0 bg-primary/40 z-[3]" />
-
 
       {/* Slide indicators */}
       <div className="absolute bottom-8 left-1/2 -translate-x-1/2 flex gap-3 z-10">
