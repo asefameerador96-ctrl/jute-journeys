@@ -1,6 +1,6 @@
 import Navbar from '@/components/Navbar';
 import ScrollProgress from '@/components/ScrollProgress';
-import GrainOverlay from '@/components/GrainOverlay';
+
 import HeroCarousel from '@/components/HeroCarousel';
 import FactsFigures from '@/components/FactsFigures';
 import ProcessSection from '@/components/ProcessSection';
