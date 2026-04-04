@@ -20,7 +20,7 @@ const Navbar = () => {
     <nav
       className={`fixed top-0 left-0 w-full z-50 transition-all duration-500 ${
         scrolled
-          ? 'bg-primary/95 backdrop-blur-md shadow-lg'
+          ? 'bg-primary shadow-lg'
           : 'bg-transparent'
       }`}
     >
@@ -63,7 +63,7 @@ const Navbar = () => {
 
       {/* Mobile menu */}
       <div
-        className={`md:hidden bg-primary/95 backdrop-blur-md overflow-hidden transition-all duration-500 ${
+        className={`md:hidden bg-primary overflow-hidden transition-all duration-500 ${
           menuOpen ? 'max-h-64 pb-6' : 'max-h-0'
         }`}
       >

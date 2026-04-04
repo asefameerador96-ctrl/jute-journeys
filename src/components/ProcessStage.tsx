@@ -50,7 +50,6 @@ const ProcessStage = ({ image, title, description, index }: ProcessStageProps) =
                 }}
                 loading="lazy"
               />
-              <div className="absolute inset-0 bg-primary/5" />
             </div>
           </div>
 
