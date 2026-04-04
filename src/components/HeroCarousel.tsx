@@ -64,7 +64,36 @@ const HeroCarousel = () => {
 
       {/* Content */}
       <div className="absolute inset-0 flex flex-col items-center justify-center text-center px-6 z-10">
-        {/* CTA button removed as requested */}
+        <h1
+          className="font-['Playfair_Display'] text-4xl sm:text-5xl md:text-7xl lg:text-8xl font-bold text-primary-foreground mb-4 tracking-tight"
+          style={{
+            opacity: loaded ? 1 : 0,
+            transform: loaded ? 'translateY(0)' : 'translateY(30px)',
+            transition: 'opacity 1s ease-out 0.3s, transform 1s ease-out 0.3s',
+          }}
+        >
+          Shah Agro Limited
+        </h1>
+        <p
+          className="text-primary-foreground/80 text-lg sm:text-xl md:text-2xl font-light tracking-[0.2em] uppercase mb-10"
+          style={{
+            opacity: loaded ? 1 : 0,
+            transform: loaded ? 'translateY(0)' : 'translateY(20px)',
+            transition: 'opacity 1s ease-out 0.6s, transform 1s ease-out 0.6s',
+          }}
+        >
+          Finest Jutes of Bangladesh
+        </p>
+        <button
+          onClick={() => document.getElementById('process')?.scrollIntoView({ behavior: 'smooth' })}
+          className="border border-accent text-accent hover:bg-accent hover:text-primary px-8 py-3 text-sm tracking-[0.25em] uppercase transition-all duration-500"
+          style={{
+            opacity: loaded ? 1 : 0,
+            transition: 'opacity 1s ease-out 0.9s, background-color 0.3s, color 0.3s',
+          }}
+        >
+          Explore Our Process
+        </button>
       </div>
 
       {/* Slide indicators */}
