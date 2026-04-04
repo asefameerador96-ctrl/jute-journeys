@@ -1,5 +1,12 @@
+/// <reference types="google.maps" />
 import { useScrollAnimation } from '@/hooks/useScrollAnimation';
 import { useEffect, useRef, useState } from 'react';
+
+declare global {
+  interface Window {
+    google?: typeof google;
+  }
+}
 
 const GOOGLE_MAPS_API_KEY = 'AIzaSyCASgr43b8xNNMjC7JCY4EFkv5-RATGEIk';
 
