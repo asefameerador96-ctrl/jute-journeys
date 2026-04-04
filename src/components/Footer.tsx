@@ -14,7 +14,7 @@ const Footer = () => (
 
         {/* Contact */}
         <div>
-          <h4 className="font-['Playfair_Display'] text-lg font-semibold mb-4">Contact</h4>
+          <h4 className="font-['Monument_Valley'] text-lg font-semibold mb-4">Contact</h4>
           <div className="space-y-2 text-primary-foreground/60 text-sm">
             <p>Shah Agro Limited</p>
             <p>Dhaka, Bangladesh</p>
@@ -26,7 +26,7 @@ const Footer = () => (
 
         {/* Quick links */}
         <div>
-          <h4 className="font-['Playfair_Display'] text-lg font-semibold mb-4">Navigate</h4>
+          <h4 className="font-['Monument_Valley'] text-lg font-semibold mb-4">Navigate</h4>
           <div className="space-y-2">
             {[
               ['process', 'Our Process'],
