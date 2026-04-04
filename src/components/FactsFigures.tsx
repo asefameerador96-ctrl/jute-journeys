@@ -15,8 +15,7 @@ const FactsFigures = () => {
           className="transition-all duration-1000 ease-out"
           style={{
             opacity: isVisible ? 1 : 0,
-            filter: isVisible ? 'blur(0px)' : 'blur(12px)',
-            transform: isVisible ? 'scale(1)' : 'scale(0.9)',
+            transform: isVisible ? 'translateY(0) scale(1)' : 'translateY(24px) scale(0.98)',
           }}
         >
           <span className="font-['Monument_Valley'] font-bold text-primary leading-none"
