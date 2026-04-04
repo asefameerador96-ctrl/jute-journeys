@@ -46,10 +46,13 @@ const stages = [
   },
 ];
 
+const VH_PER_STAGE = 70; // scroll distance per stage in vh
+
 const ProcessSection = () => {
   const { ref: headingRef, isVisible: headingVisible } = useScrollAnimation({ threshold: 0.3 });
   const containerRef = useRef<HTMLDivElement>(null);
   const [activeIndex, setActiveIndex] = useState(0);
+  const [stageProgress, setStageProgress] = useState(0);
 
   useEffect(() => {
     const container = containerRef.current;
@@ -57,11 +60,14 @@ const ProcessSection = () => {
 
     const handleScroll = () => {
       const rect = container.getBoundingClientRect();
-      const containerHeight = container.scrollHeight - window.innerHeight;
       const scrolled = -rect.top;
-      const progress = Math.max(0, Math.min(1, scrolled / containerHeight));
-      const index = Math.min(stages.length - 1, Math.floor(progress * stages.length));
+      const totalScroll = container.scrollHeight - window.innerHeight;
+      const progress = Math.max(0, Math.min(1, scrolled / totalScroll));
+      const rawIndex = progress * stages.length;
+      const index = Math.min(stages.length - 1, Math.floor(rawIndex));
+      const stageProg = rawIndex - index;
       setActiveIndex(index);
+      setStageProgress(stageProg);
     };
 
     window.addEventListener('scroll', handleScroll, { passive: true });
@@ -108,80 +114,51 @@ const ProcessSection = () => {
       <div
         ref={containerRef}
         className="relative"
-        style={{ height: `${stages.length * 100}vh` }}
+        style={{ height: `${stages.length * VH_PER_STAGE}vh` }}
       >
         <div className="sticky top-0 h-screen overflow-hidden">
-          <div className="h-full max-w-7xl mx-auto px-6 grid md:grid-cols-2 gap-10 md:gap-16 items-center">
-            {/* Left: Sticky image */}
-            <div className="relative h-[50vh] md:h-[70vh] overflow-hidden rounded-sm">
-              {stages.map((stage, i) => (
-                <img
-                  key={i}
-                  src={stage.image}
-                  alt={stage.title}
-                  className="absolute inset-0 w-full h-full object-contain transition-all duration-700 ease-out"
-                  style={{
-                    opacity: activeIndex === i ? 1 : 0,
-                    transform: activeIndex === i
-                      ? 'scale(1) translateY(0)'
-                      : activeIndex > i
-                        ? 'scale(0.95) translateY(-30px)'
-                        : 'scale(0.95) translateY(30px)',
-                  }}
-                  loading={i === 0 ? 'eager' : 'lazy'}
-                />
-              ))}
-            </div>
+          <div className="h-full max-w-7xl mx-auto px-6 flex items-center">
+            <div className="grid md:grid-cols-2 gap-10 md:gap-16 items-center w-full">
+              {/* Image side — alternates position */}
+              {stages.map((stage, i) => {
+                const isEven = i % 2 === 0;
+                const isActive = activeIndex === i;
+                const isPast = activeIndex > i;
 
-            {/* Right: Sticky text */}
-            <div className="relative">
-              {stages.map((stage, i) => (
-                <div
-                  key={i}
-                  className="absolute inset-0 flex flex-col justify-center transition-all duration-700 ease-out"
-                  style={{
-                    opacity: activeIndex === i ? 1 : 0,
-                    transform: activeIndex === i
-                      ? 'translateY(0)'
-                      : activeIndex > i
-                        ? 'translateY(-40px)'
-                        : 'translateY(40px)',
-                    pointerEvents: activeIndex === i ? 'auto' : 'none',
-                  }}
-                >
-                  {/* Step indicator */}
-                  <span className="text-accent text-sm tracking-[0.2em] uppercase font-medium mb-4">
-                    {String(i + 1).padStart(2, '0')} / {String(stages.length).padStart(2, '0')}
-                  </span>
-
-                  <h3 className="font-['Monument_Valley'] text-3xl md:text-5xl font-bold text-primary mb-6">
-                    {stage.title}
-                  </h3>
-
-                  <p className="text-muted-foreground text-base md:text-lg leading-relaxed max-w-lg">
-                    {stage.description}
-                  </p>
-
-                  <div className="mt-8 h-px bg-accent/40 w-16" />
-                </div>
-              ))}
-
-              {/* Progress dots */}
-              <div className="absolute right-0 top-1/2 -translate-y-1/2 flex flex-col gap-3">
-                {stages.map((_, i) => (
+                return (
                   <div
-                    key={i}
-                    className="transition-all duration-500 rounded-full"
+                    key={`img-${i}`}
+                    className={`relative h-[45vh] md:h-[65vh] overflow-hidden rounded-sm ${
+                      isEven ? 'md:order-1' : 'md:order-2'
+                    }`}
                     style={{
-                      width: activeIndex === i ? '3px' : '3px',
-                      height: activeIndex === i ? '24px' : '8px',
-                      backgroundColor: activeIndex === i
-                        ? 'hsl(var(--accent))'
-                        : 'hsl(var(--accent) / 0.3)',
+                      position: i === 0 ? 'relative' : 'absolute',
+                      inset: i === 0 ? undefined : 0,
+                      width: i === 0 ? undefined : '50%',
+                      left: i === 0 ? undefined : isEven ? '24px' : undefined,
+                      right: i === 0 ? undefined : !isEven ? '24px' : undefined,
+                      ...(i !== 0 && !isEven && { left: 'auto', marginLeft: 'auto' }),
                     }}
-                  />
-                ))}
-              </div>
+                  >
+                    <img
+                      src={stage.image}
+                      alt={stage.title}
+                      className="absolute inset-0 w-full h-full object-contain transition-all duration-700 ease-out"
+                      style={{
+                        opacity: isActive ? 1 : 0,
+                        transform: isActive
+                          ? 'scale(1)'
+                          : isPast
+                            ? 'scale(0.95) translateY(-20px)'
+                            : 'scale(0.95) translateY(20px)',
+                      }}
+                      loading={i === 0 ? 'eager' : 'lazy'}
+                    />
+                  </div>
+                );
+              })}
+
+              {/* We need a cleaner approach — use layered absolute positioning */}
             </div>
           </div>
         </div>
