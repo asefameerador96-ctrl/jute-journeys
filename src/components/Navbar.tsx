@@ -20,14 +20,14 @@ const Navbar = () => {
     <nav
       className={`fixed top-0 left-0 w-full z-50 transition-all duration-500 ${
         scrolled
-          ? 'bg-primary shadow-lg'
-          : 'bg-transparent'
+          ? 'bg-primary/70 backdrop-blur-xl shadow-lg border-b border-primary-foreground/10'
+          : 'bg-primary/20 backdrop-blur-md'
       }`}
     >
       <div className="max-w-7xl mx-auto px-6 py-4 flex items-center justify-between">
         <button onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })} className="flex items-center gap-3">
           <img src={logo} alt="Shah Agro Limited" className="h-10 w-auto" />
-          <span className="font-['Monument_Valley'] text-lg font-semibold text-primary-foreground tracking-wide hidden sm:inline">
+          <span className="font-['Monument_Valley'] text-xl font-bold text-primary-foreground tracking-wide hidden sm:inline">
             Shah Agro
           </span>
         </button>
@@ -42,7 +42,7 @@ const Navbar = () => {
             <button
               key={id}
               onClick={() => scrollTo(id)}
-              className="text-primary-foreground/80 hover:text-accent transition-colors duration-300 text-sm font-medium tracking-widest uppercase"
+              className="text-primary-foreground hover:text-accent transition-colors duration-300 text-base font-bold tracking-widest uppercase"
             >
               {label}
             </button>
@@ -63,7 +63,7 @@ const Navbar = () => {
 
       {/* Mobile menu */}
       <div
-        className={`md:hidden bg-primary overflow-hidden transition-all duration-500 ${
+        className={`md:hidden bg-primary/70 backdrop-blur-xl overflow-hidden transition-all duration-500 ${
           menuOpen ? 'max-h-64 pb-6' : 'max-h-0'
         }`}
       >
@@ -75,7 +75,7 @@ const Navbar = () => {
           <button
             key={id}
             onClick={() => scrollTo(id)}
-            className="block w-full text-left px-6 py-3 text-primary-foreground/80 hover:text-accent transition-colors text-sm tracking-widest uppercase"
+            className="block w-full text-left px-6 py-3 text-primary-foreground hover:text-accent transition-colors text-base font-bold tracking-widest uppercase"
           >
             {label}
           </button>
