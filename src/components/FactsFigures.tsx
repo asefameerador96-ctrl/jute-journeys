@@ -47,7 +47,7 @@ const FactsFigures = () => {
       ref={ref}
       className="relative w-full py-24 md:py-36 bg-background overflow-hidden"
     >
-      <div className="max-w-5xl mx-auto px-6 flex flex-col items-center gap-20 md:gap-28">
+      <div className="max-w-6xl mx-auto px-6 grid grid-cols-1 md:grid-cols-3 gap-12 md:gap-8">
         {stats.map((stat, i) => (
           <StatItem key={stat.label} {...stat} delay={i * 200} />
         ))}
