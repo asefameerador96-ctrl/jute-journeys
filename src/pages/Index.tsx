@@ -19,6 +19,7 @@ const Index = () => (
     <ProductShowcase />
     <FactsFigures />
     <ProcessSection />
+    <ScrollImageReveal />
     <GlobalReach />
     <Gallery />
     <Footer />
