@@ -15,9 +15,9 @@ const Index = () => (
     
     <Navbar />
     <HeroCarousel />
+    <ProductShowcase />
     <FactsFigures />
     <ProcessSection />
-    <ProductShowcase />
     <GlobalReach />
     <Gallery />
     <Footer />
