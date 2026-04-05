@@ -31,7 +31,7 @@ const StatItem = ({ target, suffix, label, delay }: { target: number; suffix: st
           {count}{suffix}
           <span className="text-accent"> +</span>
         </span>
-        <p className="mt-6 text-muted-foreground text-lg md:text-xl tracking-[0.15em] uppercase font-light">
+        <p className="mt-6 text-muted-foreground text-lg md:text-xl tracking-[0.15em] uppercase font-['Monument_Valley'] font-light">
           {label}
         </p>
       </div>
