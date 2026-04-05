@@ -1,5 +1,5 @@
+import { useEffect, useRef, useState, useCallback } from 'react';
 import { useScrollAnimation } from '@/hooks/useScrollAnimation';
-import ProcessStage from '@/components/ProcessStage';
 import S5 from '@/assets/S5.png';
 import H3 from '@/assets/H3.png';
 import C5 from '@/assets/C5.png';
@@ -46,11 +46,52 @@ const stages = [
   },
 ];
 
+const VH_PER_STAGE = 1.2; // scroll distance per stage
+
 const ProcessSection = () => {
   const { ref: headingRef, isVisible: headingVisible } = useScrollAnimation({ threshold: 0.3 });
+  const sectionRef = useRef<HTMLDivElement>(null);
+  const [scrollState, setScrollState] = useState({ activeIndex: 0, stageProgress: 0 });
+
+  const handleScroll = useCallback(() => {
+    if (!sectionRef.current) return;
+    const rect = sectionRef.current.getBoundingClientRect();
+    const sectionHeight = sectionRef.current.offsetHeight;
+    const viewportH = window.innerHeight;
+    // How far we've scrolled into the section (0 = top just entered, sectionHeight-viewportH = bottom)
+    const scrolled = -rect.top;
+    const totalScrollable = sectionHeight - viewportH;
+    const overallProgress = Math.max(0, Math.min(1, scrolled / totalScrollable));
+
+    const totalStages = stages.length;
+    const raw = overallProgress * totalStages;
+    const activeIndex = Math.min(Math.floor(raw), totalStages - 1);
+    const stageProgress = raw - activeIndex;
+
+    setScrollState({ activeIndex, stageProgress });
+  }, []);
+
+  useEffect(() => {
+    let ticking = false;
+    const onScroll = () => {
+      if (!ticking) {
+        requestAnimationFrame(() => {
+          handleScroll();
+          ticking = false;
+        });
+        ticking = true;
+      }
+    };
+    window.addEventListener('scroll', onScroll, { passive: true });
+    handleScroll();
+    return () => window.removeEventListener('scroll', onScroll);
+  }, [handleScroll]);
+
+  const totalHeight = `${stages.length * VH_PER_STAGE * 100}vh`;
 
   return (
     <section id="process" className="relative bg-background">
+      {/* Heading */}
       <div ref={headingRef} className="text-center pt-24 pb-16 px-6 overflow-hidden">
         <span
           className="text-accent text-sm tracking-[0.3em] uppercase font-medium inline-block"
@@ -76,23 +117,128 @@ const ProcessSection = () => {
         </div>
         <div
           className="mt-6 mx-auto h-px bg-accent/40 transition-all duration-1000 ease-out"
-          style={{
-            width: headingVisible ? '80px' : '0px',
-            transitionDelay: '0.4s',
-          }}
+          style={{ width: headingVisible ? '80px' : '0px', transitionDelay: '0.4s' }}
         />
       </div>
 
-      <div className="space-y-0">
-        {stages.map((stage, i) => (
-          <ProcessStage
-            key={i}
-            image={stage.image}
-            title={stage.title}
-            description={stage.description}
-            index={i}
-          />
-        ))}
+      {/* Scroll-driven image reveal area */}
+      <div ref={sectionRef} className="relative" style={{ height: totalHeight }}>
+        {/* Sticky viewport */}
+        <div className="sticky top-0 h-screen w-full overflow-hidden">
+          {/* Image layers — each slides up from bottom to cover previous */}
+          {stages.map((stage, i) => {
+            const { activeIndex, stageProgress } = scrollState;
+            let translateY = 100; // below viewport (%)
+            let scale = 1.08;
+            let opacity = 1;
+
+            if (i < activeIndex) {
+              // Already revealed — fully visible, slight zoom out
+              translateY = 0;
+              scale = 1 + 0.02 * Math.max(0, 1 - (activeIndex - i) * 0.5);
+            } else if (i === activeIndex) {
+              // Current — fully in place
+              translateY = 0;
+              scale = 1.08 - 0.06 * Math.min(stageProgress, 1);
+            } else if (i === activeIndex + 1) {
+              // Next — sliding up based on next stage progress
+              translateY = 100 - stageProgress * 100;
+              scale = 1.1;
+            } else {
+              // Future — hidden below
+              translateY = 100;
+              opacity = 0;
+            }
+
+            return (
+              <div
+                key={i}
+                className="absolute inset-0 will-change-transform"
+                style={{
+                  transform: `translateY(${translateY}%) scale(${scale})`,
+                  zIndex: i + 1,
+                  opacity,
+                }}
+              >
+                <img
+                  src={stage.image}
+                  alt={stage.title}
+                  className="w-full h-full object-cover"
+                  loading={i < 2 ? 'eager' : 'lazy'}
+                />
+                {/* Dark overlay for text readability */}
+                <div className="absolute inset-0 bg-primary/40" />
+              </div>
+            );
+          })}
+
+          {/* Text overlay — fades between stages */}
+          {stages.map((stage, i) => {
+            const { activeIndex, stageProgress } = scrollState;
+            let textOpacity = 0;
+            let textY = 30;
+
+            if (i === activeIndex) {
+              // Fade in, then fade out as next stage approaches
+              const fadeOut = stageProgress > 0.7 ? (stageProgress - 0.7) / 0.3 : 0;
+              textOpacity = Math.min(1, stageProgress < 0.15 ? stageProgress / 0.15 : 1) * (1 - fadeOut);
+              textY = 30 * (1 - Math.min(1, stageProgress < 0.15 ? stageProgress / 0.15 : 1));
+              // First stage should be visible immediately
+              if (i === 0 && activeIndex === 0) {
+                const earlyFade = stageProgress > 0.7 ? (stageProgress - 0.7) / 0.3 : 0;
+                textOpacity = 1 - earlyFade;
+                textY = 0;
+              }
+            }
+
+            const isEven = i % 2 === 0;
+
+            return (
+              <div
+                key={`text-${i}`}
+                className={`absolute inset-0 z-20 flex items-center ${isEven ? 'justify-start' : 'justify-end'}`}
+                style={{ opacity: textOpacity, pointerEvents: textOpacity > 0.3 ? 'auto' : 'none' }}
+              >
+                <div
+                  className={`px-8 md:px-20 max-w-xl ${isEven ? 'text-left' : 'text-right'}`}
+                  style={{
+                    transform: `translateY(${textY}px)`,
+                  }}
+                >
+                  <span className="text-accent text-xs tracking-[0.3em] uppercase font-medium">
+                    {String(i + 1).padStart(2, '0')} / {String(stages.length).padStart(2, '0')}
+                  </span>
+                  <h3 className="font-['Monument_Valley'] text-3xl md:text-5xl lg:text-6xl font-bold text-white mt-3 mb-6">
+                    {stage.title}
+                  </h3>
+                  <p className="text-white/80 text-sm md:text-base lg:text-lg leading-relaxed">
+                    {stage.description}
+                  </p>
+                  <div
+                    className={`mt-6 h-px bg-accent/60 ${isEven ? '' : 'ml-auto'}`}
+                    style={{ width: textOpacity > 0.5 ? '64px' : '0px', transition: 'width 0.6s ease-out' }}
+                  />
+                </div>
+              </div>
+            );
+          })}
+
+          {/* Stage indicator dots */}
+          <div className="absolute right-6 top-1/2 -translate-y-1/2 z-30 flex flex-col gap-3">
+            {stages.map((_, i) => (
+              <div
+                key={`dot-${i}`}
+                className="w-2 h-2 rounded-full transition-all duration-500"
+                style={{
+                  backgroundColor: i <= scrollState.activeIndex
+                    ? 'hsl(var(--accent))'
+                    : 'hsla(var(--accent) / 0.3)',
+                  transform: i === scrollState.activeIndex ? 'scale(1.5)' : 'scale(1)',
+                }}
+              />
+            ))}
+          </div>
+        </div>
       </div>
     </section>
   );
