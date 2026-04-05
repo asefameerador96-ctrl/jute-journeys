@@ -1,9 +1,12 @@
 import { useEffect, useState } from 'react';
+import { useNavigate, useLocation } from 'react-router-dom';
 import logo from '@/assets/logo.png';
 
 const Navbar = () => {
   const [scrolled, setScrolled] = useState(false);
   const [menuOpen, setMenuOpen] = useState(false);
+  const navigate = useNavigate();
+  const location = useLocation();
 
   useEffect(() => {
     const handleScroll = () => setScrolled(window.scrollY > 60);
@@ -13,7 +16,19 @@ const Navbar = () => {
 
   const scrollTo = (id: string) => {
     setMenuOpen(false);
-    document.getElementById(id)?.scrollIntoView({ behavior: 'smooth' });
+    if (location.pathname !== '/') {
+      navigate('/');
+      setTimeout(() => {
+        document.getElementById(id)?.scrollIntoView({ behavior: 'smooth' });
+      }, 300);
+    } else {
+      document.getElementById(id)?.scrollIntoView({ behavior: 'smooth' });
+    }
+  };
+
+  const goToAbout = () => {
+    setMenuOpen(false);
+    navigate('/about-us');
   };
 
   return (
@@ -47,6 +62,12 @@ const Navbar = () => {
               {label}
             </button>
           ))}
+          <button
+            onClick={goToAbout}
+            className="text-primary-foreground hover:text-accent transition-colors duration-300 text-base font-bold tracking-widest uppercase"
+          >
+            About Us
+          </button>
         </div>
 
         {/* Mobile hamburger */}
@@ -80,6 +101,12 @@ const Navbar = () => {
             {label}
           </button>
         ))}
+        <button
+          onClick={goToAbout}
+          className="block w-full text-left px-6 py-3 text-primary-foreground hover:text-accent transition-colors text-base font-bold tracking-widest uppercase"
+        >
+          About Us
+        </button>
       </div>
     </nav>
   );
