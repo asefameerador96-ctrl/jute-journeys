@@ -62,6 +62,12 @@ const Navbar = () => {
               {label}
             </button>
           ))}
+          <button
+            onClick={goToAbout}
+            className="text-primary-foreground hover:text-accent transition-colors duration-300 text-base font-bold tracking-widest uppercase"
+          >
+            About Us
+          </button>
         </div>
 
         {/* Mobile hamburger */}
