@@ -54,28 +54,23 @@ const ProcessStage = ({ image, title, description, index }: ProcessStageProps) =
           </div>
 
           {/* Text */}
-          <div className={`${isEven ? 'md:order-2' : 'md:order-1'}`}>
+          <div
+            className={`${isEven ? 'md:order-2' : 'md:order-1'}`}
+            style={{
+              opacity: isVisible ? 1 : 0,
+              transform: isVisible
+                ? 'translateX(0)'
+                : `translateX(${isEven ? '60px' : '-60px'})`,
+              transition: 'all 1s cubic-bezier(0.16, 1, 0.3, 1) 0.15s',
+            }}
+          >
             <div className="overflow-hidden mb-6">
-              <h3
-                className="font-['Monument_Valley'] text-3xl md:text-5xl font-bold text-primary"
-                style={{
-                  opacity: isVisible ? 1 : 0,
-                  transform: isVisible ? 'translateY(0)' : 'translateY(100%)',
-                  transition: 'all 0.8s cubic-bezier(0.16, 1, 0.3, 1) 0.2s',
-                }}
-              >
+              <h3 className="font-['Monument_Valley'] text-3xl md:text-5xl font-bold text-primary">
                 {title}
               </h3>
             </div>
 
-            <p
-              className="text-muted-foreground text-base md:text-lg leading-relaxed max-w-lg"
-              style={{
-                opacity: isVisible ? 1 : 0,
-                transform: isVisible ? 'translateY(0)' : 'translateY(30px)',
-                transition: 'all 0.8s cubic-bezier(0.16, 1, 0.3, 1) 0.35s',
-              }}
-            >
+            <p className="text-muted-foreground text-base md:text-lg leading-relaxed max-w-lg">
               {description}
             </p>
 
