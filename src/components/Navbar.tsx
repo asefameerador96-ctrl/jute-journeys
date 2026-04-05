@@ -101,6 +101,12 @@ const Navbar = () => {
             {label}
           </button>
         ))}
+        <button
+          onClick={goToAbout}
+          className="block w-full text-left px-6 py-3 text-primary-foreground hover:text-accent transition-colors text-base font-bold tracking-widest uppercase"
+        >
+          About Us
+        </button>
       </div>
     </nav>
   );
