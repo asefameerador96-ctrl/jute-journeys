@@ -25,8 +25,8 @@ const StatItem = ({ target, suffix, label, delay }: { target: number; suffix: st
         }}
       >
         <span
-          className="font-['Monument_Valley'] font-bold text-primary leading-none"
-          style={{ fontSize: 'clamp(3.2rem, 9.6vw, 8rem)' }}
+          className="block font-['Monument_Valley'] font-bold text-primary leading-none h-[1.1em]"
+          style={{ fontSize: 'clamp(2.5rem, 5vw, 4.5rem)' }}
         >
           {count}{suffix}
           <span className="text-accent"> +</span>
