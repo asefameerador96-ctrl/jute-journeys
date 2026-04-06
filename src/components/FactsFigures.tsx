@@ -1,5 +1,6 @@
 import { useScrollAnimation } from '@/hooks/useScrollAnimation';
 import { useCountUp } from '@/hooks/useCountUp';
+import ScrollTextReveal from '@/components/ScrollTextReveal';
 
 const stats = [
   { target: 7, suffix: 'K MT', label: 'Monthly Production Capacity' },
@@ -31,9 +32,13 @@ const StatItem = ({ target, suffix, label, delay }: { target: number; suffix: st
           {count}{suffix}
           <span className="text-accent"> +</span>
         </span>
-        <p className="mt-6 text-muted-foreground text-lg md:text-xl tracking-[0.15em] uppercase font-light">
-          {label}
-        </p>
+        <div className="mt-6">
+          <ScrollTextReveal
+            text={label}
+            className="text-muted-foreground text-lg md:text-xl tracking-[0.15em] uppercase font-light"
+            staggerDelay={20}
+          />
+        </div>
       </div>
     </div>
   );
