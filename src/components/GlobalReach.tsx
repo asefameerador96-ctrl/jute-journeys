@@ -101,7 +101,7 @@ const GlobalReach = () => {
               transition: 'all 0.7s cubic-bezier(0.16, 1, 0.3, 1)',
             }}
           >
-            Exporting Worldwide
+            From Bangladesh to World
           </span>
           <div className="overflow-hidden mt-4">
             <h2
