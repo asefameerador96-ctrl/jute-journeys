@@ -46,7 +46,7 @@ const stages = [
   },
 ];
 
-const VH_PER_STAGE = 1.2; // scroll distance per stage
+const VH_PER_STAGE = 1.2;
 
 const ProcessSection = () => {
   const { ref: headingRef, isVisible: headingVisible } = useScrollAnimation({ threshold: 0.3 });
@@ -58,7 +58,6 @@ const ProcessSection = () => {
     const rect = sectionRef.current.getBoundingClientRect();
     const sectionHeight = sectionRef.current.offsetHeight;
     const viewportH = window.innerHeight;
-    // How far we've scrolled into the section (0 = top just entered, sectionHeight-viewportH = bottom)
     const scrolled = -rect.top;
     const totalScrollable = sectionHeight - viewportH;
     const overallProgress = Math.max(0, Math.min(1, scrolled / totalScrollable));
@@ -121,69 +120,42 @@ const ProcessSection = () => {
         />
       </div>
 
-      {/* Scroll-driven image reveal area */}
+      {/* Scroll-driven area */}
       <div ref={sectionRef} className="relative" style={{ height: totalHeight }}>
         {/* Sticky viewport */}
         <div className="sticky top-0 h-screen w-full overflow-hidden">
-          {/* Image layers — each slides up from bottom to cover previous */}
+          {/* Each stage: half image + half text, alternating sides */}
           {stages.map((stage, i) => {
             const { activeIndex, stageProgress } = scrollState;
-            let translateY = 100; // below viewport (%)
-            let scale = 1.08;
-            let opacity = 1;
+            const isEven = i % 2 === 0;
+
+            // Image slide animation (same scroll reveal logic)
+            let translateY = 100;
+            let scale = 1.05;
+            let layerOpacity = 1;
 
             if (i < activeIndex) {
-              // Already revealed — fully visible, slight zoom out
               translateY = 0;
               scale = 1 + 0.02 * Math.max(0, 1 - (activeIndex - i) * 0.5);
             } else if (i === activeIndex) {
-              // Current — fully in place
               translateY = 0;
-              scale = 1.08 - 0.06 * Math.min(stageProgress, 1);
+              scale = 1.05 - 0.03 * Math.min(stageProgress, 1);
             } else if (i === activeIndex + 1) {
-              // Next — sliding up based on next stage progress
               translateY = 100 - stageProgress * 100;
-              scale = 1.1;
+              scale = 1.08;
             } else {
-              // Future — hidden below
               translateY = 100;
-              opacity = 0;
+              layerOpacity = 0;
             }
 
-            return (
-              <div
-                key={i}
-                className="absolute inset-0 will-change-transform"
-                style={{
-                  transform: `translateY(${translateY}%) scale(${scale})`,
-                  zIndex: i + 1,
-                  opacity,
-                }}
-              >
-                <img
-                  src={stage.image}
-                  alt={stage.title}
-                  className="w-full h-full object-cover"
-                  loading={i < 2 ? 'eager' : 'lazy'}
-                />
-                {/* Dark overlay for text readability */}
-                <div className="absolute inset-0" style={{ backgroundColor: 'hsla(80, 20%, 22%, 0.45)' }} />
-              </div>
-            );
-          })}
-
-          {/* Text overlay — fades between stages */}
-          {stages.map((stage, i) => {
-            const { activeIndex, stageProgress } = scrollState;
+            // Text animation
             let textOpacity = 0;
             let textY = 30;
 
             if (i === activeIndex) {
-              // Fade in, then fade out as next stage approaches
               const fadeOut = stageProgress > 0.7 ? (stageProgress - 0.7) / 0.3 : 0;
               textOpacity = Math.min(1, stageProgress < 0.15 ? stageProgress / 0.15 : 1) * (1 - fadeOut);
               textY = 30 * (1 - Math.min(1, stageProgress < 0.15 ? stageProgress / 0.15 : 1));
-              // First stage should be visible immediately
               if (i === 0 && activeIndex === 0) {
                 const earlyFade = stageProgress > 0.7 ? (stageProgress - 0.7) / 0.3 : 0;
                 textOpacity = 1 - earlyFade;
@@ -191,33 +163,67 @@ const ProcessSection = () => {
               }
             }
 
-            const isEven = i % 2 === 0;
+            // Text slides in from the opposite side
+            const textSlideX = isEven
+              ? (1 - textOpacity) * 40
+              : -(1 - textOpacity) * 40;
 
             return (
               <div
-                key={`text-${i}`}
-                className={`absolute inset-0 z-20 flex items-center ${isEven ? 'justify-start' : 'justify-end'}`}
-                style={{ opacity: textOpacity, pointerEvents: textOpacity > 0.3 ? 'auto' : 'none' }}
+                key={i}
+                className="absolute inset-0 will-change-transform"
+                style={{
+                  transform: `translateY(${translateY}%)`,
+                  zIndex: i + 1,
+                  opacity: layerOpacity,
+                }}
               >
-                <div
-                  className={`px-8 md:px-20 max-w-xl ${isEven ? 'text-left' : 'text-right'}`}
-                  style={{
-                    transform: `translateY(${textY}px)`,
-                  }}
-                >
-                  <span className="text-accent text-xs tracking-[0.3em] uppercase font-medium">
-                    {String(i + 1).padStart(2, '0')} / {String(stages.length).padStart(2, '0')}
-                  </span>
-                  <h3 className="font-['Monument_Valley'] text-3xl md:text-5xl lg:text-6xl font-bold mt-3 mb-6" style={{ color: '#F3EDE7' }}>
-                    {stage.title}
-                  </h3>
-                  <p className="text-sm md:text-base lg:text-lg leading-relaxed" style={{ color: 'hsla(30, 25%, 93%, 0.8)' }}>
-                    {stage.description}
-                  </p>
+                {/* Split layout: image on one side, text on other */}
+                <div className={`flex h-full w-full ${isEven ? 'flex-row' : 'flex-row-reverse'}`}>
+                  {/* Image half */}
+                  <div className="w-1/2 h-full relative overflow-hidden">
+                    <img
+                      src={stage.image}
+                      alt={stage.title}
+                      className="w-full h-full object-cover"
+                      loading={i < 2 ? 'eager' : 'lazy'}
+                      style={{
+                        transform: `scale(${scale})`,
+                        transition: 'transform 0.1s linear',
+                      }}
+                    />
+                  </div>
+
+                  {/* Text half */}
                   <div
-                    className={`mt-6 h-px bg-accent/60 ${isEven ? '' : 'ml-auto'}`}
-                    style={{ width: textOpacity > 0.5 ? '64px' : '0px', transition: 'width 0.6s ease-out' }}
-                  />
+                    className="w-1/2 h-full flex items-center bg-background"
+                    style={{
+                      opacity: textOpacity,
+                      pointerEvents: textOpacity > 0.3 ? 'auto' : 'none',
+                    }}
+                  >
+                    <div
+                      className={`px-8 md:px-16 lg:px-20 max-w-lg ${isEven ? 'text-left' : 'text-right ml-auto'}`}
+                      style={{
+                        transform: `translateY(${textY}px) translateX(${textSlideX}px)`,
+                        transition: 'transform 0.1s linear',
+                      }}
+                    >
+                      <span className="text-accent text-xs tracking-[0.3em] uppercase font-medium">
+                        {String(i + 1).padStart(2, '0')} / {String(stages.length).padStart(2, '0')}
+                      </span>
+                      <h3 className="font-['Monument_Valley'] text-3xl md:text-4xl lg:text-5xl font-bold mt-3 mb-6 text-primary">
+                        {stage.title}
+                      </h3>
+                      <p className="text-sm md:text-base lg:text-lg leading-relaxed text-muted-foreground">
+                        {stage.description}
+                      </p>
+                      <div
+                        className={`mt-6 h-px bg-accent/60 ${isEven ? '' : 'ml-auto'}`}
+                        style={{ width: textOpacity > 0.5 ? '64px' : '0px', transition: 'width 0.6s ease-out' }}
+                      />
+                    </div>
+                  </div>
                 </div>
               </div>
             );
