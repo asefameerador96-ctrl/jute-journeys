@@ -134,7 +134,7 @@ const ProcessSection = () => {
             const { activeIndex, stageProgress } = scrollState;
             const isEven = i % 2 === 0;
 
-            // Image slide animation (same scroll reveal logic)
+            // Image slide animation
             let translateY = 100;
             let scale = 1.05;
             let layerOpacity = 1;
@@ -153,19 +153,27 @@ const ProcessSection = () => {
               layerOpacity = 0;
             }
 
-            // Text animation
+            // Text animation — only show text when layer is fully in place
             let textOpacity = 0;
             let textY = 30;
 
             if (i === activeIndex) {
-              const fadeOut = stageProgress > 0.7 ? (stageProgress - 0.7) / 0.3 : 0;
-              textOpacity = Math.min(1, stageProgress < 0.15 ? stageProgress / 0.15 : 1) * (1 - fadeOut);
-              textY = 30 * (1 - Math.min(1, stageProgress < 0.15 ? stageProgress / 0.15 : 1));
-              if (i === 0 && activeIndex === 0) {
-                const earlyFade = stageProgress > 0.7 ? (stageProgress - 0.7) / 0.3 : 0;
-                textOpacity = 1 - earlyFade;
+              if (i === 0 && stageProgress < 0.05) {
+                // First stage: show text immediately
+                textOpacity = 1;
                 textY = 0;
+              } else {
+                // Text fades in after 15% progress and fades out after 70%
+                const fadeIn = Math.min(1, stageProgress < 0.2 ? stageProgress / 0.2 : 1);
+                const fadeOut = stageProgress > 0.7 ? (stageProgress - 0.7) / 0.3 : 0;
+                textOpacity = fadeIn * (1 - fadeOut);
+                textY = 30 * (1 - fadeIn);
               }
+            } else if (i === activeIndex + 1 && stageProgress > 0.85) {
+              // Next stage text starts fading in only when layer is nearly fully in place
+              const earlyFade = (stageProgress - 0.85) / 0.15;
+              textOpacity = earlyFade * 0.3; // subtle preview
+              textY = 30 * (1 - earlyFade);
             }
 
             // Text slides in from the opposite side
