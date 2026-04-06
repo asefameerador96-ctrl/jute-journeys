@@ -50,7 +50,7 @@ const FactsFigures = () => {
   return (
     <section
       ref={ref}
-      className="relative w-full py-24 md:py-36 bg-background overflow-hidden"
+      className="relative w-full py-16 md:py-24 bg-background overflow-hidden"
     >
       <div className="max-w-6xl mx-auto px-6 grid grid-cols-1 md:grid-cols-3 gap-12 md:gap-8">
         {stats.map((stat, i) => (
