@@ -166,25 +166,23 @@ const GlobalReach = () => {
             <Geographies geography={GEO_URL}>
               {({ geographies }) =>
                 geographies.map((geo) => {
-                  const geoId = geo.id;
+                  const geoId = String(geo.id);
                   const isExport = exportIds.has(geoId);
                   const isActive = activeCountry?.name === EXPORT_COUNTRIES[geoId]?.name;
 
-                  // Non-export: background color fill, olive-green border
-                  // Export (inactive): muted olive fill
-                  // Export (active/hovered): darker olive fill
                   const fillColor = isActive
                     ? COLORS.activeOlive
                     : isExport
                       ? COLORS.mutedOlive
                       : COLORS.bg;
 
-                  const strokeColor = COLORS.oliveBorder;
-
                   return (
                     <Geography
                       key={geo.rsmKey}
                       geography={geo}
+                      fill={fillColor}
+                      stroke={COLORS.oliveBorder}
+                      strokeWidth={0.4}
                       onMouseEnter={() => handleMouseEnter(geoId)}
                       onMouseLeave={handleMouseLeave}
                       onClick={() => {
@@ -196,25 +194,13 @@ const GlobalReach = () => {
                         }
                       }}
                       style={{
-                        default: {
-                          fill: fillColor,
-                          stroke: strokeColor,
-                          strokeWidth: 0.4,
-                          outline: 'none',
-                          transition: 'fill 0.3s ease',
-                          cursor: isExport ? 'pointer' : 'default',
-                        },
+                        default: { outline: 'none', cursor: isExport ? 'pointer' : 'default' },
                         hover: {
                           fill: isExport ? COLORS.activeOlive : COLORS.bg,
-                          stroke: strokeColor,
-                          strokeWidth: isExport ? 0.6 : 0.4,
                           outline: 'none',
                           cursor: isExport ? 'pointer' : 'default',
                         },
-                        pressed: {
-                          fill: isExport ? COLORS.activeOlive : COLORS.bg,
-                          outline: 'none',
-                        },
+                        pressed: { outline: 'none' },
                       }}
                     />
                   );
