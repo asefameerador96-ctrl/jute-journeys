@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom';
 import { useScrollAnimation } from '@/hooks/useScrollAnimation';
 import ScrollTextReveal from '@/components/ScrollTextReveal';
 import S5 from '@/assets/S5.png';
+import SeedingVideo from '@/assets/seeding-video.mp4';
 import H3 from '@/assets/H3.png';
 import C5 from '@/assets/C5.png';
 import B3 from '@/assets/B3.png';
@@ -12,6 +13,7 @@ import Pack2 from '@/assets/Pack2.png';
 const stages = [
   {
     image: S5,
+    video: SeedingVideo,
     title: 'Seeding',
     slug: '/journey/seeding',
     description:
@@ -181,16 +183,31 @@ const ProcessSection = () => {
                 <div className={`flex h-full w-full ${isEven ? 'flex-row' : 'flex-row-reverse'}`}>
                   {/* Image half */}
                   <div className="w-1/2 h-full relative overflow-hidden">
-                    <img
-                      src={stage.image}
-                      alt={stage.title}
-                      className="w-full h-full object-cover"
-                      loading={i < 2 ? 'eager' : 'lazy'}
-                      style={{
-                        transform: `scale(${scale})`,
-                        transition: 'transform 0.1s linear',
-                      }}
-                    />
+                    {stage.video ? (
+                      <video
+                        src={stage.video}
+                        autoPlay
+                        loop
+                        muted
+                        playsInline
+                        className="w-full h-full object-cover"
+                        style={{
+                          transform: `scale(${scale})`,
+                          transition: 'transform 0.1s linear',
+                        }}
+                      />
+                    ) : (
+                      <img
+                        src={stage.image}
+                        alt={stage.title}
+                        className="w-full h-full object-cover"
+                        loading={i < 2 ? 'eager' : 'lazy'}
+                        style={{
+                          transform: `scale(${scale})`,
+                          transition: 'transform 0.1s linear',
+                        }}
+                      />
+                    )}
                   </div>
 
                   {/* Text half */}
