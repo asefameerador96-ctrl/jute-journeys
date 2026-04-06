@@ -49,6 +49,7 @@ const COLORS = {
 function getGeoFill(geoName: string, activeCountry: ExportCountry | null): string {
   const exportData = EXPORT_BY_NAME[geoName];
   if (!exportData) return COLORS.bg;
+  if (geoName === 'Bangladesh') return 'url(#bd-flag)';
   if (activeCountry?.name === exportData.name) return COLORS.activeOlive;
   return COLORS.mutedOlive;
 }
@@ -171,11 +172,17 @@ const GlobalReach = () => {
             height={400}
             style={{ width: '100%', height: '100%', display: 'block' }}
           >
+            <defs>
+              <pattern id="bd-flag" patternUnits="objectBoundingBox" width="1" height="1">
+                <image href={bangladeshFlag} width="100%" height="100%" preserveAspectRatio="xMidYMid slice" />
+              </pattern>
+            </defs>
             <Geographies geography={GEO_URL}>
               {({ geographies }) =>
                 geographies.map((geo) => {
                   const geoName: string = geo.properties?.name ?? '';
                   const isExport = geoName in EXPORT_BY_NAME;
+                  const isBangladesh = geoName === 'Bangladesh';
 
                   return (
                     <Geography
@@ -183,7 +190,7 @@ const GlobalReach = () => {
                       geography={geo}
                       fill={getGeoFill(geoName, activeCountry)}
                       stroke={COLORS.oliveBorder}
-                      strokeWidth={0.4}
+                      strokeWidth={isBangladesh ? 1 : 0.4}
                       onMouseEnter={() => {
                         const ed = EXPORT_BY_NAME[geoName];
                         if (ed) setActiveCountry(ed);
@@ -199,7 +206,7 @@ const GlobalReach = () => {
                           cursor: isExport ? 'pointer' : 'default',
                         },
                         hover: {
-                          fill: getGeoHoverFill(geoName),
+                          fill: isBangladesh ? 'url(#bd-flag)' : getGeoHoverFill(geoName),
                           outline: 'none',
                           cursor: isExport ? 'pointer' : 'default',
                         },
@@ -212,17 +219,6 @@ const GlobalReach = () => {
                 })
               }
             </Geographies>
-            {/* Bangladesh flag map overlay */}
-            <Annotation subject={[90.3, 23.7]} dx={0} dy={0} connectorProps={{}}>
-              <image
-                href={bangladeshFlagMap}
-                x={-14}
-                y={-18}
-                width={28}
-                height={32}
-                style={{ pointerEvents: 'none' }}
-              />
-            </Annotation>
           </ComposableMap>
         </div>
       </div>
