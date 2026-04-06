@@ -164,12 +164,12 @@ const GlobalReach = () => {
           </div>
         )}
 
-        <div className="w-full" style={{ height: 'clamp(400px, 50vw, 700px)' }}>
+        <div className="w-full" style={{ height: 'clamp(350px, 45vw, 550px)' }}>
           <ComposableMap
             projection="geoMercator"
-            projectionConfig={{ scale: 140, center: [30, 20] }}
+            projectionConfig={{ scale: 200, center: [55, 20] }}
             width={900}
-            height={450}
+            height={400}
             style={{ width: '100%', height: '100%', display: 'block' }}
           >
             <Geographies geography={GEO_URL}>
@@ -213,6 +213,17 @@ const GlobalReach = () => {
                 })
               }
             </Geographies>
+            {/* Bangladesh flag map overlay */}
+            <Annotation subject={[90.3, 23.7]} dx={0} dy={0} connectorProps={{}}>
+              <image
+                href={bangladeshFlagMap}
+                x={-14}
+                y={-18}
+                width={28}
+                height={32}
+                style={{ pointerEvents: 'none' }}
+              />
+            </Annotation>
           </ComposableMap>
         </div>
       </div>
