@@ -1,6 +1,6 @@
 import { useScrollAnimation } from '@/hooks/useScrollAnimation';
 import ScrollTextReveal from '@/components/ScrollTextReveal';
-import { useState, useEffect, useCallback } from 'react';
+import { useState, useEffect, useCallback, useRef } from 'react';
 import T6 from '@/assets/T6.png';
 import T7 from '@/assets/T7.png';
 import T8 from '@/assets/T8.png';
@@ -30,6 +30,11 @@ const Gallery = () => {
   const slidesPerView = typeof window !== 'undefined' && window.innerWidth < 768 ? 1 : 3;
   const maxIndex = Math.max(0, images.length - slidesPerView);
 
+  // Touch/swipe support
+  const touchStartX = useRef(0);
+  const touchEndX = useRef(0);
+  const isDragging = useRef(false);
+
   const next = useCallback(() => {
     setCurrent((prev) => (prev >= maxIndex ? 0 : prev + 1));
   }, [maxIndex]);
@@ -37,6 +42,49 @@ const Gallery = () => {
   const prev = useCallback(() => {
     setCurrent((prev) => (prev <= 0 ? maxIndex : prev - 1));
   }, [maxIndex]);
+
+  const handleTouchStart = (e: React.TouchEvent) => {
+    touchStartX.current = e.touches[0].clientX;
+    isDragging.current = true;
+    setIsAutoPlaying(false);
+  };
+
+  const handleTouchMove = (e: React.TouchEvent) => {
+    touchEndX.current = e.touches[0].clientX;
+  };
+
+  const handleTouchEnd = () => {
+    if (!isDragging.current) return;
+    isDragging.current = false;
+    const diff = touchStartX.current - touchEndX.current;
+    if (Math.abs(diff) > 50) {
+      if (diff > 0) next();
+      else prev();
+    }
+    setIsAutoPlaying(true);
+  };
+
+  // Mouse drag support
+  const handleMouseDown = (e: React.MouseEvent) => {
+    touchStartX.current = e.clientX;
+    isDragging.current = true;
+    setIsAutoPlaying(false);
+  };
+
+  const handleMouseMove = (e: React.MouseEvent) => {
+    if (isDragging.current) touchEndX.current = e.clientX;
+  };
+
+  const handleMouseUp = () => {
+    if (!isDragging.current) return;
+    isDragging.current = false;
+    const diff = touchStartX.current - touchEndX.current;
+    if (Math.abs(diff) > 50) {
+      if (diff > 0) next();
+      else prev();
+    }
+    setIsAutoPlaying(true);
+  };
 
   useEffect(() => {
     if (!isAutoPlaying) return;
@@ -80,7 +128,16 @@ const Gallery = () => {
           onMouseEnter={() => setIsAutoPlaying(false)}
           onMouseLeave={() => setIsAutoPlaying(true)}
         >
-          <div className="overflow-hidden">
+          <div
+            className="overflow-hidden cursor-grab active:cursor-grabbing select-none"
+            onTouchStart={handleTouchStart}
+            onTouchMove={handleTouchMove}
+            onTouchEnd={handleTouchEnd}
+            onMouseDown={handleMouseDown}
+            onMouseMove={handleMouseMove}
+            onMouseUp={handleMouseUp}
+            onMouseLeave={handleMouseUp}
+          >
             <div
               className="flex transition-transform duration-700 ease-out"
               style={{
