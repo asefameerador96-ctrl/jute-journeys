@@ -16,10 +16,11 @@ const Footer = () => (
         <div>
           <h4 className="font-['Monument_Valley'] text-lg font-semibold mb-4">Contact</h4>
           <div className="space-y-2 text-primary-foreground/60 text-sm">
-            <p>Shah Agro Limited</p>
-            <p>Dhaka, Bangladesh</p>
-            <a href="mailto:info@shahagro.com" className="hover:text-accent transition-colors block">
-              info@shahagro.com
+            <p>Level 4 - EMPORI FINANCIAL CENTER</p>
+            <p>Plot-6, Road-93, North Avenue, Gulshan-2</p>
+            <p>Dhaka 1212, Bangladesh</p>
+            <a href="mailto:shahagro.export@abulkhairgroup.com" className="hover:text-accent transition-colors block">
+              shahagro.export@abulkhairgroup.com
             </a>
           </div>
         </div>
