@@ -183,16 +183,31 @@ const ProcessSection = () => {
                 <div className={`flex h-full w-full ${isEven ? 'flex-row' : 'flex-row-reverse'}`}>
                   {/* Image half */}
                   <div className="w-1/2 h-full relative overflow-hidden">
-                    <img
-                      src={stage.image}
-                      alt={stage.title}
-                      className="w-full h-full object-cover"
-                      loading={i < 2 ? 'eager' : 'lazy'}
-                      style={{
-                        transform: `scale(${scale})`,
-                        transition: 'transform 0.1s linear',
-                      }}
-                    />
+                    {stage.video ? (
+                      <video
+                        src={stage.video}
+                        autoPlay
+                        loop
+                        muted
+                        playsInline
+                        className="w-full h-full object-cover"
+                        style={{
+                          transform: `scale(${scale})`,
+                          transition: 'transform 0.1s linear',
+                        }}
+                      />
+                    ) : (
+                      <img
+                        src={stage.image}
+                        alt={stage.title}
+                        className="w-full h-full object-cover"
+                        loading={i < 2 ? 'eager' : 'lazy'}
+                        style={{
+                          transform: `scale(${scale})`,
+                          transition: 'transform 0.1s linear',
+                        }}
+                      />
+                    )}
                   </div>
 
                   {/* Text half */}
