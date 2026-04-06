@@ -35,14 +35,19 @@ const Navbar = () => {
     <nav
       className={`fixed top-0 left-0 w-full z-50 transition-all duration-500 ${
         scrolled
-          ? 'bg-primary/70 backdrop-blur-xl shadow-lg border-b border-primary-foreground/10'
-          : 'bg-primary/20 backdrop-blur-md'
+          ? 'backdrop-blur-xl shadow-lg border-b border-border/30'
+          : 'backdrop-blur-md'
       }`}
+      style={{
+        backgroundColor: scrolled
+          ? 'hsla(80, 20%, 22%, 0.75)'
+          : 'hsla(80, 20%, 22%, 0.25)',
+      }}
     >
       <div className="max-w-7xl mx-auto px-6 py-4 flex items-center justify-between">
         <button onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })} className="flex items-center gap-3">
           <img src={logo} alt="Shah Agro Limited" className="h-10 w-auto" />
-          <span className="font-['Monument_Valley'] text-xl font-bold text-primary-foreground tracking-wide hidden sm:inline">
+          <span className="font-['Monument_Valley'] text-xl font-bold tracking-wide hidden sm:inline text-primary-foreground">
             Shah Agro
           </span>
         </button>
@@ -84,9 +89,10 @@ const Navbar = () => {
 
       {/* Mobile menu */}
       <div
-        className={`md:hidden bg-primary/70 backdrop-blur-xl overflow-hidden transition-all duration-500 ${
+        className={`md:hidden backdrop-blur-xl overflow-hidden transition-all duration-500 ${
           menuOpen ? 'max-h-64 pb-6' : 'max-h-0'
         }`}
+        style={{ backgroundColor: 'hsla(80, 20%, 22%, 0.75)' }}
       >
         {[
           ['process', 'Our Process'],

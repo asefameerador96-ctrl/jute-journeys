@@ -105,9 +105,9 @@ const GlobalReach = () => {
           </span>
           <div className="overflow-hidden mt-4">
             <h2
-              className="font-['Playfair_Display'] text-4xl md:text-6xl font-bold"
+              className="font-['Monument_Valley'] text-4xl md:text-6xl font-bold"
               style={{
-                color: '#2F3E2C',
+                color: '#4F5A3A',
                 opacity: isVisible ? 1 : 0,
                 transform: isVisible ? 'translateY(0)' : 'translateY(100%)',
                 transition: 'all 0.9s cubic-bezier(0.16, 1, 0.3, 1) 0.15s',
@@ -149,7 +149,7 @@ const GlobalReach = () => {
           >
             <div className="px-6 py-4 shadow-lg" style={{ backgroundColor: COLORS.cardBg }}>
               <h3
-                className="font-['Playfair_Display'] text-lg uppercase tracking-wide font-semibold"
+                className="font-['Monument_Valley'] text-lg uppercase tracking-wide font-semibold"
                 style={{ color: COLORS.cardText }}
               >
                 {activeCountry.name}
