@@ -1,5 +1,4 @@
-import { useState, useCallback, useMemo, useRef } from 'react';
-import { useScrollAnimation } from '@/hooks/useScrollAnimation';
+import { useState, useCallback, useMemo, useRef, useEffect } from 'react';
 import {
   ComposableMap,
   Geographies,
@@ -31,17 +30,29 @@ const COLORS = {
   bg: '#F3EDE7',
   activeOlive: '#809055',
   mutedOlive: '#B7B8A2',
-  border: '#B7B8A2',
+  oliveBorder: '#B7B8A2',
   land: '#F3EDE7',
   cardBg: '#809055',
   cardText: '#F3EDE7',
 };
 
 const GlobalReach = () => {
-  const { ref: sectionRef, isVisible } = useScrollAnimation({ threshold: 0.1 });
+  const sectionRef = useRef<HTMLDivElement>(null);
+  const mapWrapperRef = useRef<HTMLDivElement>(null);
   const [activeCountry, setActiveCountry] = useState<{ name: string; item: string } | null>(null);
   const [tooltipPos, setTooltipPos] = useState({ x: 0, y: 0 });
-  const mapWrapperRef = useRef<HTMLDivElement>(null);
+  const [isVisible, setIsVisible] = useState(false);
+
+  useEffect(() => {
+    const el = sectionRef.current;
+    if (!el) return;
+    const observer = new IntersectionObserver(
+      ([entry]) => { if (entry.isIntersecting) { setIsVisible(true); observer.disconnect(); } },
+      { threshold: 0.05 }
+    );
+    observer.observe(el);
+    return () => observer.disconnect();
+  }, []);
 
   const handleMouseEnter = useCallback((geoId: string) => {
     const country = EXPORT_COUNTRIES[geoId];
@@ -159,13 +170,16 @@ const GlobalReach = () => {
                   const isExport = exportIds.has(geoId);
                   const isActive = activeCountry?.name === EXPORT_COUNTRIES[geoId]?.name;
 
+                  // Non-export: background color fill, olive-green border
+                  // Export (inactive): muted olive fill
+                  // Export (active/hovered): darker olive fill
                   const fillColor = isActive
                     ? COLORS.activeOlive
                     : isExport
                       ? COLORS.mutedOlive
-                      : COLORS.land;
+                      : COLORS.bg;
 
-                  const strokeColor = isExport ? COLORS.activeOlive : COLORS.border;
+                  const strokeColor = COLORS.oliveBorder;
 
                   return (
                     <Geography
@@ -185,20 +199,20 @@ const GlobalReach = () => {
                         default: {
                           fill: fillColor,
                           stroke: strokeColor,
-                          strokeWidth: isExport ? 0.6 : 0.3,
+                          strokeWidth: 0.4,
                           outline: 'none',
                           transition: 'fill 0.3s ease',
                           cursor: isExport ? 'pointer' : 'default',
                         },
                         hover: {
-                          fill: isExport ? COLORS.activeOlive : COLORS.land,
+                          fill: isExport ? COLORS.activeOlive : COLORS.bg,
                           stroke: strokeColor,
-                          strokeWidth: isExport ? 0.8 : 0.3,
+                          strokeWidth: isExport ? 0.6 : 0.4,
                           outline: 'none',
                           cursor: isExport ? 'pointer' : 'default',
                         },
                         pressed: {
-                          fill: isExport ? COLORS.activeOlive : COLORS.land,
+                          fill: isExport ? COLORS.activeOlive : COLORS.bg,
                           outline: 'none',
                         },
                       }}
