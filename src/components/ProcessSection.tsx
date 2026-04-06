@@ -29,6 +29,7 @@ const stages = [
   },
   {
     image: C5,
+    video: CuringVideo,
     title: 'Curing & Retting',
     slug: '/journey/curing-retting',
     description:
