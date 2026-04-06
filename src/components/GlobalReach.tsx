@@ -155,13 +155,13 @@ const GlobalReach = () => {
           </div>
         )}
 
-        <div className="w-full" style={{ aspectRatio: '2 / 1', minHeight: '400px', maxHeight: '700px' }}>
+        <div className="w-full" style={{ height: 'clamp(400px, 50vw, 700px)' }}>
           <ComposableMap
             projection="geoMercator"
             projectionConfig={{ scale: 140, center: [30, 20] }}
             width={900}
             height={450}
-            style={{ width: '100%', height: '100%' }}
+            style={{ width: '100%', height: '100%', display: 'block' }}
           >
             <Geographies geography={GEO_URL}>
               {({ geographies }) =>
