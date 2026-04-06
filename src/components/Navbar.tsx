@@ -38,7 +38,7 @@ const Navbar = () => {
       <div className="max-w-7xl mx-auto px-6 py-4 flex items-center justify-between">
         <button onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })} className="flex items-center gap-3">
           <img src={logo} alt="Shah Agro Limited" className="h-10 w-auto" />
-          <span className="font-['Monument_Valley'] text-2xl font-extrabold tracking-wider hidden sm:inline text-primary-foreground drop-shadow-md">
+          <span className="font-['Monument_Valley'] text-2xl font-extrabold tracking-wider hidden sm:inline text-[hsl(30,25%,93%)] drop-shadow-md">
             Shah Agro
           </span>
         </button>
@@ -53,7 +53,7 @@ const Navbar = () => {
             <button
               key={id}
               onClick={() => scrollTo(id)}
-              className="font-['Monument_Valley'] text-lg font-extrabold tracking-widest uppercase px-5 py-2 rounded-lg backdrop-blur-xl border border-primary-foreground/20 text-primary-foreground hover:bg-primary-foreground/15 transition-all duration-300"
+              className="font-['Monument_Valley'] text-lg font-extrabold tracking-widest uppercase px-5 py-2 rounded-lg backdrop-blur-xl border border-[hsla(30,25%,93%,0.2)] text-[hsl(30,25%,93%)] hover:bg-[hsla(30,25%,93%,0.15)] transition-all duration-300"
               style={{ backgroundColor: 'hsla(80, 20%, 22%, 0.3)' }}
             >
               {label}
@@ -61,14 +61,14 @@ const Navbar = () => {
           ))}
           <button
             onClick={goToAbout}
-            className="font-['Monument_Valley'] text-lg font-extrabold tracking-widest uppercase px-5 py-2 rounded-lg backdrop-blur-xl border border-primary-foreground/20 text-primary-foreground hover:bg-primary-foreground/15 transition-all duration-300"
+            className="font-['Monument_Valley'] text-lg font-extrabold tracking-widest uppercase px-5 py-2 rounded-lg backdrop-blur-xl border border-[hsla(30,25%,93%,0.2)] text-[hsl(30,25%,93%)] hover:bg-[hsla(30,25%,93%,0.15)] transition-all duration-300"
             style={{ backgroundColor: 'hsla(80, 20%, 22%, 0.3)' }}
           >
             About Us
           </button>
           <button
             onClick={toggleTheme}
-            className="px-3 py-2 rounded-lg backdrop-blur-xl border border-primary-foreground/20 text-primary-foreground hover:bg-primary-foreground/15 transition-all duration-300"
+            className="px-3 py-2 rounded-lg backdrop-blur-xl border border-[hsla(30,25%,93%,0.2)] text-[hsl(30,25%,93%)] hover:bg-[hsla(30,25%,93%,0.15)] transition-all duration-300"
             style={{ backgroundColor: 'hsla(80, 20%, 22%, 0.3)' }}
             aria-label="Toggle dark mode"
           >
@@ -90,9 +90,9 @@ const Navbar = () => {
           onClick={() => setMenuOpen(!menuOpen)}
           aria-label="Toggle menu"
         >
-          <span className={`w-6 h-0.5 bg-primary-foreground transition-transform duration-300 ${menuOpen ? 'rotate-45 translate-y-2' : ''}`} />
-          <span className={`w-6 h-0.5 bg-primary-foreground transition-opacity duration-300 ${menuOpen ? 'opacity-0' : ''}`} />
-          <span className={`w-6 h-0.5 bg-primary-foreground transition-transform duration-300 ${menuOpen ? '-rotate-45 -translate-y-2' : ''}`} />
+          <span className={`w-6 h-0.5 bg-[hsl(30,25%,93%)] transition-transform duration-300 ${menuOpen ? 'rotate-45 translate-y-2' : ''}`} />
+          <span className={`w-6 h-0.5 bg-[hsl(30,25%,93%)] transition-opacity duration-300 ${menuOpen ? 'opacity-0' : ''}`} />
+          <span className={`w-6 h-0.5 bg-[hsl(30,25%,93%)] transition-transform duration-300 ${menuOpen ? '-rotate-45 -translate-y-2' : ''}`} />
         </button>
       </div>
 
@@ -111,7 +111,7 @@ const Navbar = () => {
             <button
               key={id}
               onClick={() => scrollTo(id)}
-              className="font-['Monument_Valley'] text-base font-extrabold tracking-widest uppercase px-5 py-3 rounded-lg backdrop-blur-xl border border-primary-foreground/20 text-primary-foreground hover:bg-primary-foreground/15 transition-all duration-300 text-left"
+              className="font-['Monument_Valley'] text-base font-extrabold tracking-widest uppercase px-5 py-3 rounded-lg backdrop-blur-xl border border-[hsla(30,25%,93%,0.2)] text-[hsl(30,25%,93%)] hover:bg-[hsla(30,25%,93%,0.15)] transition-all duration-300 text-left"
               style={{ backgroundColor: 'hsla(80, 20%, 22%, 0.4)' }}
             >
               {label}
@@ -119,14 +119,14 @@ const Navbar = () => {
           ))}
           <button
             onClick={goToAbout}
-            className="font-['Monument_Valley'] text-base font-extrabold tracking-widest uppercase px-5 py-3 rounded-lg backdrop-blur-xl border border-primary-foreground/20 text-primary-foreground hover:bg-primary-foreground/15 transition-all duration-300 text-left"
+            className="font-['Monument_Valley'] text-base font-extrabold tracking-widest uppercase px-5 py-3 rounded-lg backdrop-blur-xl border border-[hsla(30,25%,93%,0.2)] text-[hsl(30,25%,93%)] hover:bg-[hsla(30,25%,93%,0.15)] transition-all duration-300 text-left"
             style={{ backgroundColor: 'hsla(80, 20%, 22%, 0.4)' }}
           >
             About Us
           </button>
           <button
             onClick={toggleTheme}
-            className="flex items-center gap-2 font-['Monument_Valley'] text-base font-extrabold tracking-widest uppercase px-5 py-3 rounded-lg backdrop-blur-xl border border-primary-foreground/20 text-primary-foreground hover:bg-primary-foreground/15 transition-all duration-300 text-left"
+            className="flex items-center gap-2 font-['Monument_Valley'] text-base font-extrabold tracking-widest uppercase px-5 py-3 rounded-lg backdrop-blur-xl border border-[hsla(30,25%,93%,0.2)] text-[hsl(30,25%,93%)] hover:bg-[hsla(30,25%,93%,0.15)] transition-all duration-300 text-left"
             style={{ backgroundColor: 'hsla(80, 20%, 22%, 0.4)' }}
           >
             {isDark ? '☀️ Light' : '🌙 Dark'}
