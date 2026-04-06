@@ -1,6 +1,6 @@
 import { useScrollAnimation } from '@/hooks/useScrollAnimation';
 import ScrollTextReveal from '@/components/ScrollTextReveal';
-import { useState, useEffect, useCallback, useRef } from 'react';
+import { useRef, useEffect, useState } from 'react';
 import T6 from '@/assets/T6.png';
 import T7 from '@/assets/T7.png';
 import T8 from '@/assets/T8.png';
@@ -23,80 +23,49 @@ const images = [
 
 const Gallery = () => {
   const { ref: headingRef, isVisible: headingVisible } = useScrollAnimation({ threshold: 0.3 });
-  const { ref: galleryRef, isVisible: galleryVisible } = useScrollAnimation({ threshold: 0.1 });
-  const [current, setCurrent] = useState(0);
-  const [isAutoPlaying, setIsAutoPlaying] = useState(true);
-
-  const slidesPerView = typeof window !== 'undefined' && window.innerWidth < 768 ? 1 : 3;
-  const maxIndex = Math.max(0, images.length - slidesPerView);
-
-  // Touch/swipe support
-  const touchStartX = useRef(0);
-  const touchEndX = useRef(0);
-  const isDragging = useRef(false);
-
-  const next = useCallback(() => {
-    setCurrent((prev) => (prev >= maxIndex ? 0 : prev + 1));
-  }, [maxIndex]);
-
-  const prev = useCallback(() => {
-    setCurrent((prev) => (prev <= 0 ? maxIndex : prev - 1));
-  }, [maxIndex]);
-
-  const handleTouchStart = (e: React.TouchEvent) => {
-    touchStartX.current = e.touches[0].clientX;
-    isDragging.current = true;
-    setIsAutoPlaying(false);
-  };
-
-  const handleTouchMove = (e: React.TouchEvent) => {
-    touchEndX.current = e.touches[0].clientX;
-  };
-
-  const handleTouchEnd = () => {
-    if (!isDragging.current) return;
-    isDragging.current = false;
-    const diff = touchStartX.current - touchEndX.current;
-    if (Math.abs(diff) > 50) {
-      if (diff > 0) next();
-      else prev();
-    }
-    setIsAutoPlaying(true);
-  };
-
-  // Mouse drag support
-  const handleMouseDown = (e: React.MouseEvent) => {
-    touchStartX.current = e.clientX;
-    isDragging.current = true;
-    setIsAutoPlaying(false);
-  };
-
-  const handleMouseMove = (e: React.MouseEvent) => {
-    if (isDragging.current) touchEndX.current = e.clientX;
-  };
-
-  const handleMouseUp = () => {
-    if (!isDragging.current) return;
-    isDragging.current = false;
-    const diff = touchStartX.current - touchEndX.current;
-    if (Math.abs(diff) > 50) {
-      if (diff > 0) next();
-      else prev();
-    }
-    setIsAutoPlaying(true);
-  };
+  const sectionRef = useRef<HTMLDivElement>(null);
+  const trackRef = useRef<HTMLDivElement>(null);
+  const [translateX, setTranslateX] = useState(0);
 
   useEffect(() => {
-    if (!isAutoPlaying) return;
-    const interval = setInterval(next, 3500);
-    return () => clearInterval(interval);
-  }, [isAutoPlaying, next]);
+    const section = sectionRef.current;
+    const track = trackRef.current;
+    if (!section || !track) return;
+
+    const handleScroll = () => {
+      const rect = section.getBoundingClientRect();
+      const sectionHeight = section.offsetHeight;
+      const windowHeight = window.innerHeight;
+
+      // Calculate how far through the sticky section we've scrolled
+      // The section is tall (300vh), and the content is sticky
+      // Progress goes from 0 to 1 as we scroll through
+      const scrollableDistance = sectionHeight - windowHeight;
+      const scrolled = -rect.top;
+      const progress = Math.max(0, Math.min(1, scrolled / scrollableDistance));
+
+      // Calculate max translate: total track width minus viewport
+      const trackWidth = track.scrollWidth;
+      const viewportWidth = window.innerWidth;
+      const maxTranslate = Math.max(0, trackWidth - viewportWidth);
+
+      setTranslateX(progress * maxTranslate);
+    };
+
+    window.addEventListener('scroll', handleScroll, { passive: true });
+    handleScroll();
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, []);
 
   return (
-    <section className="py-28 md:py-40 bg-background overflow-hidden">
-      <div className="max-w-7xl mx-auto px-6">
+    <section
+      ref={sectionRef}
+      className="relative bg-background"
+      style={{ height: '300vh' }}
+    >
+      <div className="sticky top-0 h-screen flex flex-col justify-center overflow-hidden">
         {/* Heading */}
-        <div ref={headingRef} className="text-center mb-16 md:mb-24 overflow-hidden">
+        <div ref={headingRef} className="text-center mb-12 md:mb-16 px-6 overflow-hidden">
           <ScrollTextReveal
             text="Visual Stories"
             className="text-accent text-sm tracking-[0.3em] uppercase font-medium"
@@ -116,91 +85,44 @@ const Gallery = () => {
           />
         </div>
 
-        {/* Carousel */}
-        <div
-          ref={galleryRef}
-          className="relative"
-          style={{
-            opacity: galleryVisible ? 1 : 0,
-            transform: galleryVisible ? 'translateY(0)' : 'translateY(40px)',
-            transition: 'all 0.8s cubic-bezier(0.16, 1, 0.3, 1) 0.2s',
-          }}
-          onMouseEnter={() => setIsAutoPlaying(false)}
-          onMouseLeave={() => setIsAutoPlaying(true)}
-        >
+        {/* Scroll-driven track */}
+        <div className="overflow-hidden">
           <div
-            className="overflow-hidden cursor-grab active:cursor-grabbing select-none"
-            onTouchStart={handleTouchStart}
-            onTouchMove={handleTouchMove}
-            onTouchEnd={handleTouchEnd}
-            onMouseDown={handleMouseDown}
-            onMouseMove={handleMouseMove}
-            onMouseUp={handleMouseUp}
-            onMouseLeave={handleMouseUp}
+            ref={trackRef}
+            className="flex gap-4 md:gap-6 pl-6 pr-6 will-change-transform"
+            style={{
+              transform: `translateX(-${translateX}px)`,
+            }}
           >
-            <div
-              className="flex transition-transform duration-700 ease-out"
-              style={{
-                transform: `translateX(-${current * (100 / slidesPerView)}%)`,
-              }}
-            >
-              {images.map((img, i) => (
-                <div
-                  key={i}
-                  className="flex-shrink-0 px-2 md:px-3"
-                  style={{ width: `${100 / slidesPerView}%` }}
-                >
-                  <div className="relative overflow-hidden rounded-sm group cursor-pointer">
-                    <img
-                      src={img.src}
-                      alt={img.alt}
-                      className="w-full aspect-[4/3] object-cover transition-transform duration-700 ease-out group-hover:scale-110"
-                      loading="lazy"
-                    />
-                    <div className="absolute inset-0 bg-primary/0 group-hover:bg-primary/30 transition-colors duration-500" />
-                    <div className="absolute bottom-0 left-0 right-0 p-4 translate-y-full group-hover:translate-y-0 transition-transform duration-500">
-                      <p className="text-primary-foreground text-sm tracking-wider">{img.alt}</p>
-                    </div>
+            {images.map((img, i) => (
+              <div
+                key={i}
+                className="flex-shrink-0 w-[80vw] md:w-[30vw]"
+              >
+                <div className="relative overflow-hidden rounded-sm group cursor-pointer">
+                  <img
+                    src={img.src}
+                    alt={img.alt}
+                    className="w-full aspect-[4/3] object-cover transition-transform duration-700 ease-out group-hover:scale-110"
+                    loading="lazy"
+                  />
+                  <div className="absolute inset-0 bg-primary/0 group-hover:bg-primary/30 transition-colors duration-500" />
+                  <div className="absolute bottom-0 left-0 right-0 p-4 translate-y-full group-hover:translate-y-0 transition-transform duration-500">
+                    <p className="text-primary-foreground text-sm tracking-wider">{img.alt}</p>
                   </div>
                 </div>
-              ))}
-            </div>
-          </div>
-
-          {/* Nav arrows */}
-          <button
-            onClick={prev}
-            className="absolute left-0 top-1/2 -translate-y-1/2 -translate-x-2 md:-translate-x-6 w-12 h-12 flex items-center justify-center hover:bg-accent transition-all duration-300 rounded-full"
-            style={{ backgroundColor: 'hsla(80, 20%, 29%, 0.8)', color: '#F3EDE7' }}
-            aria-label="Previous"
-          >
-            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-              <path d="M15 18l-6-6 6-6" />
-            </svg>
-          </button>
-          <button
-            onClick={next}
-            className="absolute right-0 top-1/2 -translate-y-1/2 translate-x-2 md:translate-x-6 w-12 h-12 flex items-center justify-center hover:bg-accent transition-all duration-300 rounded-full"
-            style={{ backgroundColor: 'hsla(80, 20%, 29%, 0.8)', color: '#F3EDE7' }}
-            aria-label="Next"
-          >
-            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-              <path d="M9 18l6-6-6-6" />
-            </svg>
-          </button>
-
-          {/* Dots */}
-          <div className="flex justify-center gap-2 mt-8">
-            {Array.from({ length: maxIndex + 1 }).map((_, i) => (
-              <button
-                key={i}
-                onClick={() => setCurrent(i)}
-                className={`h-1.5 rounded-full transition-all duration-500 ${
-                  current === i ? 'bg-accent w-8' : 'bg-primary/20 w-1.5'
-                }`}
-                aria-label={`Go to slide ${i + 1}`}
-              />
+              </div>
             ))}
+          </div>
+        </div>
+
+        {/* Scroll progress indicator */}
+        <div className="flex justify-center mt-8 px-6">
+          <div className="w-48 h-px bg-primary/10 relative">
+            <div
+              className="absolute top-0 left-0 h-full bg-accent transition-none"
+              style={{ width: `${(translateX / (trackRef.current?.scrollWidth ? trackRef.current.scrollWidth - window.innerWidth : 1)) * 100}%` }}
+            />
           </div>
         </div>
       </div>
