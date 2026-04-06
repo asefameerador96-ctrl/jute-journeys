@@ -128,7 +128,16 @@ const Gallery = () => {
           onMouseEnter={() => setIsAutoPlaying(false)}
           onMouseLeave={() => setIsAutoPlaying(true)}
         >
-          <div className="overflow-hidden">
+          <div
+            className="overflow-hidden cursor-grab active:cursor-grabbing select-none"
+            onTouchStart={handleTouchStart}
+            onTouchMove={handleTouchMove}
+            onTouchEnd={handleTouchEnd}
+            onMouseDown={handleMouseDown}
+            onMouseMove={handleMouseMove}
+            onMouseUp={handleMouseUp}
+            onMouseLeave={handleMouseUp}
+          >
             <div
               className="flex transition-transform duration-700 ease-out"
               style={{
