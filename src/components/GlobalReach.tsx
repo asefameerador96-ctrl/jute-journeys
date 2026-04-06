@@ -3,7 +3,9 @@ import {
   ComposableMap,
   Geographies,
   Geography,
+  Annotation,
 } from 'react-simple-maps';
+import bangladeshFlagMap from '@/assets/bangladesh-flag-map.png';
 
 const GEO_URL = 'https://cdn.jsdelivr.net/npm/world-atlas@2/countries-110m.json';
 
