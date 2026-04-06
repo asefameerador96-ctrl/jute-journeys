@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom';
 import { useScrollAnimation } from '@/hooks/useScrollAnimation';
 import ScrollTextReveal from '@/components/ScrollTextReveal';
 import S5 from '@/assets/S5.png';
+import SeedingVideo from '@/assets/seeding-video.mp4';
 import H3 from '@/assets/H3.png';
 import C5 from '@/assets/C5.png';
 import B3 from '@/assets/B3.png';
