@@ -1,4 +1,4 @@
-import { useState, useCallback, useMemo, useRef, useEffect } from 'react';
+import { useState, useCallback, useRef, useEffect } from 'react';
 import {
   ComposableMap,
   Geographies,
@@ -24,10 +24,11 @@ const EXPORT_LIST = [
   { name: 'Pakistan', item: 'Jute Fiber' },
   { name: 'India', item: 'Raw Jute' },
   { name: 'Nepal', item: 'Jute Products' },
-];
+] as const;
 
-// Build a lookup by name (including aliases)
-const EXPORT_BY_NAME: Record<string, { name: string; item: string }> = {};
+type ExportCountry = { name: string; item: string };
+
+const EXPORT_BY_NAME: Record<string, ExportCountry> = {};
 EXPORT_LIST.forEach((c) => {
   EXPORT_BY_NAME[c.name] = c;
   if ('aliases' in c && (c as any).aliases) {
@@ -44,10 +45,23 @@ const COLORS = {
   cardText: '#F3EDE7',
 };
 
+function getGeoFill(geoName: string, activeCountry: ExportCountry | null): string {
+  const exportData = EXPORT_BY_NAME[geoName];
+  if (!exportData) return COLORS.bg;
+  if (activeCountry?.name === exportData.name) return COLORS.activeOlive;
+  return COLORS.mutedOlive;
+}
+
+function getGeoHoverFill(geoName: string): string {
+  const exportData = EXPORT_BY_NAME[geoName];
+  if (!exportData) return COLORS.bg;
+  return COLORS.activeOlive;
+}
+
 const GlobalReach = () => {
   const sectionRef = useRef<HTMLDivElement>(null);
   const mapWrapperRef = useRef<HTMLDivElement>(null);
-  const [activeCountry, setActiveCountry] = useState<{ name: string; item: string } | null>(null);
+  const [activeCountry, setActiveCountry] = useState<ExportCountry | null>(null);
   const [tooltipPos, setTooltipPos] = useState({ x: 0, y: 0 });
   const [isVisible, setIsVisible] = useState(false);
 
@@ -159,35 +173,38 @@ const GlobalReach = () => {
             <Geographies geography={GEO_URL}>
               {({ geographies }) =>
                 geographies.map((geo) => {
-                  const geoName = geo.properties?.name || '';
-                  const exportData = EXPORT_BY_NAME[geoName];
-                  const isExport = !!exportData;
-                  const isActive = activeCountry?.name === exportData?.name;
-
-                  const fillColor = isActive
-                    ? COLORS.activeOlive
-                    : isExport
-                      ? COLORS.mutedOlive
-                      : COLORS.bg;
+                  const geoName: string = geo.properties?.name ?? '';
+                  const isExport = geoName in EXPORT_BY_NAME;
 
                   return (
-                    <path
+                    <Geography
                       key={geo.rsmKey}
-                      d={geo.svgPath || ''}
-                      fill={fillColor}
+                      geography={geo}
+                      fill={getGeoFill(geoName, activeCountry)}
                       stroke={COLORS.oliveBorder}
                       strokeWidth={0.4}
-                      style={{
-                        outline: 'none',
-                        cursor: isExport ? 'pointer' : 'default',
-                        transition: 'fill 0.25s ease',
+                      onMouseEnter={() => {
+                        const ed = EXPORT_BY_NAME[geoName];
+                        if (ed) setActiveCountry(ed);
                       }}
-                      onMouseEnter={() => { if (exportData) setActiveCountry(exportData); }}
                       onMouseLeave={() => setActiveCountry(null)}
                       onClick={() => {
-                        if (exportData) {
-                          setActiveCountry(activeCountry?.name === exportData.name ? null : exportData);
-                        }
+                        const ed = EXPORT_BY_NAME[geoName];
+                        if (ed) setActiveCountry(activeCountry?.name === ed.name ? null : ed);
+                      }}
+                      style={{
+                        default: {
+                          outline: 'none',
+                          cursor: isExport ? 'pointer' : 'default',
+                        },
+                        hover: {
+                          fill: getGeoHoverFill(geoName),
+                          outline: 'none',
+                          cursor: isExport ? 'pointer' : 'default',
+                        },
+                        pressed: {
+                          outline: 'none',
+                        },
                       }}
                     />
                   );
@@ -223,7 +240,7 @@ const GlobalReach = () => {
                   opacity: isVisible ? 1 : 0,
                   transition: `all 0.5s cubic-bezier(0.16, 1, 0.3, 1) ${0.5 + i * 0.03}s`,
                 }}
-                onMouseEnter={() => setActiveCountry(country)}
+                onMouseEnter={() => setActiveCountry(country as ExportCountry)}
                 onMouseLeave={() => setActiveCountry(null)}
               >
                 {country.name}
