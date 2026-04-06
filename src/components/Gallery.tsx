@@ -121,7 +121,8 @@ const Gallery = () => {
           {/* Nav arrows */}
           <button
             onClick={prev}
-            className="absolute left-0 top-1/2 -translate-y-1/2 -translate-x-2 md:-translate-x-6 w-12 h-12 flex items-center justify-center bg-primary/80 hover:bg-accent text-primary-foreground transition-all duration-300 rounded-full"
+            className="absolute left-0 top-1/2 -translate-y-1/2 -translate-x-2 md:-translate-x-6 w-12 h-12 flex items-center justify-center hover:bg-accent transition-all duration-300 rounded-full"
+            style={{ backgroundColor: 'hsla(80, 20%, 29%, 0.8)', color: '#F3EDE7' }}
             aria-label="Previous"
           >
             <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
@@ -130,7 +131,8 @@ const Gallery = () => {
           </button>
           <button
             onClick={next}
-            className="absolute right-0 top-1/2 -translate-y-1/2 translate-x-2 md:translate-x-6 w-12 h-12 flex items-center justify-center bg-primary/80 hover:bg-accent text-primary-foreground transition-all duration-300 rounded-full"
+            className="absolute right-0 top-1/2 -translate-y-1/2 translate-x-2 md:translate-x-6 w-12 h-12 flex items-center justify-center hover:bg-accent transition-all duration-300 rounded-full"
+            style={{ backgroundColor: 'hsla(80, 20%, 29%, 0.8)', color: '#F3EDE7' }}
             aria-label="Next"
           >
             <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">

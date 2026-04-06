@@ -167,7 +167,7 @@ const ProcessSection = () => {
                   loading={i < 2 ? 'eager' : 'lazy'}
                 />
                 {/* Dark overlay for text readability */}
-                <div className="absolute inset-0 bg-primary/40" />
+                <div className="absolute inset-0" style={{ backgroundColor: 'hsla(80, 20%, 22%, 0.45)' }} />
               </div>
             );
           })}
@@ -208,10 +208,10 @@ const ProcessSection = () => {
                   <span className="text-accent text-xs tracking-[0.3em] uppercase font-medium">
                     {String(i + 1).padStart(2, '0')} / {String(stages.length).padStart(2, '0')}
                   </span>
-                  <h3 className="font-['Monument_Valley'] text-3xl md:text-5xl lg:text-6xl font-bold text-white mt-3 mb-6">
+                  <h3 className="font-['Monument_Valley'] text-3xl md:text-5xl lg:text-6xl font-bold mt-3 mb-6" style={{ color: '#F3EDE7' }}>
                     {stage.title}
                   </h3>
-                  <p className="text-white/80 text-sm md:text-base lg:text-lg leading-relaxed">
+                  <p className="text-sm md:text-base lg:text-lg leading-relaxed" style={{ color: 'hsla(30, 25%, 93%, 0.8)' }}>
                     {stage.description}
                   </p>
                   <div
