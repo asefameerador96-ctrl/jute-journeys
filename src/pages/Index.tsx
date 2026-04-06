@@ -8,6 +8,7 @@ import ProductShowcase from '@/components/ProductShowcase';
 import GlobalReach from '@/components/GlobalReach';
 import Gallery from '@/components/Gallery';
 import Footer from '@/components/Footer';
+import BigBrandFooter from '@/components/BigBrandFooter';
 
 const Index = () => (
   <div className="min-h-screen bg-background">
@@ -22,6 +23,7 @@ const Index = () => (
     <GlobalReach />
     <Gallery />
     <Footer />
+    <BigBrandFooter />
   </div>
 );
 
