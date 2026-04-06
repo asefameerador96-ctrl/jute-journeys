@@ -166,7 +166,7 @@ const GlobalReach = () => {
             <Geographies geography={GEO_URL}>
               {({ geographies }) =>
                 geographies.map((geo) => {
-                  const geoId = String(geo.id);
+                  const geoId = String(geo.id).padStart(3, '0');
                   const isExport = exportIds.has(geoId);
                   const isActive = activeCountry?.name === EXPORT_COUNTRIES[geoId]?.name;
 
