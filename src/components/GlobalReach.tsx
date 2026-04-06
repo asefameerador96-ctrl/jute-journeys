@@ -7,31 +7,39 @@ import {
 
 const GEO_URL = 'https://cdn.jsdelivr.net/npm/world-atlas@2/countries-110m.json';
 
-const EXPORT_COUNTRIES: Record<string, { name: string; item: string }> = {
-  '056': { name: 'Belgium', item: 'Raw Jute' },
-  '276': { name: 'Germany', item: 'Jute Yarn' },
-  '364': { name: 'Iran', item: 'Raw Jute' },
-  '792': { name: 'Turkey', item: 'Jute Products' },
-  '860': { name: 'Uzbekistan', item: 'Raw Jute' },
-  '360': { name: 'Indonesia', item: 'Jute Fiber' },
-  '818': { name: 'Egypt', item: 'Jute Goods' },
-  '400': { name: 'Jordan', item: 'Jute Products' },
-  '682': { name: 'Saudi Arabia', item: 'Jute Bags' },
-  '384': { name: 'Ivory Coast', item: 'Raw Jute' },
-  '729': { name: 'Sudan', item: 'Jute Products' },
-  '504': { name: 'Morocco', item: 'Jute Yarn' },
-  '156': { name: 'China', item: 'Raw Jute' },
-  '586': { name: 'Pakistan', item: 'Jute Fiber' },
-  '356': { name: 'India', item: 'Raw Jute' },
-  '524': { name: 'Nepal', item: 'Jute Products' },
-};
+const EXPORT_LIST = [
+  { name: 'Belgium', item: 'Raw Jute' },
+  { name: 'Germany', item: 'Jute Yarn' },
+  { name: 'Iran', item: 'Raw Jute' },
+  { name: 'Turkey', item: 'Jute Products' },
+  { name: 'Uzbekistan', item: 'Raw Jute' },
+  { name: 'Indonesia', item: 'Jute Fiber' },
+  { name: 'Egypt', item: 'Jute Goods' },
+  { name: 'Jordan', item: 'Jute Products' },
+  { name: 'Saudi Arabia', item: 'Jute Bags' },
+  { name: 'Ivory Coast', item: 'Raw Jute', aliases: ["Côte d'Ivoire"] },
+  { name: 'Sudan', item: 'Jute Products' },
+  { name: 'Morocco', item: 'Jute Yarn' },
+  { name: 'China', item: 'Raw Jute' },
+  { name: 'Pakistan', item: 'Jute Fiber' },
+  { name: 'India', item: 'Raw Jute' },
+  { name: 'Nepal', item: 'Jute Products' },
+];
+
+// Build a lookup by name (including aliases)
+const EXPORT_BY_NAME: Record<string, { name: string; item: string }> = {};
+EXPORT_LIST.forEach((c) => {
+  EXPORT_BY_NAME[c.name] = c;
+  if ('aliases' in c && (c as any).aliases) {
+    (c as any).aliases.forEach((a: string) => { EXPORT_BY_NAME[a] = c; });
+  }
+});
 
 const COLORS = {
   bg: '#F3EDE7',
   activeOlive: '#809055',
   mutedOlive: '#B7B8A2',
   oliveBorder: '#B7B8A2',
-  land: '#F3EDE7',
   cardBg: '#809055',
   cardText: '#F3EDE7',
 };
@@ -54,25 +62,11 @@ const GlobalReach = () => {
     return () => observer.disconnect();
   }, []);
 
-  const handleMouseEnter = useCallback((geoId: string) => {
-    const country = EXPORT_COUNTRIES[geoId];
-    if (country) setActiveCountry(country);
-  }, []);
-
-  const handleMouseLeave = useCallback(() => {
-    setActiveCountry(null);
-  }, []);
-
   const handleMouseMove = useCallback((e: React.MouseEvent) => {
     if (!mapWrapperRef.current) return;
     const rect = mapWrapperRef.current.getBoundingClientRect();
-    setTooltipPos({
-      x: e.clientX - rect.left,
-      y: e.clientY - rect.top,
-    });
+    setTooltipPos({ x: e.clientX - rect.left, y: e.clientY - rect.top });
   }, []);
-
-  const exportIds = useMemo(() => new Set(Object.keys(EXPORT_COUNTRIES)), []);
 
   return (
     <section
@@ -117,7 +111,7 @@ const GlobalReach = () => {
         </div>
       </div>
 
-      {/* Map area */}
+      {/* Map */}
       <div
         ref={mapWrapperRef}
         className="relative w-full"
@@ -128,7 +122,6 @@ const GlobalReach = () => {
           transition: 'all 1s cubic-bezier(0.16, 1, 0.3, 1) 0.3s',
         }}
       >
-        {/* Floating tooltip near cursor */}
         {activeCountry && (
           <div
             className="absolute z-30 pointer-events-none"
@@ -166,9 +159,10 @@ const GlobalReach = () => {
             <Geographies geography={GEO_URL}>
               {({ geographies }) =>
                 geographies.map((geo) => {
-                  const geoId = String(geo.id).padStart(3, '0');
-                  const isExport = exportIds.has(geoId);
-                  const isActive = activeCountry?.name === EXPORT_COUNTRIES[geoId]?.name;
+                  const geoName = geo.properties?.name || '';
+                  const exportData = EXPORT_BY_NAME[geoName];
+                  const isExport = !!exportData;
+                  const isActive = activeCountry?.name === exportData?.name;
 
                   const fillColor = isActive
                     ? COLORS.activeOlive
@@ -180,17 +174,11 @@ const GlobalReach = () => {
                     <Geography
                       key={geo.rsmKey}
                       geography={geo}
-                      fill={fillColor}
-                      stroke={COLORS.oliveBorder}
-                      strokeWidth={0.4}
-                      onMouseEnter={() => handleMouseEnter(geoId)}
-                      onMouseLeave={handleMouseLeave}
+                      onMouseEnter={() => { if (exportData) setActiveCountry(exportData); }}
+                      onMouseLeave={() => setActiveCountry(null)}
                       onClick={() => {
-                        const country = EXPORT_COUNTRIES[geoId];
-                        if (country) {
-                          setActiveCountry(
-                            activeCountry?.name === country.name ? null : country
-                          );
+                        if (exportData) {
+                          setActiveCountry(activeCountry?.name === exportData.name ? null : exportData);
                         }
                       }}
                       style={{
@@ -233,11 +221,11 @@ const GlobalReach = () => {
             transition: 'opacity 0.8s ease 0.6s',
           }}
         >
-          {Object.entries(EXPORT_COUNTRIES).map(([id, country], i) => {
+          {EXPORT_LIST.map((country, i) => {
             const isActive = activeCountry?.name === country.name;
             return (
               <button
-                key={id}
+                key={country.name}
                 className="px-4 py-2 text-[11px] tracking-[0.15em] uppercase font-medium border transition-all duration-300"
                 style={{
                   backgroundColor: isActive ? COLORS.activeOlive : 'transparent',
