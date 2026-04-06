@@ -214,7 +214,7 @@ const GlobalReach = () => {
       </div>
 
       {/* Country tags */}
-      <div className="max-w-7xl mx-auto px-6 pb-28 md:pb-40">
+      <div className="max-w-7xl mx-auto px-6 pb-10 md:pb-14">
         <div
           className="mt-12 flex flex-wrap justify-center gap-3 md:gap-4 max-w-5xl mx-auto"
           style={{
