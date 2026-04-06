@@ -16,9 +16,9 @@ const ProductShowcase = () => {
   const { ref: headingRef, isVisible: headingVisible } = useScrollAnimation({ threshold: 0.5 });
 
   return (
-    <section id="products" className="py-28 md:py-40 bg-background" ref={ref}>
+    <section id="products" className="py-16 md:py-24 bg-background" ref={ref}>
       <div className="max-w-7xl mx-auto px-6">
-        <div ref={headingRef} className="text-center mb-16 md:mb-24 overflow-hidden">
+        <div ref={headingRef} className="text-center mb-10 md:mb-16 overflow-hidden">
           <ScrollTextReveal
             text="What We Export"
             className="text-accent text-sm tracking-[0.3em] uppercase font-medium"

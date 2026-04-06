@@ -91,8 +91,8 @@ const GlobalReach = () => {
       className="relative overflow-hidden"
       style={{ backgroundColor: COLORS.bg }}
     >
-      <div className="max-w-7xl mx-auto px-6 pt-28 md:pt-40 pb-6">
-        <div className="text-center mb-12 md:mb-20">
+      <div className="max-w-7xl mx-auto px-6 pt-16 md:pt-24 pb-6">
+        <div className="text-center mb-8 md:mb-14">
           <ScrollTextReveal
             text="From Bangladesh to World"
             className="text-xs tracking-[0.3em] uppercase font-medium"

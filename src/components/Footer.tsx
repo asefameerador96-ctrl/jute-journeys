@@ -1,7 +1,7 @@
 import logo from '@/assets/logo.png';
 
 const Footer = () => (
-  <footer id="contact" className="py-16 md:py-20" style={{ backgroundColor: 'hsl(80, 20%, 22%)' }}>
+  <footer id="contact" className="py-12 md:py-16" style={{ backgroundColor: 'hsl(80, 20%, 22%)' }}>
     <div className="max-w-7xl mx-auto px-6">
       <div className="grid grid-cols-1 md:grid-cols-3 gap-12 items-start">
         {/* Logo & tagline */}
