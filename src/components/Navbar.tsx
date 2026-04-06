@@ -32,44 +32,35 @@ const Navbar = () => {
   };
 
   return (
-    <nav
-      className={`fixed top-0 left-0 w-full z-50 transition-all duration-500 ${
-        scrolled
-          ? 'backdrop-blur-xl shadow-lg border-b border-border/30'
-          : 'backdrop-blur-md'
-      }`}
-      style={{
-        backgroundColor: scrolled
-          ? 'hsla(80, 20%, 22%, 0.75)'
-          : 'hsla(80, 20%, 22%, 0.25)',
-      }}
-    >
+    <nav className="fixed top-0 left-0 w-full z-50">
       <div className="max-w-7xl mx-auto px-6 py-4 flex items-center justify-between">
         <button onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })} className="flex items-center gap-3">
           <img src={logo} alt="Shah Agro Limited" className="h-10 w-auto" />
-          <span className="font-['Monument_Valley'] text-xl font-bold tracking-wide hidden sm:inline text-primary-foreground">
+          <span className="font-['Monument_Valley'] text-2xl font-extrabold tracking-wider hidden sm:inline text-primary-foreground drop-shadow-md">
             Shah Agro
           </span>
         </button>
 
         {/* Desktop nav */}
-        <div className="hidden md:flex items-center gap-8">
+        <div className="hidden md:flex items-center gap-3">
           {[
-            ['process', 'Our Process'],
+            ['process', 'Our Journey'],
             ['products', 'Products'],
             ['contact', 'Contact'],
           ].map(([id, label]) => (
             <button
               key={id}
               onClick={() => scrollTo(id)}
-              className="text-primary-foreground hover:text-accent transition-colors duration-300 text-base font-bold tracking-widest uppercase"
+              className="font-['Monument_Valley'] text-lg font-extrabold tracking-widest uppercase px-5 py-2 rounded-lg backdrop-blur-xl border border-primary-foreground/20 text-primary-foreground hover:bg-primary-foreground/15 transition-all duration-300"
+              style={{ backgroundColor: 'hsla(80, 20%, 22%, 0.3)' }}
             >
               {label}
             </button>
           ))}
           <button
             onClick={goToAbout}
-            className="text-primary-foreground hover:text-accent transition-colors duration-300 text-base font-bold tracking-widest uppercase"
+            className="font-['Monument_Valley'] text-lg font-extrabold tracking-widest uppercase px-5 py-2 rounded-lg backdrop-blur-xl border border-primary-foreground/20 text-primary-foreground hover:bg-primary-foreground/15 transition-all duration-300"
+            style={{ backgroundColor: 'hsla(80, 20%, 22%, 0.3)' }}
           >
             About Us
           </button>
@@ -89,30 +80,33 @@ const Navbar = () => {
 
       {/* Mobile menu */}
       <div
-        className={`md:hidden backdrop-blur-xl overflow-hidden transition-all duration-500 ${
-          menuOpen ? 'max-h-64 pb-6' : 'max-h-0'
+        className={`md:hidden overflow-hidden transition-all duration-500 px-6 ${
+          menuOpen ? 'max-h-80 pb-4' : 'max-h-0'
         }`}
-        style={{ backgroundColor: 'hsla(80, 20%, 22%, 0.75)' }}
       >
-        {[
-          ['process', 'Our Process'],
-          ['products', 'Products'],
-          ['contact', 'Contact'],
-        ].map(([id, label]) => (
+        <div className="flex flex-col gap-2">
+          {[
+            ['process', 'Our Journey'],
+            ['products', 'Products'],
+            ['contact', 'Contact'],
+          ].map(([id, label]) => (
+            <button
+              key={id}
+              onClick={() => scrollTo(id)}
+              className="font-['Monument_Valley'] text-base font-extrabold tracking-widest uppercase px-5 py-3 rounded-lg backdrop-blur-xl border border-primary-foreground/20 text-primary-foreground hover:bg-primary-foreground/15 transition-all duration-300 text-left"
+              style={{ backgroundColor: 'hsla(80, 20%, 22%, 0.4)' }}
+            >
+              {label}
+            </button>
+          ))}
           <button
-            key={id}
-            onClick={() => scrollTo(id)}
-            className="block w-full text-left px-6 py-3 text-primary-foreground hover:text-accent transition-colors text-base font-bold tracking-widest uppercase"
+            onClick={goToAbout}
+            className="font-['Monument_Valley'] text-base font-extrabold tracking-widest uppercase px-5 py-3 rounded-lg backdrop-blur-xl border border-primary-foreground/20 text-primary-foreground hover:bg-primary-foreground/15 transition-all duration-300 text-left"
+            style={{ backgroundColor: 'hsla(80, 20%, 22%, 0.4)' }}
           >
-            {label}
+            About Us
           </button>
-        ))}
-        <button
-          onClick={goToAbout}
-          className="block w-full text-left px-6 py-3 text-primary-foreground hover:text-accent transition-colors text-base font-bold tracking-widest uppercase"
-        >
-          About Us
-        </button>
+        </div>
       </div>
     </nav>
   );
