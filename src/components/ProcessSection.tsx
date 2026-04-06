@@ -1,4 +1,5 @@
 import { useEffect, useRef, useState, useCallback } from 'react';
+import { Link } from 'react-router-dom';
 import { useScrollAnimation } from '@/hooks/useScrollAnimation';
 import ScrollTextReveal from '@/components/ScrollTextReveal';
 import S5 from '@/assets/S5.png';
@@ -12,36 +13,42 @@ const stages = [
   {
     image: S5,
     title: 'Seeding',
+    slug: '/journey/seeding',
     description:
       'Carefully selected jute seeds are sown across the fertile Ganges Delta, where the tropical climate and rich alluvial soil create ideal growing conditions for the world\'s finest golden fiber.',
   },
   {
     image: H3,
     title: 'Harvesting',
+    slug: '/journey/harvesting',
     description:
       'At peak maturity, jute stalks are hand-harvested by skilled farmers, ensuring each fiber retains its natural luster, strength, and exceptional length — the hallmark of Bangladeshi jute.',
   },
   {
     image: C5,
     title: 'Curing & Retting',
+    slug: '/journey/curing-retting',
     description:
       'The harvested stalks undergo a traditional retting process in slow-moving waterways. This natural curing separates the precious fibers from the woody core, producing soft, workable strands.',
   },
   {
     image: B3,
     title: 'Buying & Grading',
+    slug: '/journey/buying',
     description:
       'Our expert graders meticulously inspect and classify raw jute fibers according to international standards — evaluating strength, color, fineness, and fiber length at every stage.',
   },
   {
     image: M3,
     title: 'Manufacturing',
+    slug: '/journey/manufacturing',
     description:
       'State-of-the-art machinery combined with generations of craftsmanship transforms raw jute fiber into premium yarn, sliver, and finished products — meeting global export specifications.',
   },
   {
     image: Pack2,
     title: 'Packing & Export',
+    slug: '/journey/packing-exporting',
     description:
       'Finished products are precision-packed in export-grade bales and containerized for worldwide shipment. Every bale carries the Shah Agro seal of quality and traceability.',
   },
