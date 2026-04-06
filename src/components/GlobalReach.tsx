@@ -1,15 +1,13 @@
-import { useState, useCallback, useMemo } from 'react';
+import { useState, useCallback, useMemo, useRef } from 'react';
 import { useScrollAnimation } from '@/hooks/useScrollAnimation';
 import {
   ComposableMap,
   Geographies,
   Geography,
-  ZoomableGroup,
 } from 'react-simple-maps';
 
 const GEO_URL = 'https://cdn.jsdelivr.net/npm/world-atlas@2/countries-110m.json';
 
-// ISO 3166-1 numeric codes mapped to export countries
 const EXPORT_COUNTRIES: Record<string, { name: string; item: string }> = {
   '056': { name: 'Belgium', item: 'Raw Jute' },
   '276': { name: 'Germany', item: 'Jute Yarn' },
@@ -33,59 +31,17 @@ const COLORS = {
   bg: '#F3EDE7',
   activeOlive: '#809055',
   mutedOlive: '#B7B8A2',
-  border: '#D5D0C8',
-  land: '#E8E2DA',
+  border: '#B7B8A2',
+  land: '#F3EDE7',
   cardBg: '#809055',
   cardText: '#F3EDE7',
-  water: '#F3EDE7',
 };
-
-const DEFAULT_INFO = { name: 'Bangladesh', item: 'Origin Country' };
-
-const InfoCard = ({ name, item, isDefault }: { name: string; item: string; isDefault: boolean }) => (
-  <div
-    className="absolute top-8 left-8 z-20 transition-all duration-500 ease-out"
-    style={{
-      opacity: 1,
-      transform: 'translateY(0)',
-    }}
-  >
-    <div
-      className="px-8 py-7 min-w-[220px]"
-      style={{
-        backgroundColor: COLORS.cardBg,
-        transition: 'background-color 0.4s ease',
-      }}
-    >
-      <p
-        className="text-[11px] tracking-[0.3em] uppercase mb-1 font-medium"
-        style={{ color: `${COLORS.cardText}99` }}
-      >
-        {isDefault ? 'Origin' : 'Export Destination'}
-      </p>
-      <h3
-        className="font-['Playfair_Display'] text-2xl md:text-3xl uppercase tracking-wide font-semibold leading-tight"
-        style={{ color: COLORS.cardText }}
-      >
-        {name}
-      </h3>
-      <div className="w-10 h-px my-3" style={{ backgroundColor: `${COLORS.cardText}40` }} />
-      <p
-        className="text-xs tracking-[0.2em] uppercase"
-        style={{ color: `${COLORS.cardText}BB` }}
-      >
-        {item}
-      </p>
-    </div>
-  </div>
-);
 
 const GlobalReach = () => {
   const { ref: sectionRef, isVisible } = useScrollAnimation({ threshold: 0.1 });
   const [activeCountry, setActiveCountry] = useState<{ name: string; item: string } | null>(null);
-
-  const info = activeCountry || DEFAULT_INFO;
-  const isDefault = !activeCountry;
+  const [tooltipPos, setTooltipPos] = useState({ x: 0, y: 0 });
+  const mapWrapperRef = useRef<HTMLDivElement>(null);
 
   const handleMouseEnter = useCallback((geoId: string) => {
     const country = EXPORT_COUNTRIES[geoId];
@@ -94,6 +50,15 @@ const GlobalReach = () => {
 
   const handleMouseLeave = useCallback(() => {
     setActiveCountry(null);
+  }, []);
+
+  const handleMouseMove = useCallback((e: React.MouseEvent) => {
+    if (!mapWrapperRef.current) return;
+    const rect = mapWrapperRef.current.getBoundingClientRect();
+    setTooltipPos({
+      x: e.clientX - rect.left,
+      y: e.clientY - rect.top,
+    });
   }, []);
 
   const exportIds = useMemo(() => new Set(Object.keys(EXPORT_COUNTRIES)), []);
@@ -105,7 +70,6 @@ const GlobalReach = () => {
       style={{ backgroundColor: COLORS.bg }}
     >
       <div className="max-w-7xl mx-auto px-6 pt-28 md:pt-40 pb-6">
-        {/* Heading */}
         <div className="text-center mb-12 md:mb-20">
           <span
             className="text-xs tracking-[0.3em] uppercase font-medium inline-block"
@@ -144,22 +108,46 @@ const GlobalReach = () => {
 
       {/* Map area */}
       <div
+        ref={mapWrapperRef}
         className="relative w-full"
+        onMouseMove={handleMouseMove}
         style={{
           opacity: isVisible ? 1 : 0,
           transform: isVisible ? 'translateY(0)' : 'translateY(30px)',
           transition: 'all 1s cubic-bezier(0.16, 1, 0.3, 1) 0.3s',
         }}
       >
-        <InfoCard name={info.name} item={info.item} isDefault={isDefault} />
+        {/* Floating tooltip near cursor */}
+        {activeCountry && (
+          <div
+            className="absolute z-30 pointer-events-none"
+            style={{
+              left: tooltipPos.x + 16,
+              top: tooltipPos.y - 60,
+              transition: 'left 0.08s ease-out, top 0.08s ease-out',
+            }}
+          >
+            <div className="px-6 py-4 shadow-lg" style={{ backgroundColor: COLORS.cardBg }}>
+              <h3
+                className="font-['Playfair_Display'] text-lg uppercase tracking-wide font-semibold"
+                style={{ color: COLORS.cardText }}
+              >
+                {activeCountry.name}
+              </h3>
+              <p
+                className="text-[10px] tracking-[0.2em] uppercase mt-1"
+                style={{ color: `${COLORS.cardText}BB` }}
+              >
+                {activeCountry.item}
+              </p>
+            </div>
+          </div>
+        )}
 
         <div className="w-full" style={{ aspectRatio: '2 / 1', minHeight: '400px', maxHeight: '700px' }}>
           <ComposableMap
             projection="geoMercator"
-            projectionConfig={{
-              scale: 140,
-              center: [30, 20],
-            }}
+            projectionConfig={{ scale: 140, center: [30, 20] }}
             width={900}
             height={450}
             style={{ width: '100%', height: '100%' }}
@@ -171,9 +159,13 @@ const GlobalReach = () => {
                   const isExport = exportIds.has(geoId);
                   const isActive = activeCountry?.name === EXPORT_COUNTRIES[geoId]?.name;
 
-                  let fillColor = COLORS.land;
-                  if (isActive) fillColor = COLORS.activeOlive;
-                  else if (isExport) fillColor = COLORS.mutedOlive;
+                  const fillColor = isActive
+                    ? COLORS.activeOlive
+                    : isExport
+                      ? COLORS.mutedOlive
+                      : COLORS.land;
+
+                  const strokeColor = isExport ? COLORS.activeOlive : COLORS.border;
 
                   return (
                     <Geography
@@ -182,7 +174,6 @@ const GlobalReach = () => {
                       onMouseEnter={() => handleMouseEnter(geoId)}
                       onMouseLeave={handleMouseLeave}
                       onClick={() => {
-                        // Mobile tap support
                         const country = EXPORT_COUNTRIES[geoId];
                         if (country) {
                           setActiveCountry(
@@ -193,16 +184,16 @@ const GlobalReach = () => {
                       style={{
                         default: {
                           fill: fillColor,
-                          stroke: COLORS.border,
-                          strokeWidth: 0.4,
+                          stroke: strokeColor,
+                          strokeWidth: isExport ? 0.6 : 0.3,
                           outline: 'none',
                           transition: 'fill 0.3s ease',
                           cursor: isExport ? 'pointer' : 'default',
                         },
                         hover: {
                           fill: isExport ? COLORS.activeOlive : COLORS.land,
-                          stroke: COLORS.border,
-                          strokeWidth: isExport ? 0.6 : 0.4,
+                          stroke: strokeColor,
+                          strokeWidth: isExport ? 0.8 : 0.3,
                           outline: 'none',
                           cursor: isExport ? 'pointer' : 'default',
                         },
@@ -220,7 +211,7 @@ const GlobalReach = () => {
         </div>
       </div>
 
-      {/* Country list */}
+      {/* Country tags */}
       <div className="max-w-7xl mx-auto px-6 pb-28 md:pb-40">
         <div
           className="mt-12 flex flex-wrap justify-center gap-3 md:gap-4 max-w-5xl mx-auto"
