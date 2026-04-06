@@ -47,9 +47,9 @@ const COLORS = {
 };
 
 function getGeoFill(geoName: string, activeCountry: ExportCountry | null): string {
+  if (geoName === 'Bangladesh') return 'url(#bd-flag)';
   const exportData = EXPORT_BY_NAME[geoName];
   if (!exportData) return COLORS.bg;
-  if (geoName === 'Bangladesh') return 'url(#bd-flag)';
   if (activeCountry?.name === exportData.name) return COLORS.activeOlive;
   return COLORS.mutedOlive;
 }
