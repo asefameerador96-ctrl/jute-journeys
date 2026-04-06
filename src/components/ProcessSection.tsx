@@ -10,6 +10,7 @@ import CuringVideo from '@/assets/curing-retting-video.mp4';
 import B3 from '@/assets/B3.png';
 import M3 from '@/assets/M3.png';
 import Pack2 from '@/assets/Pack2.png';
+import PackingVideo from '@/assets/packing-export-video.mp4';
 
 const stages = [
   {
