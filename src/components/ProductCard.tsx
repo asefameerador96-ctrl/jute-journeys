@@ -1,12 +1,14 @@
 import { useState } from 'react';
+import { Link } from 'react-router-dom';
 
 interface ProductCardProps {
   image: string;
   title: string;
   tagline: string;
+  slug?: string;
 }
 
-const ProductCard = ({ image, title, tagline }: ProductCardProps) => {
+const ProductCard = ({ image, title, tagline, slug }: ProductCardProps) => {
   const [hovered, setHovered] = useState(false);
 
   return (
@@ -35,14 +37,29 @@ const ProductCard = ({ image, title, tagline }: ProductCardProps) => {
           {title}
         </h3>
         <p className="text-muted-foreground text-sm leading-relaxed">{tagline}</p>
-        <div
-          className="mt-4 transition-all duration-500"
-          style={{ opacity: hovered ? 1 : 0, transform: hovered ? 'translateY(0)' : 'translateY(8px)' }}
-        >
-          <span className="text-accent text-xs tracking-[0.25em] uppercase font-medium">
-            View Details →
-          </span>
-        </div>
+        {slug && (
+          <div
+            className="mt-4 transition-all duration-500"
+            style={{ opacity: hovered ? 1 : 0, transform: hovered ? 'translateY(0)' : 'translateY(8px)' }}
+          >
+            <Link
+              to={slug}
+              className="text-accent text-xs tracking-[0.25em] uppercase font-medium hover:text-primary transition-colors duration-300"
+            >
+              Know More →
+            </Link>
+          </div>
+        )}
+        {!slug && (
+          <div
+            className="mt-4 transition-all duration-500"
+            style={{ opacity: hovered ? 1 : 0, transform: hovered ? 'translateY(0)' : 'translateY(8px)' }}
+          >
+            <span className="text-accent text-xs tracking-[0.25em] uppercase font-medium">
+              View Details →
+            </span>
+          </div>
+        )}
       </div>
     </div>
   );

@@ -6,9 +6,9 @@ import SLV5 from '@/assets/SLV5.png';
 import SB2 from '@/assets/SB2.png';
 
 const products = [
-  { image: Y5, title: 'Jute Yarn', tagline: 'Premium-grade yarn spun from the finest raw jute — consistent twist, strength, and luster.' },
-  { image: SLV5, title: 'Jute Sliver', tagline: 'Carefully carded and drawn sliver fibers, ready for spinning into high-quality jute products.' },
-  { image: SB2, title: 'Sacking Bags', tagline: 'Durable, biodegradable sacking bags built for heavy-duty packaging and international export.' },
+  { image: Y5, title: 'Jute Yarn', tagline: 'Premium-grade yarn spun from the finest raw jute — consistent twist, strength, and luster.', slug: '/products/yarn' },
+  { image: SLV5, title: 'Jute Sliver', tagline: 'Carefully carded and drawn sliver fibers, ready for spinning into high-quality jute products.', slug: '/products/sliver' },
+  { image: SB2, title: 'Sacking Bags', tagline: 'Durable, biodegradable sacking bags built for heavy-duty packaging and international export.', slug: '/products/sacking-bag' },
 ];
 
 const ProductShowcase = () => {
