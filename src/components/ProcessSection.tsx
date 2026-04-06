@@ -52,6 +52,7 @@ const stages = [
   },
   {
     image: Pack2,
+    video: PackingVideo,
     title: 'Packing & Export',
     slug: '/journey/packing-exporting',
     description:
