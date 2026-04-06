@@ -30,8 +30,9 @@ const Footer = () => (
           <h4 className="font-['Monument_Valley'] text-lg font-semibold mb-4 text-primary-foreground">Navigate</h4>
           <div className="space-y-2">
             {[
-              ['process', 'Our Process'],
+              ['process', 'Our Journey'],
               ['products', 'Products'],
+              ['contact', 'Contact'],
             ].map(([id, label]) => (
               <button
                 key={id}
@@ -42,6 +43,13 @@ const Footer = () => (
                 {label}
               </button>
             ))}
+            <a
+              href="/about"
+              className="block hover:text-accent transition-colors text-sm"
+              style={{ color: 'hsla(30, 25%, 93%, 0.6)' }}
+            >
+              About Us
+            </a>
           </div>
         </div>
       </div>
