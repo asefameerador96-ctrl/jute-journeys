@@ -171,37 +171,23 @@ const GlobalReach = () => {
                       : COLORS.bg;
 
                   return (
-                    <Geography
+                    <path
                       key={geo.rsmKey}
-                      geography={geo}
+                      d={geo.svgPath || ''}
+                      fill={fillColor}
+                      stroke={COLORS.oliveBorder}
+                      strokeWidth={0.4}
+                      style={{
+                        outline: 'none',
+                        cursor: isExport ? 'pointer' : 'default',
+                        transition: 'fill 0.25s ease',
+                      }}
                       onMouseEnter={() => { if (exportData) setActiveCountry(exportData); }}
                       onMouseLeave={() => setActiveCountry(null)}
                       onClick={() => {
                         if (exportData) {
                           setActiveCountry(activeCountry?.name === exportData.name ? null : exportData);
                         }
-                      }}
-                      style={{
-                        default: {
-                          fill: fillColor,
-                          stroke: COLORS.oliveBorder,
-                          strokeWidth: 0.4,
-                          outline: 'none',
-                          cursor: isExport ? 'pointer' : 'default',
-                        },
-                        hover: {
-                          fill: isExport ? COLORS.activeOlive : COLORS.bg,
-                          stroke: COLORS.oliveBorder,
-                          strokeWidth: 0.4,
-                          outline: 'none',
-                          cursor: isExport ? 'pointer' : 'default',
-                        },
-                        pressed: {
-                          fill: isExport ? COLORS.activeOlive : COLORS.bg,
-                          stroke: COLORS.oliveBorder,
-                          strokeWidth: 0.4,
-                          outline: 'none',
-                        },
                       }}
                     />
                   );
