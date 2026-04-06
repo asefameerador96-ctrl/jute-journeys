@@ -1,4 +1,5 @@
 import { useScrollAnimation } from '@/hooks/useScrollAnimation';
+import ScrollTextReveal from '@/components/ScrollTextReveal';
 import { useState, useEffect, useCallback } from 'react';
 import T6 from '@/assets/T6.png';
 import T7 from '@/assets/T7.png';
@@ -48,27 +49,18 @@ const Gallery = () => {
       <div className="max-w-7xl mx-auto px-6">
         {/* Heading */}
         <div ref={headingRef} className="text-center mb-16 md:mb-24 overflow-hidden">
-          <span
-            className="text-accent text-sm tracking-[0.3em] uppercase font-medium inline-block"
-            style={{
-              opacity: headingVisible ? 1 : 0,
-              transform: headingVisible ? 'translateY(0)' : 'translateY(20px)',
-              transition: 'all 0.7s cubic-bezier(0.16, 1, 0.3, 1)',
-            }}
-          >
-            Visual Stories
-          </span>
+          <ScrollTextReveal
+            text="Visual Stories"
+            className="text-accent text-sm tracking-[0.3em] uppercase font-medium"
+            staggerDelay={25}
+          />
           <div className="overflow-hidden mt-4">
-            <h2
+            <ScrollTextReveal
+              text="Gallery"
               className="font-['Monument_Valley'] text-4xl md:text-6xl font-bold text-primary"
-              style={{
-                opacity: headingVisible ? 1 : 0,
-                transform: headingVisible ? 'translateY(0)' : 'translateY(100%)',
-                transition: 'all 0.9s cubic-bezier(0.16, 1, 0.3, 1) 0.15s',
-              }}
-            >
-              Gallery
-            </h2>
+              staggerDelay={60}
+              threshold={0.2}
+            />
           </div>
           <div
             className="mt-6 mx-auto h-px bg-accent/40 transition-all duration-1000 ease-out"

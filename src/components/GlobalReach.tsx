@@ -1,4 +1,5 @@
 import { useState, useCallback, useRef, useEffect } from 'react';
+import ScrollTextReveal from '@/components/ScrollTextReveal';
 import {
   ComposableMap,
   Geographies,
@@ -92,29 +93,18 @@ const GlobalReach = () => {
     >
       <div className="max-w-7xl mx-auto px-6 pt-28 md:pt-40 pb-6">
         <div className="text-center mb-12 md:mb-20">
-          <span
-            className="text-xs tracking-[0.3em] uppercase font-medium inline-block"
-            style={{
-              color: COLORS.activeOlive,
-              opacity: isVisible ? 1 : 0,
-              transform: isVisible ? 'translateY(0)' : 'translateY(20px)',
-              transition: 'all 0.7s cubic-bezier(0.16, 1, 0.3, 1)',
-            }}
-          >
-            From Bangladesh to World
-          </span>
+          <ScrollTextReveal
+            text="From Bangladesh to World"
+            className="text-xs tracking-[0.3em] uppercase font-medium"
+            staggerDelay={25}
+          />
           <div className="overflow-hidden mt-4">
-            <h2
-              className="font-['Monument_Valley'] text-4xl md:text-6xl font-bold"
-              style={{
-                color: '#4F5A3A',
-                opacity: isVisible ? 1 : 0,
-                transform: isVisible ? 'translateY(0)' : 'translateY(100%)',
-                transition: 'all 0.9s cubic-bezier(0.16, 1, 0.3, 1) 0.15s',
-              }}
-            >
-              Global Reach
-            </h2>
+            <ScrollTextReveal
+              text="Global Reach"
+              className="font-['Monument_Valley'] text-4xl md:text-6xl font-bold text-primary"
+              staggerDelay={50}
+              threshold={0.2}
+            />
           </div>
           <div
             className="mt-6 mx-auto h-px transition-all duration-1000 ease-out"

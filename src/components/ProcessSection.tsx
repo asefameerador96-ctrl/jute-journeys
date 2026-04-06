@@ -1,5 +1,6 @@
 import { useEffect, useRef, useState, useCallback } from 'react';
 import { useScrollAnimation } from '@/hooks/useScrollAnimation';
+import ScrollTextReveal from '@/components/ScrollTextReveal';
 import S5 from '@/assets/S5.png';
 import H3 from '@/assets/H3.png';
 import C5 from '@/assets/C5.png';
@@ -92,27 +93,18 @@ const ProcessSection = () => {
     <section id="process" className="relative bg-background">
       {/* Heading */}
       <div ref={headingRef} className="text-center pt-24 pb-16 px-6 overflow-hidden">
-        <span
-          className="text-accent text-sm tracking-[0.3em] uppercase font-medium inline-block"
-          style={{
-            opacity: headingVisible ? 1 : 0,
-            transform: headingVisible ? 'translateY(0)' : 'translateY(20px)',
-            transition: 'all 0.7s cubic-bezier(0.16, 1, 0.3, 1)',
-          }}
-        >
-          From Seed to Ship
-        </span>
+        <ScrollTextReveal
+          text="From Seed to Ship"
+          className="text-accent text-sm tracking-[0.3em] uppercase font-medium"
+          staggerDelay={25}
+        />
         <div className="overflow-hidden mt-4">
-          <h2
+          <ScrollTextReveal
+            text="Our Journey"
             className="font-['Monument_Valley'] text-4xl md:text-6xl font-bold text-primary"
-            style={{
-              opacity: headingVisible ? 1 : 0,
-              transform: headingVisible ? 'translateY(0)' : 'translateY(100%)',
-              transition: 'all 0.9s cubic-bezier(0.16, 1, 0.3, 1) 0.15s',
-            }}
-          >
-            Our Journey
-          </h2>
+            staggerDelay={50}
+            threshold={0.2}
+          />
         </div>
         <div
           className="mt-6 mx-auto h-px bg-accent/40 transition-all duration-1000 ease-out"

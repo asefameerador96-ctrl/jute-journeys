@@ -1,5 +1,6 @@
 import ProductCard from './ProductCard';
 import { useScrollAnimation } from '@/hooks/useScrollAnimation';
+import ScrollTextReveal from '@/components/ScrollTextReveal';
 import Y5 from '@/assets/Y5.png';
 import SLV5 from '@/assets/SLV5.png';
 import SB2 from '@/assets/SB2.png';
@@ -18,25 +19,18 @@ const ProductShowcase = () => {
     <section id="products" className="py-28 md:py-40 bg-background" ref={ref}>
       <div className="max-w-7xl mx-auto px-6">
         <div ref={headingRef} className="text-center mb-16 md:mb-24 overflow-hidden">
-          <span
-            className="text-accent text-sm tracking-[0.3em] uppercase font-medium inline-block"
-            style={{
-              opacity: headingVisible ? 1 : 0,
-              transform: headingVisible ? 'translateY(0)' : 'translateY(20px)',
-              transition: 'all 0.7s cubic-bezier(0.16, 1, 0.3, 1)',
-            }}
-          >What We Export</span>
+          <ScrollTextReveal
+            text="What We Export"
+            className="text-accent text-sm tracking-[0.3em] uppercase font-medium"
+            staggerDelay={25}
+          />
           <div className="overflow-hidden mt-4">
-            <h2
+            <ScrollTextReveal
+              text="Our Products"
               className="font-['Monument_Valley'] text-4xl md:text-6xl font-bold text-primary"
-              style={{
-                opacity: headingVisible ? 1 : 0,
-                transform: headingVisible ? 'translateY(0)' : 'translateY(100%)',
-                transition: 'all 0.9s cubic-bezier(0.16, 1, 0.3, 1) 0.15s',
-              }}
-            >
-              Our Products
-            </h2>
+              staggerDelay={50}
+              threshold={0.2}
+            />
           </div>
           <div
             className="mt-6 mx-auto h-px bg-accent/40 transition-all duration-1000 ease-out"
