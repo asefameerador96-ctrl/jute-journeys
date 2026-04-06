@@ -13,6 +13,7 @@ import Pack2 from '@/assets/Pack2.png';
 const stages = [
   {
     image: S5,
+    video: SeedingVideo,
     title: 'Seeding',
     slug: '/journey/seeding',
     description:
