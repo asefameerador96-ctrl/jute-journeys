@@ -221,6 +221,13 @@ const ProcessSection = () => {
                         className={`mt-6 h-px bg-accent/60 ${isEven ? '' : 'ml-auto'}`}
                         style={{ width: textOpacity > 0.5 ? '64px' : '0px', transition: 'width 0.6s ease-out' }}
                       />
+                      <Link
+                        to={stage.slug}
+                        className={`inline-flex items-center gap-1 mt-5 text-accent text-xs tracking-[0.2em] uppercase font-medium hover:text-primary transition-colors duration-300 ${isEven ? '' : 'ml-auto'}`}
+                        style={{ display: 'block', textAlign: isEven ? 'left' : 'right' }}
+                      >
+                        Know More →
+                      </Link>
                     </div>
                   </div>
                 </div>
