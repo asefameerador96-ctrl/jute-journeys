@@ -1,5 +1,4 @@
-import { useState, useCallback, useMemo, useRef } from 'react';
-import { useScrollAnimation } from '@/hooks/useScrollAnimation';
+import { useState, useCallback, useRef, useEffect } from 'react';
 import {
   ComposableMap,
   Geographies,
@@ -8,60 +7,80 @@ import {
 
 const GEO_URL = 'https://cdn.jsdelivr.net/npm/world-atlas@2/countries-110m.json';
 
-const EXPORT_COUNTRIES: Record<string, { name: string; item: string }> = {
-  '056': { name: 'Belgium', item: 'Raw Jute' },
-  '276': { name: 'Germany', item: 'Jute Yarn' },
-  '364': { name: 'Iran', item: 'Raw Jute' },
-  '792': { name: 'Turkey', item: 'Jute Products' },
-  '860': { name: 'Uzbekistan', item: 'Raw Jute' },
-  '360': { name: 'Indonesia', item: 'Jute Fiber' },
-  '818': { name: 'Egypt', item: 'Jute Goods' },
-  '400': { name: 'Jordan', item: 'Jute Products' },
-  '682': { name: 'Saudi Arabia', item: 'Jute Bags' },
-  '384': { name: 'Ivory Coast', item: 'Raw Jute' },
-  '729': { name: 'Sudan', item: 'Jute Products' },
-  '504': { name: 'Morocco', item: 'Jute Yarn' },
-  '156': { name: 'China', item: 'Raw Jute' },
-  '586': { name: 'Pakistan', item: 'Jute Fiber' },
-  '356': { name: 'India', item: 'Raw Jute' },
-  '524': { name: 'Nepal', item: 'Jute Products' },
-};
+const EXPORT_LIST = [
+  { name: 'Belgium', item: 'Raw Jute' },
+  { name: 'Germany', item: 'Jute Yarn' },
+  { name: 'Iran', item: 'Raw Jute' },
+  { name: 'Turkey', item: 'Jute Products' },
+  { name: 'Uzbekistan', item: 'Raw Jute' },
+  { name: 'Indonesia', item: 'Jute Fiber' },
+  { name: 'Egypt', item: 'Jute Goods' },
+  { name: 'Jordan', item: 'Jute Products' },
+  { name: 'Saudi Arabia', item: 'Jute Bags' },
+  { name: 'Ivory Coast', item: 'Raw Jute', aliases: ["Côte d'Ivoire"] },
+  { name: 'Sudan', item: 'Jute Products' },
+  { name: 'Morocco', item: 'Jute Yarn' },
+  { name: 'China', item: 'Raw Jute' },
+  { name: 'Pakistan', item: 'Jute Fiber' },
+  { name: 'India', item: 'Raw Jute' },
+  { name: 'Nepal', item: 'Jute Products' },
+] as const;
+
+type ExportCountry = { name: string; item: string };
+
+const EXPORT_BY_NAME: Record<string, ExportCountry> = {};
+EXPORT_LIST.forEach((c) => {
+  EXPORT_BY_NAME[c.name] = c;
+  if ('aliases' in c && (c as any).aliases) {
+    (c as any).aliases.forEach((a: string) => { EXPORT_BY_NAME[a] = c; });
+  }
+});
 
 const COLORS = {
   bg: '#F3EDE7',
   activeOlive: '#809055',
   mutedOlive: '#B7B8A2',
-  border: '#B7B8A2',
-  land: '#F3EDE7',
+  oliveBorder: '#B7B8A2',
   cardBg: '#809055',
   cardText: '#F3EDE7',
 };
 
+function getGeoFill(geoName: string, activeCountry: ExportCountry | null): string {
+  const exportData = EXPORT_BY_NAME[geoName];
+  if (!exportData) return COLORS.bg;
+  if (activeCountry?.name === exportData.name) return COLORS.activeOlive;
+  return COLORS.mutedOlive;
+}
+
+function getGeoHoverFill(geoName: string): string {
+  const exportData = EXPORT_BY_NAME[geoName];
+  if (!exportData) return COLORS.bg;
+  return COLORS.activeOlive;
+}
+
 const GlobalReach = () => {
-  const { ref: sectionRef, isVisible } = useScrollAnimation({ threshold: 0.1 });
-  const [activeCountry, setActiveCountry] = useState<{ name: string; item: string } | null>(null);
-  const [tooltipPos, setTooltipPos] = useState({ x: 0, y: 0 });
+  const sectionRef = useRef<HTMLDivElement>(null);
   const mapWrapperRef = useRef<HTMLDivElement>(null);
+  const [activeCountry, setActiveCountry] = useState<ExportCountry | null>(null);
+  const [tooltipPos, setTooltipPos] = useState({ x: 0, y: 0 });
+  const [isVisible, setIsVisible] = useState(false);
 
-  const handleMouseEnter = useCallback((geoId: string) => {
-    const country = EXPORT_COUNTRIES[geoId];
-    if (country) setActiveCountry(country);
-  }, []);
-
-  const handleMouseLeave = useCallback(() => {
-    setActiveCountry(null);
+  useEffect(() => {
+    const el = sectionRef.current;
+    if (!el) return;
+    const observer = new IntersectionObserver(
+      ([entry]) => { if (entry.isIntersecting) { setIsVisible(true); observer.disconnect(); } },
+      { threshold: 0.05 }
+    );
+    observer.observe(el);
+    return () => observer.disconnect();
   }, []);
 
   const handleMouseMove = useCallback((e: React.MouseEvent) => {
     if (!mapWrapperRef.current) return;
     const rect = mapWrapperRef.current.getBoundingClientRect();
-    setTooltipPos({
-      x: e.clientX - rect.left,
-      y: e.clientY - rect.top,
-    });
+    setTooltipPos({ x: e.clientX - rect.left, y: e.clientY - rect.top });
   }, []);
-
-  const exportIds = useMemo(() => new Set(Object.keys(EXPORT_COUNTRIES)), []);
 
   return (
     <section
@@ -106,7 +125,7 @@ const GlobalReach = () => {
         </div>
       </div>
 
-      {/* Map area */}
+      {/* Map */}
       <div
         ref={mapWrapperRef}
         className="relative w-full"
@@ -117,7 +136,6 @@ const GlobalReach = () => {
           transition: 'all 1s cubic-bezier(0.16, 1, 0.3, 1) 0.3s',
         }}
       >
-        {/* Floating tooltip near cursor */}
         {activeCountry && (
           <div
             className="absolute z-30 pointer-events-none"
@@ -144,61 +162,47 @@ const GlobalReach = () => {
           </div>
         )}
 
-        <div className="w-full" style={{ aspectRatio: '2 / 1', minHeight: '400px', maxHeight: '700px' }}>
+        <div className="w-full" style={{ height: 'clamp(400px, 50vw, 700px)' }}>
           <ComposableMap
             projection="geoMercator"
             projectionConfig={{ scale: 140, center: [30, 20] }}
             width={900}
             height={450}
-            style={{ width: '100%', height: '100%' }}
+            style={{ width: '100%', height: '100%', display: 'block' }}
           >
             <Geographies geography={GEO_URL}>
               {({ geographies }) =>
                 geographies.map((geo) => {
-                  const geoId = geo.id;
-                  const isExport = exportIds.has(geoId);
-                  const isActive = activeCountry?.name === EXPORT_COUNTRIES[geoId]?.name;
-
-                  const fillColor = isActive
-                    ? COLORS.activeOlive
-                    : isExport
-                      ? COLORS.mutedOlive
-                      : COLORS.land;
-
-                  const strokeColor = isExport ? COLORS.activeOlive : COLORS.border;
+                  const geoName: string = geo.properties?.name ?? '';
+                  const isExport = geoName in EXPORT_BY_NAME;
 
                   return (
                     <Geography
                       key={geo.rsmKey}
                       geography={geo}
-                      onMouseEnter={() => handleMouseEnter(geoId)}
-                      onMouseLeave={handleMouseLeave}
+                      fill={getGeoFill(geoName, activeCountry)}
+                      stroke={COLORS.oliveBorder}
+                      strokeWidth={0.4}
+                      onMouseEnter={() => {
+                        const ed = EXPORT_BY_NAME[geoName];
+                        if (ed) setActiveCountry(ed);
+                      }}
+                      onMouseLeave={() => setActiveCountry(null)}
                       onClick={() => {
-                        const country = EXPORT_COUNTRIES[geoId];
-                        if (country) {
-                          setActiveCountry(
-                            activeCountry?.name === country.name ? null : country
-                          );
-                        }
+                        const ed = EXPORT_BY_NAME[geoName];
+                        if (ed) setActiveCountry(activeCountry?.name === ed.name ? null : ed);
                       }}
                       style={{
                         default: {
-                          fill: fillColor,
-                          stroke: strokeColor,
-                          strokeWidth: isExport ? 0.6 : 0.3,
                           outline: 'none',
-                          transition: 'fill 0.3s ease',
                           cursor: isExport ? 'pointer' : 'default',
                         },
                         hover: {
-                          fill: isExport ? COLORS.activeOlive : COLORS.land,
-                          stroke: strokeColor,
-                          strokeWidth: isExport ? 0.8 : 0.3,
+                          fill: getGeoHoverFill(geoName),
                           outline: 'none',
                           cursor: isExport ? 'pointer' : 'default',
                         },
                         pressed: {
-                          fill: isExport ? COLORS.activeOlive : COLORS.land,
                           outline: 'none',
                         },
                       }}
@@ -220,11 +224,11 @@ const GlobalReach = () => {
             transition: 'opacity 0.8s ease 0.6s',
           }}
         >
-          {Object.entries(EXPORT_COUNTRIES).map(([id, country], i) => {
+          {EXPORT_LIST.map((country, i) => {
             const isActive = activeCountry?.name === country.name;
             return (
               <button
-                key={id}
+                key={country.name}
                 className="px-4 py-2 text-[11px] tracking-[0.15em] uppercase font-medium border transition-all duration-300"
                 style={{
                   backgroundColor: isActive ? COLORS.activeOlive : 'transparent',
@@ -236,7 +240,7 @@ const GlobalReach = () => {
                   opacity: isVisible ? 1 : 0,
                   transition: `all 0.5s cubic-bezier(0.16, 1, 0.3, 1) ${0.5 + i * 0.03}s`,
                 }}
-                onMouseEnter={() => setActiveCountry(country)}
+                onMouseEnter={() => setActiveCountry(country as ExportCountry)}
                 onMouseLeave={() => setActiveCountry(null)}
               >
                 {country.name}
