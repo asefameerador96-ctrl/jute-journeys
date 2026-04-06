@@ -6,6 +6,7 @@ import S5 from '@/assets/S5.png';
 import SeedingVideo from '@/assets/seeding-video.mp4';
 import H3 from '@/assets/H3.png';
 import C5 from '@/assets/C5.png';
+import CuringVideo from '@/assets/curing-retting-video.mp4';
 import B3 from '@/assets/B3.png';
 import M3 from '@/assets/M3.png';
 import Pack2 from '@/assets/Pack2.png';
