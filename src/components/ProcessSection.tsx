@@ -60,7 +60,7 @@ const stages = [
   },
 ];
 
-const VH_PER_STAGE = 1.2;
+const VH_PER_STAGE = 1.6;
 
 const ProcessSection = () => {
   const { ref: headingRef, isVisible: headingVisible } = useScrollAnimation({ threshold: 0.3 });
@@ -134,9 +134,12 @@ const ProcessSection = () => {
             const { activeIndex, stageProgress } = scrollState;
             const isEven = i % 2 === 0;
 
-            // Image slide animation
+            // Image slide animation — incoming layer is held below the viewport
+            // until the current stage's text has had time to be read, then slides
+            // up over the last 30% of progress.
+            const HANDOFF_START = 0.7;
             let translateY = 100;
-            let scale = 1.05;
+            let scale = 1.04;
             let layerOpacity = 1;
 
             if (i < activeIndex) {
@@ -144,42 +147,44 @@ const ProcessSection = () => {
               scale = 1 + 0.02 * Math.max(0, 1 - (activeIndex - i) * 0.5);
             } else if (i === activeIndex) {
               translateY = 0;
-              scale = 1.05 - 0.03 * Math.min(stageProgress, 1);
+              scale = 1.04 - 0.02 * Math.min(stageProgress, 1);
             } else if (i === activeIndex + 1) {
-              translateY = 100 - stageProgress * 100;
-              scale = 1.08;
+              const incomingProgress = Math.max(0, (stageProgress - HANDOFF_START) / (1 - HANDOFF_START));
+              translateY = 100 - incomingProgress * 100;
+              scale = 1.05;
             } else {
               translateY = 100;
               layerOpacity = 0;
             }
 
-            // Text animation — only show text when layer is fully in place
+            // Text animation — appears quickly once the image is in place,
+            // stays fully readable for a long plateau, then fades out just as
+            // the next image begins sliding up.
             let textOpacity = 0;
             let textY = 30;
 
             if (i === activeIndex) {
               if (i === 0 && stageProgress < 0.05) {
-                // First stage: show text immediately
                 textOpacity = 1;
                 textY = 0;
               } else {
-                // Text fades in after 15% progress and fades out after 70%
-                const fadeIn = Math.min(1, stageProgress < 0.2 ? stageProgress / 0.2 : 1);
-                const fadeOut = stageProgress > 0.7 ? (stageProgress - 0.7) / 0.3 : 0;
+                const FADE_IN_END = 0.12;
+                const FADE_OUT_START = HANDOFF_START + 0.02;
+                const FADE_OUT_END = FADE_OUT_START + 0.13;
+                const fadeIn = stageProgress < FADE_IN_END ? stageProgress / FADE_IN_END : 1;
+                const fadeOut = stageProgress > FADE_OUT_START
+                  ? Math.min(1, (stageProgress - FADE_OUT_START) / (FADE_OUT_END - FADE_OUT_START))
+                  : 0;
                 textOpacity = fadeIn * (1 - fadeOut);
                 textY = 30 * (1 - fadeIn);
               }
-            } else if (i === activeIndex + 1 && stageProgress > 0.85) {
-              // Next stage text starts fading in only when layer is nearly fully in place
-              const earlyFade = (stageProgress - 0.85) / 0.15;
-              textOpacity = earlyFade * 0.3; // subtle preview
-              textY = 30 * (1 - earlyFade);
             }
 
-            // Text slides in from the opposite side
+            // Text slides in from the opposite side — gentler distance keeps
+            // motion calm while you're reading.
             const textSlideX = isEven
-              ? (1 - textOpacity) * 40
-              : -(1 - textOpacity) * 40;
+              ? (1 - textOpacity) * 24
+              : -(1 - textOpacity) * 24;
 
             return (
               <div
