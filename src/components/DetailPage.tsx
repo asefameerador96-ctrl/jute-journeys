@@ -1,8 +1,18 @@
+import { useEffect, useRef, useState } from 'react';
 import { Link } from 'react-router-dom';
+import Autoplay from 'embla-carousel-autoplay';
 import Navbar from '@/components/Navbar';
 import Footer from '@/components/Footer';
 import BigBrandFooter from '@/components/BigBrandFooter';
 import ScrollProgress from '@/components/ScrollProgress';
+import {
+  Carousel,
+  CarouselApi,
+  CarouselContent,
+  CarouselItem,
+  CarouselNext,
+  CarouselPrevious,
+} from '@/components/ui/carousel';
 import { useScrollAnimation } from '@/hooks/useScrollAnimation';
 import { ChevronLeft } from 'lucide-react';
 
@@ -17,8 +27,20 @@ interface DetailPageProps {
 
 const DetailPage = ({ category, step, headline, description, images, imageAlts }: DetailPageProps) => {
   const { ref: heroRef, isVisible: heroVisible } = useScrollAnimation({ threshold: 0.1 });
-  const { ref: contentRef, isVisible: contentVisible } = useScrollAnimation({ threshold: 0.1 });
-  const { ref: img2Ref, isVisible: img2Visible } = useScrollAnimation({ threshold: 0.1 });
+  const [api, setApi] = useState<CarouselApi>();
+  const [selectedIndex, setSelectedIndex] = useState(0);
+  const autoplayRef = useRef(Autoplay({ delay: 5000, stopOnInteraction: false, stopOnMouseEnter: true }));
+
+  useEffect(() => {
+    if (!api) return;
+    const onSelect = () => setSelectedIndex(api.selectedScrollSnap());
+    onSelect();
+    api.on('select', onSelect);
+    api.on('reInit', onSelect);
+    return () => {
+      api.off('select', onSelect);
+    };
+  }, [api]);
 
   const backLink = category === 'journey' ? '/#process' : '/#products';
   const backLabel = category === 'journey' ? 'Back to Journey' : 'Back to Products';
@@ -44,25 +66,68 @@ const DetailPage = ({ category, step, headline, description, images, imageAlts }
         </nav>
       </div>
 
-      {/* Hero image + headline */}
-      <div ref={heroRef} className="max-w-7xl mx-auto px-6 pb-10">
+      {/* Carousel (left) + headline & description (right) */}
+      <div ref={heroRef} className="max-w-7xl mx-auto px-6 pb-16">
         <div className="grid md:grid-cols-2 gap-8 md:gap-14 items-center">
+          {/* Carousel */}
           <div
-            className="overflow-hidden rounded-sm"
+            className="relative"
             style={{
               opacity: heroVisible ? 1 : 0,
               transform: heroVisible ? 'translateX(0)' : 'translateX(-40px)',
               transition: 'all 0.8s cubic-bezier(0.16, 1, 0.3, 1)',
             }}
           >
-            <img
-              src={images[0]}
-              alt={imageAlts?.[0] || headline}
-              className="w-full h-auto object-cover rounded-sm"
-              loading="eager"
-            />
+            <Carousel
+              setApi={setApi}
+              opts={{ loop: true, align: 'start' }}
+              plugins={[autoplayRef.current]}
+              className="w-full"
+            >
+              <CarouselContent>
+                {images.map((src, i) => (
+                  <CarouselItem key={i}>
+                    <div className="overflow-hidden rounded-sm aspect-[4/3] md:aspect-[5/4]">
+                      <img
+                        src={src}
+                        alt={imageAlts?.[i] || `${headline} ${i + 1}`}
+                        className="w-full h-full object-cover"
+                        loading={i === 0 ? 'eager' : 'lazy'}
+                      />
+                    </div>
+                  </CarouselItem>
+                ))}
+              </CarouselContent>
+              {images.length > 1 && (
+                <>
+                  <CarouselPrevious className="left-3 top-1/2 -translate-y-1/2 bg-background/80 backdrop-blur border-accent/40 hover:bg-background" />
+                  <CarouselNext className="right-3 top-1/2 -translate-y-1/2 bg-background/80 backdrop-blur border-accent/40 hover:bg-background" />
+                </>
+              )}
+            </Carousel>
+
+            {/* Dots */}
+            {images.length > 1 && (
+              <div className="flex justify-center gap-2 mt-4">
+                {images.map((_, i) => (
+                  <button
+                    key={i}
+                    type="button"
+                    aria-label={`Go to slide ${i + 1}`}
+                    onClick={() => api?.scrollTo(i)}
+                    className="h-2 rounded-full transition-all duration-300"
+                    style={{
+                      width: i === selectedIndex ? '24px' : '8px',
+                      backgroundColor:
+                        i === selectedIndex ? 'hsl(var(--accent))' : 'hsla(var(--accent) / 0.3)',
+                    }}
+                  />
+                ))}
+              </div>
+            )}
           </div>
 
+          {/* Text panel */}
           <div
             style={{
               opacity: heroVisible ? 1 : 0,
@@ -79,40 +144,6 @@ const DetailPage = ({ category, step, headline, description, images, imageAlts }
               {headline}
             </h1>
             <div className="h-px w-16 bg-accent/60 mb-6" />
-          </div>
-        </div>
-      </div>
-
-      {/* Description + second image */}
-      <div ref={contentRef} className="max-w-7xl mx-auto px-6 pb-10">
-        <div className="grid md:grid-cols-2 gap-8 md:gap-14 items-center">
-          <div
-            className="md:order-2 overflow-hidden rounded-sm"
-            ref={img2Ref}
-            style={{
-              opacity: img2Visible ? 1 : 0,
-              transform: img2Visible ? 'translateX(0)' : 'translateX(40px)',
-              transition: 'all 0.8s cubic-bezier(0.16, 1, 0.3, 1)',
-            }}
-          >
-            {images[1] ? (
-              <img
-                src={images[1]}
-                alt={imageAlts?.[1] || headline}
-                className="w-full h-auto object-cover rounded-sm"
-                loading="lazy"
-              />
-            ) : null}
-          </div>
-
-          <div
-            className="md:order-1"
-            style={{
-              opacity: contentVisible ? 1 : 0,
-              transform: contentVisible ? 'translateY(0)' : 'translateY(30px)',
-              transition: 'all 0.8s cubic-bezier(0.16, 1, 0.3, 1) 0.1s',
-            }}
-          >
             <p className="text-muted-foreground text-base md:text-lg leading-relaxed max-w-xl">
               {description}
             </p>
