@@ -35,7 +35,7 @@ const StatItem = ({ target, suffix, label, delay }: { target: number; suffix: st
         <div className="mt-6">
           <ScrollTextReveal
             text={label}
-            className="text-muted-foreground text-lg md:text-xl tracking-[0.15em] uppercase font-light"
+            className="text-muted-foreground text-lg md:text-xl tracking-[0.15em] uppercase font-light whitespace-nowrap"
             staggerDelay={20}
           />
         </div>
