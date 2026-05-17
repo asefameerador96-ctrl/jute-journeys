@@ -16,9 +16,11 @@ const Footer = () => (
         <div>
           <h4 className="font-['Monument_Valley'] text-lg font-semibold mb-4 text-primary-foreground">Contact</h4>
           <div className="space-y-2 text-sm" style={{ color: 'hsla(30, 25%, 93%, 0.6)' }}>
+            <p>SHAH AGRO LIMITED</p>
             <p>Level 4 - EMPORI FINANCIAL CENTER</p>
             <p>Plot-6, Road-93, North Avenue, Gulshan-2</p>
             <p>Dhaka 1212, Bangladesh</p>
+            <p>+880 1901-311653</p>
             <a href="mailto:shahagro.export@abulkhairgroup.com" className="hover:text-accent transition-colors block">
               shahagro.export@abulkhairgroup.com
             </a>
