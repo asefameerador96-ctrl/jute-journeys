@@ -34,37 +34,44 @@ const ScrollTextReveal = ({
     return () => observer.disconnect();
   }, [threshold]);
 
-  const letters = useMemo(() => {
-    const chars: { char: string; index: number }[] = [];
+  const words = useMemo(() => {
+    const result: { chars: string[]; startIndex: number }[] = [];
     let idx = 0;
-    for (const char of text) {
-      chars.push({ char, index: idx });
-      if (char !== ' ') idx++;
+    for (const word of text.split(' ')) {
+      if (word.length === 0) continue;
+      result.push({ chars: [...word], startIndex: idx });
+      idx += word.length;
     }
-    return chars;
+    return result;
   }, [text]);
 
   return (
     <div ref={ref} className="inline-block">
       {/* @ts-ignore */}
       <Tag className={className} style={{ display: 'inline' }}>
-        {letters.map((l, i) =>
-          l.char === ' ' ? (
-            <span key={i}>&nbsp;</span>
-          ) : (
-            <span
-              key={i}
-              className="inline-block"
-              style={{
-                opacity: isVisible ? 1 : 0,
-                transform: isVisible ? 'translateY(0)' : 'translateY(100%)',
-                transition: `opacity 0.4s cubic-bezier(0.16, 1, 0.3, 1) ${l.index * staggerDelay}ms, transform 0.5s cubic-bezier(0.16, 1, 0.3, 1) ${l.index * staggerDelay}ms`,
-              }}
-            >
-              {l.char}
+        {words.map((word, wi) => (
+          <span key={wi}>
+            {wi > 0 && ' '}
+            <span className="inline-block whitespace-nowrap">
+              {word.chars.map((char, ci) => {
+                const charIdx = word.startIndex + ci;
+                return (
+                  <span
+                    key={ci}
+                    className="inline-block"
+                    style={{
+                      opacity: isVisible ? 1 : 0,
+                      transform: isVisible ? 'translateY(0)' : 'translateY(100%)',
+                      transition: `opacity 0.4s cubic-bezier(0.16, 1, 0.3, 1) ${charIdx * staggerDelay}ms, transform 0.5s cubic-bezier(0.16, 1, 0.3, 1) ${charIdx * staggerDelay}ms`,
+                    }}
+                  >
+                    {char}
+                  </span>
+                );
+              })}
             </span>
-          )
-        )}
+          </span>
+        ))}
       </Tag>
     </div>
   );
