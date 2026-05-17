@@ -254,7 +254,7 @@ const ProcessSection = () => {
                       <h3 className="font-['Monument_Valley'] text-3xl md:text-4xl lg:text-5xl font-bold mt-3 mb-3 text-primary">
                         {stage.title}
                       </h3>
-                      <p className="text-lg md:text-xl lg:text-2xl font-light text-accent/80 mb-4">
+                      <p className="font-['Monument_Valley'] text-xl md:text-2xl lg:text-3xl font-normal text-accent/80 mb-4">
                         {stage.subtitle}
                       </p>
                       <p className="text-sm md:text-base lg:text-lg leading-relaxed text-muted-foreground">
