@@ -7,7 +7,7 @@ import SeedingVideo from '@/assets/seeding-video.mp4';
 import H3 from '@/assets/H3.png';
 import C5 from '@/assets/C5.png';
 import CuringVideo from '@/assets/curing-retting-video.mp4';
-import B3 from '@/assets/B3.png';
+import B4 from '@/assets/B4.jpeg';
 import M3 from '@/assets/M3.png';
 import Pack2 from '@/assets/Pack2.png';
 import PackingVideo from '@/assets/packing-export-video.mp4';
@@ -40,7 +40,7 @@ const stages = [
       'Expertly retted to enhance softness, durability, and the signature golden finish.',
   },
   {
-    image: B3,
+    image: B4,
     title: 'Buying & Grading',
     subtitle: 'Only the Finest Selected',
     slug: '/journey/buying',
