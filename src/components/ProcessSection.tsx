@@ -17,46 +17,52 @@ const stages = [
     image: S5,
     video: SeedingVideo,
     title: 'Seeding',
+    subtitle: 'Where Quality Takes Root',
     slug: '/journey/seeding',
     description:
-      'Carefully selected jute seeds are sown across the fertile Ganges Delta, where the tropical climate and rich alluvial soil create ideal growing conditions for the world\'s finest golden fiber.',
+      'Carefully cultivated from the finest seeds to ensure superior jute fiber from the very start.',
   },
   {
     image: H3,
     title: 'Harvesting',
+    subtitle: 'Timed to Perfection',
     slug: '/journey/harvesting',
     description:
-      'At peak maturity, jute stalks are hand-harvested by skilled farmers, ensuring each fiber retains its natural luster, strength, and exceptional length — the hallmark of Bangladeshi jute.',
+      'Harvested at peak maturity to preserve strength, consistency, and natural quality.',
   },
   {
     image: C5,
     video: CuringVideo,
     title: 'Curing & Retting',
+    subtitle: 'Refined by Nature',
     slug: '/journey/curing-retting',
     description:
-      'The harvested stalks undergo a traditional retting process in slow-moving waterways. This natural curing separates the precious fibers from the woody core, producing soft, workable strands.',
+      'Expertly retted to enhance softness, durability, and the signature golden finish.',
   },
   {
     image: B3,
     title: 'Buying & Grading',
+    subtitle: 'Only the Finest Selected',
     slug: '/journey/buying',
     description:
-      'Our expert graders meticulously inspect and classify raw jute fibers according to international standards — evaluating strength, color, fineness, and fiber length at every stage.',
+      'Rigorously graded to ensure only the highest quality jute moves forward.',
   },
   {
     image: M3,
     title: 'Manufacturing',
+    subtitle: 'Engineered for Excellence',
     slug: '/journey/manufacturing',
     description:
-      'State-of-the-art machinery combined with generations of craftsmanship transforms raw jute fiber into premium yarn, sliver, and finished products — meeting global export specifications.',
+      'Precision manufacturing transforms raw fiber into world-class jute products.',
   },
   {
     image: Pack2,
     video: PackingVideo,
     title: 'Packing & Export',
+    subtitle: 'Delivered Without Compromise',
     slug: '/journey/packing-exporting',
     description:
-      'Finished products are precision-packed in export-grade bales and containerized for worldwide shipment. Every bale carries the Shah Agro seal of quality and traceability.',
+      'Securely packed and efficiently exported to maintain quality across global markets.',
   },
 ];
 
@@ -245,9 +251,12 @@ const ProcessSection = () => {
                       <span className="text-accent text-xs tracking-[0.3em] uppercase font-medium">
                         {String(i + 1).padStart(2, '0')} / {String(stages.length).padStart(2, '0')}
                       </span>
-                      <h3 className="font-['Monument_Valley'] text-3xl md:text-4xl lg:text-5xl font-bold mt-3 mb-6 text-primary">
+                      <h3 className="font-['Monument_Valley'] text-3xl md:text-4xl lg:text-5xl font-bold mt-3 mb-3 text-primary">
                         {stage.title}
                       </h3>
+                      <p className="text-lg md:text-xl lg:text-2xl font-light text-accent/80 mb-4">
+                        {stage.subtitle}
+                      </p>
                       <p className="text-sm md:text-base lg:text-lg leading-relaxed text-muted-foreground">
                         {stage.description}
                       </p>
