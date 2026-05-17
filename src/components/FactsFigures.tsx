@@ -3,7 +3,7 @@ import { useCountUp } from '@/hooks/useCountUp';
 import ScrollTextReveal from '@/components/ScrollTextReveal';
 
 const stats = [
-  { target: 7, suffix: 'K MT', label: 'Monthly Production Capacity' },
+  { target: 7000, suffix: 'MT', label: 'Monthly Production Capacity' },
   { target: 50, suffix: '', label: 'Countries Worldwide' },
   { target: 200, suffix: '', label: 'Satisfied Clients' },
 ];
