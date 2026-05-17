@@ -95,13 +95,13 @@ const GlobalReach = () => {
         <div className="text-center mb-6 md:mb-10">
           <ScrollTextReveal
             text="From Bangladesh to World"
-            className="text-xs tracking-[0.3em] uppercase font-medium"
+            className="text-xs tracking-[0.3em] uppercase font-medium text-[hsl(80,20%,29%)]"
             staggerDelay={25}
           />
           <div className="overflow-hidden mt-4">
             <ScrollTextReveal
               text="Global Reach"
-              className="font-['Monument_Valley'] text-4xl md:text-6xl font-bold text-primary"
+              className="font-['Monument_Valley'] text-4xl md:text-6xl font-bold text-[hsl(80,20%,29%)]"
               staggerDelay={50}
               threshold={0.2}
             />
