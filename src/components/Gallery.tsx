@@ -1,24 +1,38 @@
 import { useScrollAnimation } from '@/hooks/useScrollAnimation';
 import ScrollTextReveal from '@/components/ScrollTextReveal';
 import { useRef, useEffect, useState } from 'react';
-import T6 from '@/assets/T6.png';
-import T7 from '@/assets/T7.png';
-import T8 from '@/assets/T8.png';
-import S5 from '@/assets/S5.png';
-import H3 from '@/assets/H3.png';
-import C5 from '@/assets/C5.png';
-import M3 from '@/assets/M3.png';
-import Pack2 from '@/assets/Pack2.png';
+import g1 from '@/assets/gallery/g1.png';
+import g2 from '@/assets/gallery/g2.png';
+import g3 from '@/assets/gallery/g3.png';
+import g4 from '@/assets/gallery/g4.png';
+import g5 from '@/assets/gallery/g5.png';
+import g6 from '@/assets/gallery/g6.png';
+import g7 from '@/assets/gallery/g7.png';
+import g8 from '@/assets/gallery/g8.png';
+import g9 from '@/assets/gallery/g9.png';
+import g10 from '@/assets/gallery/g10.png';
+import g11 from '@/assets/gallery/g11.png';
+import g12 from '@/assets/gallery/g12.png';
+import g13 from '@/assets/gallery/g13.png';
+import g14 from '@/assets/gallery/g14.png';
+import g15 from '@/assets/gallery/g15.png';
 
 const images = [
-  { src: T6, alt: 'Jute fields at golden hour' },
-  { src: H3, alt: 'Harvesting jute stalks' },
-  { src: S5, alt: 'Seeding process' },
-  { src: T7, alt: 'Raw jute bales' },
-  { src: C5, alt: 'Curing and retting' },
-  { src: M3, alt: 'Manufacturing facility' },
-  { src: T8, alt: 'Jute fiber close-up' },
-  { src: Pack2, alt: 'Export packing' },
+  { src: g1, alt: 'Shah Agro Limited — Image 1' },
+  { src: g2, alt: 'Shah Agro Limited — Image 2' },
+  { src: g3, alt: 'Shah Agro Limited — Image 3' },
+  { src: g4, alt: 'Shah Agro Limited — Image 4' },
+  { src: g5, alt: 'Shah Agro Limited — Image 5' },
+  { src: g6, alt: 'Shah Agro Limited — Image 6' },
+  { src: g7, alt: 'Shah Agro Limited — Image 7' },
+  { src: g8, alt: 'Shah Agro Limited — Image 8' },
+  { src: g9, alt: 'Shah Agro Limited — Image 9' },
+  { src: g10, alt: 'Shah Agro Limited — Image 10' },
+  { src: g11, alt: 'Shah Agro Limited — Image 11' },
+  { src: g12, alt: 'Shah Agro Limited — Image 12' },
+  { src: g13, alt: 'Shah Agro Limited — Image 13' },
+  { src: g14, alt: 'Shah Agro Limited — Image 14' },
+  { src: g15, alt: 'Shah Agro Limited — Image 15' },
 ];
 
 const Gallery = () => {
