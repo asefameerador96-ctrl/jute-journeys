@@ -8,7 +8,6 @@ import C5 from '@/assets/C5.png';
 import B4 from '@/assets/B4.jpeg';
 import M3 from '@/assets/M3.png';
 import Pack2 from '@/assets/Pack2.png';
-import PackingVideo from '@/assets/packing-export-video.mp4';
 
 const stages = [
   {
@@ -53,7 +52,6 @@ const stages = [
   },
   {
     image: Pack2,
-    video: PackingVideo,
     title: 'Packing & Export',
     subtitle: 'Delivered Without Compromise',
     slug: '/journey/packing-exporting',
@@ -170,11 +168,12 @@ const ProcessSection = () => {
                 textOpacity = 1;
                 textY = 0;
               } else {
+                const isLastStage = i === stages.length - 1;
                 const FADE_IN_END = 0.12;
                 const FADE_OUT_START = HANDOFF_START + 0.02;
                 const FADE_OUT_END = FADE_OUT_START + 0.13;
                 const fadeIn = stageProgress < FADE_IN_END ? stageProgress / FADE_IN_END : 1;
-                const fadeOut = stageProgress > FADE_OUT_START
+                const fadeOut = !isLastStage && stageProgress > FADE_OUT_START
                   ? Math.min(1, (stageProgress - FADE_OUT_START) / (FADE_OUT_END - FADE_OUT_START))
                   : 0;
                 textOpacity = fadeIn * (1 - fadeOut);
