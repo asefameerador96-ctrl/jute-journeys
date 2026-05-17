@@ -137,7 +137,7 @@ const DetailPage = ({ category, step, headline, description, images, imageAlts }
           >
             {step && (
               <span className="text-accent text-xs tracking-[0.3em] uppercase font-medium mb-4 block">
-                {categoryLabel}
+                {step}
               </span>
             )}
             <h1 className="font-['Monument_Valley'] text-3xl md:text-4xl lg:text-5xl font-bold text-primary leading-tight mb-6">
