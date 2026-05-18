@@ -1,6 +1,7 @@
 import { useScrollAnimation } from '@/hooks/useScrollAnimation';
 import ScrollTextReveal from '@/components/ScrollTextReveal';
 import { useRef, useEffect, useState } from 'react';
+import { X, ChevronLeft, ChevronRight } from 'lucide-react';
 import g1 from '@/assets/gallery/g1.png';
 import g2 from '@/assets/gallery/g2.png';
 import g3 from '@/assets/gallery/g3.png';
@@ -40,6 +41,7 @@ const Gallery = () => {
   const sectionRef = useRef<HTMLDivElement>(null);
   const trackRef = useRef<HTMLDivElement>(null);
   const [translateX, setTranslateX] = useState(0);
+  const [lightboxIndex, setLightboxIndex] = useState<number | null>(null);
 
   useEffect(() => {
     const section = sectionRef.current;
@@ -51,14 +53,10 @@ const Gallery = () => {
       const sectionHeight = section.offsetHeight;
       const windowHeight = window.innerHeight;
 
-      // Calculate how far through the sticky section we've scrolled
-      // The section is tall (300vh), and the content is sticky
-      // Progress goes from 0 to 1 as we scroll through
       const scrollableDistance = sectionHeight - windowHeight;
       const scrolled = -rect.top;
       const progress = Math.max(0, Math.min(1, scrolled / scrollableDistance));
 
-      // Calculate max translate: total track width minus viewport
       const trackWidth = track.scrollWidth;
       const viewportWidth = window.innerWidth;
       const maxTranslate = Math.max(0, trackWidth - viewportWidth);
@@ -71,76 +69,165 @@ const Gallery = () => {
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
+  // Lightbox keyboard navigation
+  useEffect(() => {
+    if (lightboxIndex === null) return;
+    const handleKey = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') setLightboxIndex(null);
+      if (e.key === 'ArrowRight') setLightboxIndex((i) => (i === null ? null : (i + 1) % images.length));
+      if (e.key === 'ArrowLeft') setLightboxIndex((i) => (i === null ? null : (i - 1 + images.length) % images.length));
+    };
+    window.addEventListener('keydown', handleKey);
+    // Lock body scroll while lightbox is open
+    const prevOverflow = document.body.style.overflow;
+    document.body.style.overflow = 'hidden';
+    return () => {
+      window.removeEventListener('keydown', handleKey);
+      document.body.style.overflow = prevOverflow;
+    };
+  }, [lightboxIndex]);
+
   return (
-    <section
-      ref={sectionRef}
-      className="relative bg-background"
-      style={{ height: '300vh' }}
-    >
-      <div className="sticky top-0 h-screen flex flex-col justify-center overflow-hidden">
-        {/* Heading */}
-        <div ref={headingRef} className="text-center mb-12 md:mb-16 px-6 overflow-hidden">
-          <ScrollTextReveal
-            text="Visual Stories"
-            className="text-accent text-sm tracking-[0.3em] uppercase font-medium"
-            staggerDelay={25}
-          />
-          <div className="overflow-hidden mt-4">
+    <>
+      <section
+        ref={sectionRef}
+        className="relative bg-background"
+        style={{ height: '300vh' }}
+      >
+        <div className="sticky top-0 h-screen flex flex-col justify-center overflow-hidden">
+          {/* Heading */}
+          <div ref={headingRef} className="text-center mb-8 md:mb-12 px-6 overflow-hidden">
             <ScrollTextReveal
-              text="Gallery"
-              className="font-['Monument_Valley'] text-4xl md:text-6xl font-bold text-primary"
-              staggerDelay={60}
-              threshold={0.2}
+              text="Visual Stories"
+              className="text-accent text-sm tracking-[0.3em] uppercase font-medium"
+              staggerDelay={25}
             />
-          </div>
-          <div
-            className="mt-6 mx-auto h-px bg-accent/40 transition-all duration-1000 ease-out"
-            style={{ width: headingVisible ? '80px' : '0px', transitionDelay: '0.4s' }}
-          />
-        </div>
-
-        {/* Scroll-driven track */}
-        <div className="overflow-hidden">
-          <div
-            ref={trackRef}
-            className="flex gap-4 md:gap-6 pl-6 pr-6 will-change-transform"
-            style={{
-              transform: `translateX(-${translateX}px)`,
-            }}
-          >
-            {images.map((img, i) => (
-              <div
-                key={i}
-                className="flex-shrink-0 w-[80vw] md:w-[30vw]"
-              >
-                <div className="relative overflow-hidden rounded-sm group cursor-pointer">
-                  <img
-                    src={img.src}
-                    alt={img.alt}
-                    className="w-full aspect-[4/3] object-cover transition-transform duration-700 ease-out group-hover:scale-110"
-                    loading="lazy"
-                  />
-                  <div className="absolute inset-0 bg-primary/0 group-hover:bg-primary/30 transition-colors duration-500" />
-                  <div className="absolute bottom-0 left-0 right-0 p-4 translate-y-full group-hover:translate-y-0 transition-transform duration-500">
-                    <p className="text-primary-foreground text-sm tracking-wider">{img.alt}</p>
-                  </div>
-                </div>
-              </div>
-            ))}
-          </div>
-        </div>
-
-        {/* Scroll progress indicator */}
-        <div className="flex justify-center mt-8 px-6">
-          <div className="w-48 h-px bg-primary/10 relative">
+            <div className="overflow-hidden mt-4">
+              <ScrollTextReveal
+                text="Gallery"
+                className="font-['Monument_Valley'] text-4xl md:text-6xl font-bold text-primary"
+                staggerDelay={60}
+                threshold={0.2}
+              />
+            </div>
             <div
-              className="absolute top-0 left-0 h-full bg-accent transition-none"
-              style={{ width: `${(translateX / (trackRef.current?.scrollWidth ? trackRef.current.scrollWidth - window.innerWidth : 1)) * 100}%` }}
+              className="mt-6 mx-auto h-px bg-accent/40 transition-all duration-1000 ease-out"
+              style={{ width: headingVisible ? '80px' : '0px', transitionDelay: '0.4s' }}
             />
           </div>
+
+          {/* Scroll-driven track */}
+          <div className="overflow-hidden">
+            <div
+              ref={trackRef}
+              className="flex gap-4 md:gap-6 pl-6 pr-6 will-change-transform items-center"
+              style={{
+                transform: `translateX(-${translateX}px)`,
+              }}
+            >
+              {images.map((img, i) => (
+                <div
+                  key={i}
+                  className="flex-shrink-0 w-[70vw] md:w-[28vw] lg:w-[24vw]"
+                >
+                  <button
+                    type="button"
+                    onClick={() => setLightboxIndex(i)}
+                    className="relative overflow-hidden rounded-sm group cursor-pointer w-full block bg-primary/5"
+                    aria-label={`View ${img.alt} full size`}
+                  >
+                    <div className="w-full h-[60vh] flex items-center justify-center">
+                      <img
+                        src={img.src}
+                        alt={img.alt}
+                        className="max-w-full max-h-full w-auto h-auto object-contain transition-transform duration-700 ease-out group-hover:scale-105"
+                        loading="lazy"
+                      />
+                    </div>
+                    <div className="absolute inset-0 bg-primary/0 group-hover:bg-primary/20 transition-colors duration-500 pointer-events-none" />
+                    <div className="absolute bottom-0 left-0 right-0 p-4 translate-y-full group-hover:translate-y-0 transition-transform duration-500 bg-gradient-to-t from-primary/80 to-transparent pointer-events-none">
+                      <p className="text-primary-foreground text-sm tracking-wider">Click to view</p>
+                    </div>
+                  </button>
+                </div>
+              ))}
+            </div>
+          </div>
+
+          {/* Scroll progress indicator */}
+          <div className="flex justify-center mt-8 px-6">
+            <div className="w-48 h-px bg-primary/10 relative">
+              <div
+                className="absolute top-0 left-0 h-full bg-accent transition-none"
+                style={{ width: `${(translateX / (trackRef.current?.scrollWidth ? trackRef.current.scrollWidth - window.innerWidth : 1)) * 100}%` }}
+              />
+            </div>
+          </div>
         </div>
-      </div>
-    </section>
+      </section>
+
+      {/* Lightbox */}
+      {lightboxIndex !== null && (
+        <div
+          className="fixed inset-0 z-[100] flex items-center justify-center bg-black/90 backdrop-blur-sm animate-in fade-in duration-300"
+          onClick={() => setLightboxIndex(null)}
+        >
+          {/* Close button */}
+          <button
+            type="button"
+            onClick={() => setLightboxIndex(null)}
+            className="absolute top-6 right-6 z-10 p-3 rounded-full bg-white/10 hover:bg-white/20 text-white transition-colors"
+            aria-label="Close"
+          >
+            <X className="w-6 h-6" />
+          </button>
+
+          {/* Previous */}
+          <button
+            type="button"
+            onClick={(e) => {
+              e.stopPropagation();
+              setLightboxIndex((lightboxIndex - 1 + images.length) % images.length);
+            }}
+            className="absolute left-4 md:left-8 z-10 p-3 rounded-full bg-white/10 hover:bg-white/20 text-white transition-colors"
+            aria-label="Previous image"
+          >
+            <ChevronLeft className="w-6 h-6" />
+          </button>
+
+          {/* Image — 75% of viewport */}
+          <div
+            className="relative flex items-center justify-center"
+            style={{ width: '75vw', height: '75vh' }}
+            onClick={(e) => e.stopPropagation()}
+          >
+            <img
+              src={images[lightboxIndex].src}
+              alt={images[lightboxIndex].alt}
+              className="max-w-full max-h-full w-auto h-auto object-contain rounded-sm shadow-2xl"
+            />
+          </div>
+
+          {/* Next */}
+          <button
+            type="button"
+            onClick={(e) => {
+              e.stopPropagation();
+              setLightboxIndex((lightboxIndex + 1) % images.length);
+            }}
+            className="absolute right-4 md:right-8 z-10 p-3 rounded-full bg-white/10 hover:bg-white/20 text-white transition-colors"
+            aria-label="Next image"
+          >
+            <ChevronRight className="w-6 h-6" />
+          </button>
+
+          {/* Counter */}
+          <div className="absolute bottom-6 left-1/2 -translate-x-1/2 text-white/80 text-sm tracking-widest">
+            {lightboxIndex + 1} / {images.length}
+          </div>
+        </div>
+      )}
+    </>
   );
 };
 

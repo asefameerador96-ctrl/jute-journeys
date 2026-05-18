@@ -36,7 +36,16 @@ const Navbar = () => {
   return (
     <nav className="fixed top-0 left-0 w-full z-50">
       <div className="max-w-7xl mx-auto px-6 py-4 flex items-center justify-between">
-        <button onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })} className="flex items-center gap-3">
+        <button
+          onClick={() => {
+            if (location.pathname !== '/') {
+              navigate('/');
+            } else {
+              window.scrollTo({ top: 0, behavior: 'smooth' });
+            }
+          }}
+          className="flex items-center gap-3"
+        >
           <img src={logo} alt="Shah Agro Limited" className="h-10 w-auto" />
           <span className="font-['Monument_Valley'] text-2xl font-extrabold tracking-wider hidden sm:inline text-black dark:text-white">
             Shah Agro

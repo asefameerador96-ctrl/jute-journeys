@@ -39,7 +39,6 @@ const Footer = () => (
             {[
               ['process', 'Our Journey'],
               ['products', 'Products'],
-              ['contact', 'Contact'],
             ].map(([id, label]) => (
               <button
                 key={id}
