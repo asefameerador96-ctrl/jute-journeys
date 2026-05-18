@@ -21,6 +21,10 @@ export interface DetailPageSpecifications {
   specialty?: string[];
   yarnCountPly?: Record<string, string>;
   grades?: string[];
+  productionRange?: {
+    title: string;
+    items: { label: string; range: string; note?: string }[];
+  };
 }
 
 interface DetailPageProps {
@@ -253,6 +257,37 @@ const DetailPage = ({ category, step, headline, description, images, imageAlts, 
                     <div key={type} className="flex md:flex-row flex-col md:items-center gap-2 md:gap-6 border-b border-accent/20 pb-3 last:border-b-0">
                       <span className="font-semibold text-primary md:min-w-[120px]">{type}</span>
                       <span className="text-muted-foreground">{range}</span>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            )}
+
+            {/* Production Range Section */}
+            {specifications.productionRange && (
+              <div>
+                <h4 className="font-['Monument_Valley'] text-lg md:text-xl font-bold text-primary mb-4">
+                  {specifications.productionRange.title}
+                </h4>
+                <div className="space-y-4">
+                  {specifications.productionRange.items.map((item, i) => (
+                    <div
+                      key={i}
+                      className="flex md:flex-row flex-col md:items-baseline gap-2 md:gap-6 border-b border-accent/20 pb-4 last:border-b-0"
+                    >
+                      <span className="font-semibold text-primary md:min-w-[160px]">
+                        {item.label}
+                      </span>
+                      <div className="flex-1">
+                        <div className="text-primary font-medium text-base md:text-lg">
+                          {item.range}
+                        </div>
+                        {item.note && (
+                          <div className="text-muted-foreground text-xs md:text-sm mt-1 italic">
+                            {item.note}
+                          </div>
+                        )}
+                      </div>
                     </div>
                   ))}
                 </div>
