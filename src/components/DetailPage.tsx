@@ -14,7 +14,13 @@ import {
   CarouselPrevious,
 } from '@/components/ui/carousel';
 import { useScrollAnimation } from '@/hooks/useScrollAnimation';
-import { ChevronLeft } from 'lucide-react';
+import { ChevronLeft, ChevronDown } from 'lucide-react';
+
+export interface DetailPageSpecifications {
+  quality?: { items: string[] };
+  specialty?: string[];
+  yarnCountPly?: Record<string, string>;
+}
 
 interface DetailPageProps {
   category: 'journey' | 'products';
@@ -23,9 +29,11 @@ interface DetailPageProps {
   description: string;
   images: string[];
   imageAlts?: string[];
+  specifications?: DetailPageSpecifications;
 }
 
-const DetailPage = ({ category, step, headline, description, images, imageAlts }: DetailPageProps) => {
+const DetailPage = ({ category, step, headline, description, images, imageAlts, specifications }: DetailPageProps) => {
+  const [specsExpanded, setSpecsExpanded] = useState(false);
   const { ref: heroRef, isVisible: heroVisible } = useScrollAnimation({ threshold: 0.1 });
   const [api, setApi] = useState<CarouselApi>();
   const [selectedIndex, setSelectedIndex] = useState(0);
@@ -146,6 +154,21 @@ const DetailPage = ({ category, step, headline, description, images, imageAlts }
             <div className="h-px w-16 bg-accent/60 mb-6" />
             <p className="text-muted-foreground text-base md:text-lg leading-relaxed max-w-xl">
               {description}
+              {specifications && (
+                <>
+                  {' '}
+                  <button
+                    onClick={() => setSpecsExpanded(!specsExpanded)}
+                    className="inline-flex items-center gap-1 text-accent font-semibold hover:text-primary transition-colors duration-300 cursor-pointer"
+                  >
+                    {specsExpanded ? 'See less' : 'See more'}
+                    <ChevronDown
+                      className="w-4 h-4 transition-transform duration-300"
+                      style={{ transform: specsExpanded ? 'rotate(180deg)' : 'rotate(0deg)' }}
+                    />
+                  </button>
+                </>
+              )}
             </p>
 
             <Link
@@ -158,6 +181,66 @@ const DetailPage = ({ category, step, headline, description, images, imageAlts }
           </div>
         </div>
       </div>
+
+      {/* Expandable specifications panel */}
+      {specifications && specsExpanded && (
+        <div className="max-w-7xl mx-auto px-6 pb-16">
+          <div className="space-y-8 bg-background/50 rounded-lg p-6 md:p-8 border border-accent/20">
+            {/* Quality Section */}
+            {specifications.quality && (
+              <div>
+                <h4 className="font-['Monument_Valley'] text-lg md:text-xl font-bold text-primary mb-4">
+                  Quality
+                </h4>
+                <ul className="space-y-2 text-sm md:text-base text-muted-foreground">
+                  {specifications.quality.items.map((item, i) => (
+                    <li key={i} className="flex items-start gap-3 leading-relaxed">
+                      <span className="text-accent font-bold mt-1">•</span>
+                      <span>{item}</span>
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            )}
+
+            {/* Specialty Section */}
+            {specifications.specialty && (
+              <div>
+                <h4 className="font-['Monument_Valley'] text-lg md:text-xl font-bold text-primary mb-4">
+                  Specialty
+                </h4>
+                <div className="flex flex-wrap gap-2">
+                  {specifications.specialty.map((item, i) => (
+                    <span
+                      key={i}
+                      className="px-4 py-2 bg-accent/10 border border-accent/30 rounded-full text-sm md:text-base text-primary font-medium"
+                    >
+                      {item}
+                    </span>
+                  ))}
+                </div>
+              </div>
+            )}
+
+            {/* Yarn Count & PLY Section */}
+            {specifications.yarnCountPly && (
+              <div>
+                <h4 className="font-['Monument_Valley'] text-lg md:text-xl font-bold text-primary mb-4">
+                  Yarn Count & PLY
+                </h4>
+                <div className="space-y-3 text-sm md:text-base text-muted-foreground">
+                  {Object.entries(specifications.yarnCountPly).map(([type, range]) => (
+                    <div key={type} className="flex md:flex-row flex-col md:items-center gap-2 md:gap-6 border-b border-accent/20 pb-3 last:border-b-0">
+                      <span className="font-semibold text-primary md:min-w-[120px]">{type}</span>
+                      <span className="text-muted-foreground">{range}</span>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            )}
+          </div>
+        </div>
+      )}
 
       <Footer />
       <BigBrandFooter />
