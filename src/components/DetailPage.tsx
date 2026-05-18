@@ -20,6 +20,7 @@ export interface DetailPageSpecifications {
   quality?: { items: string[] };
   specialty?: string[];
   yarnCountPly?: Record<string, string>;
+  grades?: string[];
 }
 
 interface DetailPageProps {
@@ -186,6 +187,25 @@ const DetailPage = ({ category, step, headline, description, images, imageAlts, 
       {specifications && specsExpanded && (
         <div className="max-w-7xl mx-auto px-6 pb-16">
           <div className="space-y-8 bg-background/50 rounded-lg p-6 md:p-8 border border-accent/20">
+            {/* Grades Section */}
+            {specifications.grades && (
+              <div>
+                <h4 className="font-['Monument_Valley'] text-lg md:text-xl font-bold text-primary mb-4">
+                  Available Grades
+                </h4>
+                <div className="flex flex-wrap gap-3">
+                  {specifications.grades.map((grade, i) => (
+                    <span
+                      key={i}
+                      className="px-5 py-2.5 bg-accent/10 border border-accent/40 rounded-md text-sm md:text-base text-primary font-semibold tracking-wider uppercase"
+                    >
+                      {grade}
+                    </span>
+                  ))}
+                </div>
+              </div>
+            )}
+
             {/* Quality Section */}
             {specifications.quality && (
               <div>
