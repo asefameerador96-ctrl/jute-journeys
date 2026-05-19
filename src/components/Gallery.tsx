@@ -128,7 +128,7 @@ const Gallery = () => {
               {images.map((img, i) => (
                 <div
                   key={i}
-                  className="flex-shrink-0 w-[70vw] md:w-[28vw] lg:w-[24vw]"
+                  className="flex-shrink-0 w-[75vw] md:w-[28vw] lg:w-[24vw]"
                 >
                   <button
                     type="button"
@@ -136,7 +136,7 @@ const Gallery = () => {
                     className="relative overflow-hidden rounded-sm group cursor-pointer w-full block bg-primary/5"
                     aria-label={`View ${img.alt} full size`}
                   >
-                    <div className="w-full h-[60vh] flex items-center justify-center">
+                    <div className="w-full h-[45vh] md:h-[60vh] flex items-center justify-center">
                       <img
                         src={img.src}
                         alt={img.alt}
@@ -195,10 +195,9 @@ const Gallery = () => {
             <ChevronLeft className="w-6 h-6" />
           </button>
 
-          {/* Image — 75% of viewport */}
+          {/* Image — 92vw on mobile, 75vw on desktop */}
           <div
-            className="relative flex items-center justify-center"
-            style={{ width: '75vw', height: '75vh' }}
+            className="relative flex items-center justify-center w-[92vw] md:w-[75vw] h-[70vh] md:h-[75vh]"
             onClick={(e) => e.stopPropagation()}
           >
             <img

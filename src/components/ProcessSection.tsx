@@ -197,10 +197,10 @@ const ProcessSection = () => {
                   opacity: layerOpacity,
                 }}
               >
-                {/* Split layout: image on one side, text on other */}
-                <div className={`flex h-full w-full ${isEven ? 'flex-row' : 'flex-row-reverse'}`}>
+                {/* Split layout: stacked on mobile, side-by-side on desktop */}
+                <div className={`flex h-full w-full flex-col ${isEven ? 'md:flex-row' : 'md:flex-row-reverse'}`}>
                   {/* Image half */}
-                  <div className="w-1/2 h-full relative overflow-hidden">
+                  <div className="w-full md:w-1/2 h-1/2 md:h-full relative overflow-hidden">
                     {stage.video ? (
                       <video
                         src={stage.video}
@@ -230,39 +230,39 @@ const ProcessSection = () => {
 
                   {/* Text half */}
                   <div
-                    className="w-1/2 h-full flex items-center bg-background"
+                    className="w-full md:w-1/2 h-1/2 md:h-full flex items-center bg-background"
                     style={{
                       opacity: textOpacity,
                       pointerEvents: textOpacity > 0.3 ? 'auto' : 'none',
                     }}
                   >
                     <div
-                      className={`px-8 md:px-16 lg:px-20 max-w-lg ${isEven ? 'text-left' : 'text-right ml-auto'}`}
+                      className={`px-6 md:px-16 lg:px-20 max-w-lg w-full ${isEven ? 'md:text-left' : 'md:text-right md:ml-auto'}`}
                       style={{
                         transform: `translateY(${textY}px) translateX(${textSlideX}px)`,
                         transition: 'transform 0.1s linear',
                       }}
                     >
-                      <span className="text-accent text-xs tracking-[0.3em] uppercase font-medium">
+                      <span className="text-accent text-[10px] md:text-xs tracking-[0.3em] uppercase font-medium">
                         {String(i + 1).padStart(2, '0')} / {String(stages.length).padStart(2, '0')}
                       </span>
-                      <h3 className="font-['Monument_Valley'] text-3xl md:text-4xl lg:text-5xl font-bold mt-3 mb-3 text-primary">
+                      <h3 className="font-['Monument_Valley'] text-2xl md:text-4xl lg:text-5xl font-bold mt-2 md:mt-3 mb-2 md:mb-3 text-primary">
                         {stage.title}
                       </h3>
-                      <p className="font-['Monument_Valley'] text-xl md:text-2xl lg:text-3xl font-normal text-accent/80 mb-4">
+                      <p className="font-['Monument_Valley'] text-base md:text-2xl lg:text-3xl font-normal text-accent/80 mb-2 md:mb-4">
                         {stage.subtitle}
                       </p>
-                      <p className="text-sm md:text-base lg:text-lg leading-relaxed text-muted-foreground">
+                      <p className="text-xs md:text-base lg:text-lg leading-relaxed text-muted-foreground line-clamp-3 md:line-clamp-none">
                         {stage.description}
                       </p>
                       <div
-                        className={`mt-6 h-px bg-accent/60 ${isEven ? '' : 'ml-auto'}`}
+                        className={`mt-3 md:mt-6 h-px bg-accent/60 ${isEven ? '' : 'md:ml-auto'}`}
                         style={{ width: textOpacity > 0.5 ? '64px' : '0px', transition: 'width 0.6s ease-out' }}
                       />
                       <Link
                         to={stage.slug}
-                        className={`inline-flex items-center gap-1 mt-5 text-accent text-xs tracking-[0.2em] uppercase font-medium hover:text-primary transition-colors duration-300 ${isEven ? '' : 'ml-auto'}`}
-                        style={{ display: 'block', textAlign: isEven ? 'left' : 'right' }}
+                        className={`inline-flex items-center gap-1 mt-3 md:mt-5 text-accent text-xs tracking-[0.2em] uppercase font-medium hover:text-primary transition-colors duration-300 ${isEven ? '' : 'md:ml-auto'}`}
+                        style={{ display: 'block' }}
                       >
                         Know More →
                       </Link>

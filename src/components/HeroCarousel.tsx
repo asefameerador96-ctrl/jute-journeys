@@ -63,16 +63,20 @@ const HeroCarousel = () => {
         );
       })}
 
-      <div className="absolute bottom-8 left-1/2 z-10 flex -translate-x-1/2 gap-3">
+      <div className="absolute bottom-6 md:bottom-8 left-1/2 z-10 flex -translate-x-1/2 gap-3">
         {slides.map((slide, i) => (
           <button
             key={slide.alt}
             onClick={() => goToSlide(i)}
-            className={`h-2 rounded-full transition-all duration-500 ${
-              current === i ? 'bg-accent w-8' : 'bg-primary-foreground/40 w-2'
-            }`}
+            className="flex items-center justify-center min-w-[44px] min-h-[44px] md:min-w-0 md:min-h-0 md:h-2"
             aria-label={`Slide ${i + 1}`}
-          />
+          >
+            <span
+              className={`block h-2 rounded-full transition-all duration-500 ${
+                current === i ? 'bg-accent w-8' : 'bg-primary-foreground/40 w-2'
+              }`}
+            />
+          </button>
         ))}
       </div>
     </section>

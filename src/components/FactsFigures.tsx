@@ -32,10 +32,10 @@ const StatItem = ({ target, suffix, label, delay }: { target: number; suffix: st
           {count}{suffix}
           <span className="text-accent"> +</span>
         </span>
-        <div className="mt-6">
+        <div className="mt-4 md:mt-6">
           <ScrollTextReveal
             text={label}
-            className="text-muted-foreground text-lg md:text-xl tracking-[0.15em] uppercase font-light break-keep"
+            className="text-muted-foreground text-base md:text-xl tracking-[0.1em] md:tracking-[0.15em] uppercase font-light break-keep"
             staggerDelay={20}
           />
         </div>
@@ -52,7 +52,7 @@ const FactsFigures = () => {
       ref={ref}
       className="relative w-full py-10 md:py-14 bg-background overflow-hidden"
     >
-      <div className="max-w-6xl mx-auto px-6 grid grid-cols-1 md:grid-cols-3 gap-12 md:gap-8">
+      <div className="max-w-6xl mx-auto px-6 grid grid-cols-1 md:grid-cols-3 gap-8 md:gap-8">
         {stats.map((stat, i) => (
           <StatItem key={stat.label} {...stat} delay={i * 200} />
         ))}

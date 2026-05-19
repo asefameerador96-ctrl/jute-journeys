@@ -38,7 +38,7 @@ const ProductShowcase = () => {
           />
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-8 md:gap-10">
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 md:gap-10">
           {products.map((product, i) => (
             <div
               key={product.title}
