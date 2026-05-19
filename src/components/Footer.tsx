@@ -1,6 +1,22 @@
+import { Link, useNavigate, useLocation } from 'react-router-dom';
 import logo from '@/assets/logo.png';
 
-const Footer = () => (
+const Footer = () => {
+  const navigate = useNavigate();
+  const location = useLocation();
+
+  const scrollToSection = (id: string) => {
+    if (location.pathname !== '/') {
+      navigate('/');
+      setTimeout(() => {
+        document.getElementById(id)?.scrollIntoView({ behavior: 'smooth' });
+      }, 300);
+    } else {
+      document.getElementById(id)?.scrollIntoView({ behavior: 'smooth' });
+    }
+  };
+
+  return (
   <footer id="contact" className="py-10 md:py-12" style={{ backgroundColor: 'hsl(80, 20%, 22%)' }}>
     <div className="max-w-7xl mx-auto px-6">
       <div className="grid grid-cols-1 md:grid-cols-3 gap-12 items-start">
@@ -42,20 +58,20 @@ const Footer = () => (
             ].map(([id, label]) => (
               <button
                 key={id}
-                onClick={() => document.getElementById(id)?.scrollIntoView({ behavior: 'smooth' })}
-                className="block hover:text-accent transition-colors text-sm"
+                onClick={() => scrollToSection(id)}
+                className="block hover:text-accent transition-colors text-sm text-left"
                 style={{ color: 'hsla(30, 25%, 93%, 0.6)' }}
               >
                 {label}
               </button>
             ))}
-            <a
-              href="/about"
+            <Link
+              to="/about-us"
               className="block hover:text-accent transition-colors text-sm"
               style={{ color: 'hsla(30, 25%, 93%, 0.6)' }}
             >
               About Us
-            </a>
+            </Link>
           </div>
         </div>
       </div>
@@ -70,6 +86,7 @@ const Footer = () => (
       </div>
     </div>
   </footer>
-);
+  );
+};
 
 export default Footer;
