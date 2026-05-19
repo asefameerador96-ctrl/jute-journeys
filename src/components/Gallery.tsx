@@ -145,7 +145,12 @@ const Gallery = () => {
                       />
                     </div>
                     <div className="absolute inset-0 bg-primary/0 group-hover:bg-primary/20 transition-colors duration-500 pointer-events-none" />
-                    <div className="absolute bottom-0 left-0 right-0 p-4 translate-y-full group-hover:translate-y-0 transition-transform duration-500 bg-gradient-to-t from-primary/80 to-transparent pointer-events-none">
+                    {/* Mobile: persistent corner badge so users know it's tappable */}
+                    <div className="md:hidden absolute top-3 right-3 bg-primary/70 backdrop-blur-sm rounded-full px-3 py-1 pointer-events-none">
+                      <p className="text-primary-foreground text-[10px] tracking-wider uppercase">Tap to view</p>
+                    </div>
+                    {/* Desktop: hover-reveal bottom bar */}
+                    <div className="hidden md:block absolute bottom-0 left-0 right-0 p-4 translate-y-full group-hover:translate-y-0 transition-transform duration-500 bg-gradient-to-t from-primary/80 to-transparent pointer-events-none">
                       <p className="text-primary-foreground text-sm tracking-wider">Click to view</p>
                     </div>
                   </button>

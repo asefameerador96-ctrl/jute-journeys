@@ -39,8 +39,7 @@ const ProductCard = ({ image, title, tagline, slug }: ProductCardProps) => {
         <p className="text-muted-foreground text-sm leading-relaxed">{tagline}</p>
         {slug && (
           <div
-            className="mt-4 transition-all duration-500"
-            style={{ opacity: hovered ? 1 : 0, transform: hovered ? 'translateY(0)' : 'translateY(8px)' }}
+            className="mt-4 transition-all duration-500 opacity-100 md:opacity-0 md:group-hover:opacity-100 md:translate-y-2 md:group-hover:translate-y-0"
           >
             <Link
               to={slug}
@@ -52,8 +51,7 @@ const ProductCard = ({ image, title, tagline, slug }: ProductCardProps) => {
         )}
         {!slug && (
           <div
-            className="mt-4 transition-all duration-500"
-            style={{ opacity: hovered ? 1 : 0, transform: hovered ? 'translateY(0)' : 'translateY(8px)' }}
+            className="mt-4 transition-all duration-500 opacity-100 md:opacity-0 md:group-hover:opacity-100 md:translate-y-2 md:group-hover:translate-y-0"
           >
             <span className="text-accent text-xs tracking-[0.25em] uppercase font-medium">
               View Details →
