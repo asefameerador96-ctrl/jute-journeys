@@ -44,5 +44,6 @@ public/         # served as-is at the site root
 
 ## Deployment
 
-The repo was bootstrapped with Lovable. To deploy, run `npm run build` and serve the
-generated `dist/` folder on any static host (Netlify, Vercel, GitHub Pages, etc.).
+To deploy, run `npm run build` and serve the generated `dist/` folder on any
+static host (Vercel, Netlify, GitHub Pages, etc.). The live site is deployed
+to [shahagro.com](https://www.shahagro.com) via Vercel from the `main` branch.
