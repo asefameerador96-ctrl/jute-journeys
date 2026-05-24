@@ -1,12 +1,23 @@
+import wordmarkDark from '@/assets/shah-agro-wordmark-dark.png';
+import wordmarkLight from '@/assets/shah-agro-wordmark-light.png';
+
 const BigBrandFooter = () => (
   <div className="py-6 md:py-10 bg-background overflow-hidden">
-    <div className="text-center px-2">
-      <h2
-        className="font-['Monument_Valley'] text-[14vw] md:text-[10vw] lg:text-[8vw] font-bold leading-none tracking-wider select-none uppercase whitespace-nowrap"
-        style={{ color: 'hsl(80, 20%, 26%)' }}
-      >
-        Shah Agro
-      </h2>
+    <div className="flex justify-center items-center px-4">
+      {/* Light mode: dark olive wordmark on cream bg */}
+      <img
+        src={wordmarkDark}
+        alt="Shah Agro"
+        className="block dark:hidden select-none w-[88vw] md:w-[70vw] lg:w-[60vw] max-w-[1000px] h-auto"
+        draggable={false}
+      />
+      {/* Dark mode: cream wordmark on dark bg */}
+      <img
+        src={wordmarkLight}
+        alt="Shah Agro"
+        className="hidden dark:block select-none w-[88vw] md:w-[70vw] lg:w-[60vw] max-w-[1000px] h-auto"
+        draggable={false}
+      />
     </div>
   </div>
 );
