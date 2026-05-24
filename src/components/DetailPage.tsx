@@ -39,10 +39,21 @@ interface DetailPageProps {
 
 const DetailPage = ({ category, step, headline, description, images, imageAlts, specifications }: DetailPageProps) => {
   const [specsExpanded, setSpecsExpanded] = useState(false);
+  const specsPanelRef = useRef<HTMLDivElement>(null);
   const { ref: heroRef, isVisible: heroVisible } = useScrollAnimation({ threshold: 0.1 });
   const [api, setApi] = useState<CarouselApi>();
   const [selectedIndex, setSelectedIndex] = useState(0);
   const autoplayRef = useRef(Autoplay({ delay: 5000, stopOnInteraction: false, stopOnMouseEnter: true }));
+
+  // Scroll to the specs panel when it expands (after the DOM has rendered)
+  useEffect(() => {
+    if (!specsExpanded || !specsPanelRef.current) return;
+    // Use rAF to wait for the layout to settle, then scroll smoothly
+    const id = requestAnimationFrame(() => {
+      specsPanelRef.current?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    });
+    return () => cancelAnimationFrame(id);
+  }, [specsExpanded]);
 
   useEffect(() => {
     if (!api) return;
@@ -189,7 +200,7 @@ const DetailPage = ({ category, step, headline, description, images, imageAlts, 
 
       {/* Expandable specifications panel */}
       {specifications && specsExpanded && (
-        <div className="max-w-7xl mx-auto px-6 pb-16">
+        <div ref={specsPanelRef} className="max-w-7xl mx-auto px-6 pb-16 scroll-mt-24">
           <div className="space-y-8 bg-background/50 rounded-lg p-6 md:p-8 border border-accent/20">
             {/* Grades Section */}
             {specifications.grades && (
