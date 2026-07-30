@@ -1,0 +1,9 @@
+{
+  "navigationFallback": {
+    "rewrite": "/index.html",
+    "exclude": ["/assets/*", "/fonts/*", "*.{png,jpg,jpeg,gif,svg,ico,mp4,webm,otf,ttf,woff,woff2,txt,xml,json}"]
+  },
+  "mimeTypes": {
+    ".otf": "font/otf"
+  }
+}
