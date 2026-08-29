@@ -1,6 +1,6 @@
 import DetailPage from '@/components/DetailPage';
-import C4 from '@/assets/C4.png';
-import C2 from '@/assets/C2.png';
+import C4 from '@/assets/C4.webp';
+import C2 from '@/assets/C2.webp';
 
 const CuringRetting = () => (
   <DetailPage

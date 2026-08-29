@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from 'react';
-import T6 from '@/assets/T6.png';
-import T8 from '@/assets/T8.png';
+import T6 from '@/assets/T6.webp';
+import T8 from '@/assets/T8.webp';
 
 const ScrollImageReveal = () => {
   const sectionRef = useRef<HTMLDivElement>(null);

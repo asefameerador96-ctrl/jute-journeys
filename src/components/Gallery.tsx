@@ -2,21 +2,21 @@ import { useScrollAnimation } from '@/hooks/useScrollAnimation';
 import ScrollTextReveal from '@/components/ScrollTextReveal';
 import { useRef, useEffect, useState } from 'react';
 import { X, ChevronLeft, ChevronRight } from 'lucide-react';
-import g1 from '@/assets/gallery/g1.png';
-import g2 from '@/assets/gallery/g2.png';
-import g3 from '@/assets/gallery/g3.png';
-import g4 from '@/assets/gallery/g4.png';
-import g5 from '@/assets/gallery/g5.png';
-import g6 from '@/assets/gallery/g6.png';
-import g7 from '@/assets/gallery/g7.png';
-import g8 from '@/assets/gallery/g8.png';
-import g9 from '@/assets/gallery/g9.png';
-import g10 from '@/assets/gallery/g10.png';
-import g11 from '@/assets/gallery/g11.png';
-import g12 from '@/assets/gallery/g12.png';
-import g13 from '@/assets/gallery/g13.png';
-import g14 from '@/assets/gallery/g14.png';
-import g15 from '@/assets/gallery/g15.png';
+import g1 from '@/assets/gallery/g1.webp';
+import g2 from '@/assets/gallery/g2.webp';
+import g3 from '@/assets/gallery/g3.webp';
+import g4 from '@/assets/gallery/g4.webp';
+import g5 from '@/assets/gallery/g5.webp';
+import g6 from '@/assets/gallery/g6.webp';
+import g7 from '@/assets/gallery/g7.webp';
+import g8 from '@/assets/gallery/g8.webp';
+import g9 from '@/assets/gallery/g9.webp';
+import g10 from '@/assets/gallery/g10.webp';
+import g11 from '@/assets/gallery/g11.webp';
+import g12 from '@/assets/gallery/g12.webp';
+import g13 from '@/assets/gallery/g13.webp';
+import g14 from '@/assets/gallery/g14.webp';
+import g15 from '@/assets/gallery/g15.webp';
 
 const images = [
   { src: g1, alt: 'Shah Agro Limited — Image 1' },

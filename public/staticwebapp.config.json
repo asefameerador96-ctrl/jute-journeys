@@ -1,9 +1,42 @@
 {
   "navigationFallback": {
     "rewrite": "/index.html",
-    "exclude": ["/assets/*", "/fonts/*", "*.{png,jpg,jpeg,gif,svg,ico,mp4,webm,otf,ttf,woff,woff2,txt,xml,json}"]
+    "exclude": [
+      "/assets/*",
+      "/fonts/*",
+      "*.{png,jpg,jpeg,gif,webp,avif,svg,ico,mp4,webm,otf,ttf,woff,woff2,txt,xml,json,js,css,map}"
+    ]
   },
   "mimeTypes": {
-    ".otf": "font/otf"
-  }
+    ".otf": "font/otf",
+    ".webp": "image/webp",
+    ".webmanifest": "application/manifest+json"
+  },
+  "globalHeaders": {
+    "X-Content-Type-Options": "nosniff",
+    "Referrer-Policy": "strict-origin-when-cross-origin",
+    "X-Frame-Options": "SAMEORIGIN"
+  },
+  "routes": [
+    {
+      "route": "/assets/*",
+      "headers": {
+        "Cache-Control": "public, max-age=31536000, immutable"
+      }
+    },
+    {
+      "route": "/fonts/*",
+      "headers": {
+        "Cache-Control": "public, max-age=31536000, immutable"
+      }
+    },
+    {
+      "route": "/sitemap.xml",
+      "headers": { "Cache-Control": "public, max-age=3600" }
+    },
+    {
+      "route": "/robots.txt",
+      "headers": { "Cache-Control": "public, max-age=3600" }
+    }
+  ]
 }

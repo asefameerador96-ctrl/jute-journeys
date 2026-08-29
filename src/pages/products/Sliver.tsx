@@ -1,6 +1,6 @@
 import DetailPage from '@/components/DetailPage';
-import SLV3 from '@/assets/SLV3.png';
-import SLV6 from '@/assets/SLV6.png';
+import SLV3 from '@/assets/SLV3.webp';
+import SLV6 from '@/assets/SLV6.webp';
 
 const Sliver = () => (
   <DetailPage

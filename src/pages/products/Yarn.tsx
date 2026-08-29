@@ -1,6 +1,6 @@
 import DetailPage from '@/components/DetailPage';
-import Y6 from '@/assets/Y6.png';
-import Y2 from '@/assets/Y2.png';
+import Y6 from '@/assets/Y6.webp';
+import Y2 from '@/assets/Y2.webp';
 
 const Yarn = () => (
   <DetailPage

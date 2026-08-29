@@ -1,6 +1,6 @@
 import DetailPage from '@/components/DetailPage';
-import M2 from '@/assets/M2.png';
-import M6 from '@/assets/M6.png';
+import M2 from '@/assets/M2.webp';
+import M6 from '@/assets/M6.webp';
 
 const Manufacturing = () => (
   <DetailPage

@@ -1,6 +1,6 @@
 import DetailPage from '@/components/DetailPage';
-import EX1 from '@/assets/EX1.png';
-import Pack3 from '@/assets/Pack3.png';
+import EX1 from '@/assets/EX1.webp';
+import Pack3 from '@/assets/Pack3.webp';
 
 const PackingExporting = () => (
   <DetailPage
