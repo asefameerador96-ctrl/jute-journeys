@@ -92,6 +92,16 @@ for (const route of routes) {
       // explicit loading attribute is eager by default. That front-loaded the whole
       // gallery. Mark everything below the first viewport as lazy so the static HTML
       // requests roughly what the client-rendered page used to.
+      // Vite injects <link rel="modulepreload" as="script"> at runtime when a
+      // dynamic import fires. By snapshot time the lazy chunks for this route have
+      // loaded, so those links end up in the static HTML — and they told every page
+      // to preload the map chunk, which undoes the code splitting entirely. Vite's
+      // own build-time preloads carry no "as" attribute, so only the runtime ones
+      // are removed here.
+      for (const link of document.querySelectorAll('link[rel="modulepreload"][as="script"]')) {
+        link.remove();
+      }
+
       const fold = window.innerHeight;
       for (const img of document.images) {
         const belowFold = img.getBoundingClientRect().top > fold;
