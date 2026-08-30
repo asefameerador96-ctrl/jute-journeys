@@ -1,8 +1,14 @@
 import { useState } from 'react';
 import { Link } from 'react-router-dom';
 
+/** The shape vite-imagetools returns for a "?...&as=picture" import. */
+interface ResponsiveImage {
+  img: { src: string; w: number; h: number };
+  sources: { webp: string };
+}
+
 interface ProductCardProps {
-  image: string;
+  image: ResponsiveImage;
   title: string;
   tagline: string;
   slug?: string;
@@ -25,11 +31,16 @@ const ProductCard = ({ image, title, tagline, slug }: ProductCardProps) => {
     >
       <div className="aspect-[3/4] overflow-hidden">
         <img
-          src={image}
+          src={image.img.src}
+          srcSet={image.sources.webp}
+          sizes="(max-width: 768px) 92vw, 32vw"
+          width={image.img.w}
+          height={image.img.h}
           alt={title}
           className="w-full h-full object-cover transition-transform duration-700"
           style={{ transform: hovered ? 'scale(1.08)' : 'scale(1)' }}
           loading="lazy"
+          decoding="async"
         />
       </div>
       <div className="p-6 text-center">

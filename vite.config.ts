@@ -1,5 +1,6 @@
 import { defineConfig } from "vite";
 import react from "@vitejs/plugin-react-swc";
+import { imagetools } from "vite-imagetools";
 import path from "path";
 
 // https://vitejs.dev/config/
@@ -11,7 +12,10 @@ export default defineConfig(() => ({
       overlay: false,
     },
   },
-  plugins: [react()],
+  // imagetools generates the width variants referenced by "?w=...&as=picture"
+  // imports, so a phone can fetch an image sized for its screen instead of the
+  // full 1920px file.
+  plugins: [react(), imagetools()],
   build: {
     rollupOptions: {
       output: {

@@ -1,9 +1,9 @@
 import ProductCard from './ProductCard';
 import { useScrollAnimation } from '@/hooks/useScrollAnimation';
 import ScrollTextReveal from '@/components/ScrollTextReveal';
-import Y5 from '@/assets/Y5.webp';
-import SLV5 from '@/assets/SLV5.webp';
-import SB2 from '@/assets/SB2.webp';
+import Y5 from '@/assets/Y5.webp?w=480;768;1100&format=webp&quality=72&as=picture';
+import SLV5 from '@/assets/SLV5.webp?w=480;768;1100&format=webp&quality=72&as=picture';
+import SB2 from '@/assets/SB2.webp?w=480;768;1100&format=webp&quality=72&as=picture';
 
 const products = [
   { image: Y5, title: 'Jute Yarn', tagline: 'Premium-grade yarn spun from the finest raw jute — consistent twist, strength, and luster.', slug: '/products/yarn' },

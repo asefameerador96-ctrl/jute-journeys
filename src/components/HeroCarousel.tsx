@@ -1,7 +1,7 @@
 import { useEffect, useState, useCallback } from 'react';
-import T9 from '@/assets/T9.webp';
-import T10 from '@/assets/T10.webp';
-import T11 from '@/assets/T11.webp';
+import T9 from '@/assets/T9.webp?w=768;1280;1800&format=webp&quality=72&as=picture';
+import T10 from '@/assets/T10.webp?w=768;1280;1800&format=webp&quality=72&as=picture';
+import T11 from '@/assets/T11.webp?w=768;1280;1800&format=webp&quality=72&as=picture';
 
 const slides = [
   { src: T9, alt: 'Rich fields of Bangladesh' },
@@ -49,7 +49,11 @@ const HeroCarousel = () => {
             }}
           >
             <img
-              src={slide.src}
+              src={slide.src.img.src}
+              srcSet={slide.src.sources.webp}
+              sizes="100vw"
+              width={slide.src.img.w}
+              height={slide.src.img.h}
               alt={slide.alt}
               className="h-full w-full object-cover"
               style={{
