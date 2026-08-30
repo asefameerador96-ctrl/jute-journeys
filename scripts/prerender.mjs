@@ -94,10 +94,16 @@ for (const route of routes) {
       // requests roughly what the client-rendered page used to.
       const fold = window.innerHeight;
       for (const img of document.images) {
-        if (img.getBoundingClientRect().top > fold && img.getAttribute("loading") !== "lazy") {
+        const belowFold = img.getBoundingClientRect().top > fold;
+        if (belowFold && img.getAttribute("loading") !== "lazy") {
           img.setAttribute("loading", "lazy");
         }
         if (!img.getAttribute("decoding")) img.setAttribute("decoding", "async");
+        // The gallery is a horizontal carousel, so every slide sits at the same
+        // vertical offset and loading="lazy" does not hold any of them back — the
+        // browser counts them all as near the viewport. Dropping their priority
+        // keeps them from competing with the hero image for bandwidth.
+        if (belowFold) img.setAttribute("fetchpriority", "low");
       }
 
       const rootEl = document.getElementById("root");
