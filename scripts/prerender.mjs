@@ -86,6 +86,20 @@ for (const route of routes) {
     await page.waitForTimeout(400);
 
     const html = await page.evaluate(() => {
+      // Prerendering changes image loading behaviour. React used to mount sections
+      // progressively, so below-the-fold images did not exist in the DOM on first
+      // paint; in the snapshot they all exist at once, and any <img> without an
+      // explicit loading attribute is eager by default. That front-loaded the whole
+      // gallery. Mark everything below the first viewport as lazy so the static HTML
+      // requests roughly what the client-rendered page used to.
+      const fold = window.innerHeight;
+      for (const img of document.images) {
+        if (img.getBoundingClientRect().top > fold && img.getAttribute("loading") !== "lazy") {
+          img.setAttribute("loading", "lazy");
+        }
+        if (!img.getAttribute("decoding")) img.setAttribute("decoding", "async");
+      }
+
       const rootEl = document.getElementById("root");
       if (rootEl) rootEl.setAttribute("data-prerendered", "true"); // informational only
       return "<!doctype html>\n" + document.documentElement.outerHTML;
