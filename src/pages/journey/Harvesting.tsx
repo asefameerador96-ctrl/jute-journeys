@@ -1,6 +1,6 @@
 import DetailPage from '@/components/DetailPage';
-import H4 from '@/assets/H4.png';
-import H2 from '@/assets/H2.png';
+import H4 from '@/assets/H4.webp';
+import H2 from '@/assets/H2.webp';
 
 const Harvesting = () => (
   <DetailPage

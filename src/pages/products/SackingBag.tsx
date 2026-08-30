@@ -1,6 +1,6 @@
 import DetailPage from '@/components/DetailPage';
-import SB5 from '@/assets/SB5.png';
-import SB1 from '@/assets/SB1.png';
+import SB5 from '@/assets/SB5.webp';
+import SB1 from '@/assets/SB1.webp';
 
 const SackingBag = () => (
   <DetailPage

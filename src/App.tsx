@@ -4,20 +4,26 @@ import { Toaster as Sonner } from "@/components/ui/sonner";
 import { Toaster } from "@/components/ui/toaster";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import ScrollToTop from "@/components/ScrollToTop";
+import { Suspense, lazy } from "react";
+import RouteSeo from "@/components/RouteSeo";
+
+// Only the homepage is bundled eagerly. Every other route is its own chunk, so a
+// visitor landing on / never downloads the product and journey pages, and editing
+// one page does not invalidate the others' cached chunks.
+const AboutUs = lazy(() => import("./pages/AboutUs.tsx"));
+const NotFound = lazy(() => import("./pages/NotFound.tsx"));
+const Seeding = lazy(() => import("./pages/journey/Seeding.tsx"));
+const Harvesting = lazy(() => import("./pages/journey/Harvesting.tsx"));
+const CuringRetting = lazy(() => import("./pages/journey/CuringRetting.tsx"));
+const Buying = lazy(() => import("./pages/journey/Buying.tsx"));
+const Manufacturing = lazy(() => import("./pages/journey/Manufacturing.tsx"));
+const PackingExporting = lazy(() => import("./pages/journey/PackingExporting.tsx"));
+const Yarn = lazy(() => import("./pages/products/Yarn.tsx"));
+const Sliver = lazy(() => import("./pages/products/Sliver.tsx"));
+const SackingBag = lazy(() => import("./pages/products/SackingBag.tsx"));
 import Index from "./pages/Index.tsx";
-import AboutUs from "./pages/AboutUs.tsx";
-import NotFound from "./pages/NotFound.tsx";
 
-import Seeding from "./pages/journey/Seeding.tsx";
-import Harvesting from "./pages/journey/Harvesting.tsx";
-import CuringRetting from "./pages/journey/CuringRetting.tsx";
-import Buying from "./pages/journey/Buying.tsx";
-import Manufacturing from "./pages/journey/Manufacturing.tsx";
-import PackingExporting from "./pages/journey/PackingExporting.tsx";
 
-import Yarn from "./pages/products/Yarn.tsx";
-import Sliver from "./pages/products/Sliver.tsx";
-import SackingBag from "./pages/products/SackingBag.tsx";
 
 const queryClient = new QueryClient();
 
@@ -28,6 +34,8 @@ const App = () => (
       <Sonner />
       <BrowserRouter>
         <ScrollToTop />
+        <RouteSeo />
+        <Suspense fallback={null}>
         <Routes>
           <Route path="/" element={<Index />} />
           <Route path="/about-us" element={<AboutUs />} />
@@ -43,6 +51,7 @@ const App = () => (
           {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
           <Route path="*" element={<NotFound />} />
         </Routes>
+        </Suspense>
       </BrowserRouter>
     </TooltipProvider>
   </QueryClientProvider>

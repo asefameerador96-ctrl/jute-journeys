@@ -1,6 +1,6 @@
 import DetailPage from '@/components/DetailPage';
-import B1 from '@/assets/B1.png';
-import B2 from '@/assets/B2.png';
+import B1 from '@/assets/B1.webp';
+import B2 from '@/assets/B2.webp';
 
 const Buying = () => (
   <DetailPage

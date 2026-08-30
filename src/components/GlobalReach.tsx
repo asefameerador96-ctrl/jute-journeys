@@ -5,7 +5,13 @@ import {
   Geographies,
   Geography,
 } from 'react-simple-maps';
-import bangladeshFlag from '@/assets/bangladesh-flag.jpg';
+import bangladeshFlag from '@/assets/bangladesh-flag.webp';
+
+declare global {
+  interface Window {
+    __PRERENDER__?: boolean;
+  }
+}
 
 const GEO_URL = 'https://cdn.jsdelivr.net/npm/world-atlas@2/countries-110m.json';
 
@@ -67,6 +73,14 @@ const GlobalReach = () => {
   const [activeCountry, setActiveCountry] = useState<ExportCountry | null>(null);
   const [tooltipPos, setTooltipPos] = useState({ x: 0, y: 0 });
   const [isVisible, setIsVisible] = useState(false);
+
+  // Starts false so the hydrated markup matches the prerendered markup exactly;
+  // flipped after mount in a real browser. The prerenderer sets __PRERENDER__ so
+  // the heavy map SVG never lands in the static HTML.
+  const [showMap, setShowMap] = useState(false);
+  useEffect(() => {
+    if (!window.__PRERENDER__) setShowMap(true);
+  }, []);
 
   useEffect(() => {
     const el = sectionRef.current;
@@ -155,6 +169,11 @@ const GlobalReach = () => {
         )}
 
         <div className="w-full" style={{ height: 'clamp(350px, 45vw, 550px)' }}>
+          {/* The world map renders ~400 KB of SVG path data and pulls its geography
+              from a CDN. Rendering it only after mount keeps that weight out of the
+              prerendered HTML (see scripts/prerender.mjs) while leaving the reserved
+              height in place, so nothing shifts when it appears. */}
+          {showMap && (
           <ComposableMap
             projection="geoMercator"
             projectionConfig={{ scale: 200, center: [55, 20] }}
@@ -210,6 +229,7 @@ const GlobalReach = () => {
               }
             </Geographies>
           </ComposableMap>
+          )}
         </div>
       </div>
 

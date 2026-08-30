@@ -1,6 +1,6 @@
 import DetailPage from '@/components/DetailPage';
-import S4 from '@/assets/S4.png';
-import S3 from '@/assets/S3.png';
+import S4 from '@/assets/S4.webp';
+import S3 from '@/assets/S3.webp';
 
 const Seeding = () => (
   <DetailPage

@@ -2,12 +2,12 @@ import { useEffect, useRef, useState, useCallback } from 'react';
 import { Link } from 'react-router-dom';
 import { useScrollAnimation } from '@/hooks/useScrollAnimation';
 import ScrollTextReveal from '@/components/ScrollTextReveal';
-import S5 from '@/assets/S5.png';
-import H3 from '@/assets/H3.png';
-import C5 from '@/assets/C5.png';
-import B4 from '@/assets/B4.jpeg';
-import M3 from '@/assets/M3.png';
-import Pack2 from '@/assets/Pack2.png';
+import S5 from '@/assets/S5.webp';
+import H3 from '@/assets/H3.webp';
+import C5 from '@/assets/C5.webp';
+import B4 from '@/assets/B4.webp';
+import M3 from '@/assets/M3.webp';
+import Pack2 from '@/assets/Pack2.webp';
 
 const stages = [
   {

@@ -1,7 +1,7 @@
 import { useEffect, useState, useCallback } from 'react';
-import T9 from '@/assets/T9.png';
-import T10 from '@/assets/T10.png';
-import T11 from '@/assets/T11.png';
+import T9 from '@/assets/T9.webp';
+import T10 from '@/assets/T10.webp';
+import T11 from '@/assets/T11.webp';
 
 const slides = [
   { src: T9, alt: 'Rich fields of Bangladesh' },

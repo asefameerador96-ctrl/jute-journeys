@@ -1,5 +1,5 @@
-import wordmarkDark from '@/assets/shah-agro-wordmark-dark.png';
-import wordmarkLight from '@/assets/shah-agro-wordmark-light.png';
+import wordmarkDark from '@/assets/shah-agro-wordmark-dark.webp';
+import wordmarkLight from '@/assets/shah-agro-wordmark-light.webp';
 
 const BigBrandFooter = () => (
   <div className="py-6 md:py-10 bg-background overflow-hidden">
