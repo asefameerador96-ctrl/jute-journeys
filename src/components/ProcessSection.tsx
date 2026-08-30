@@ -2,12 +2,13 @@ import { useEffect, useRef, useState, useCallback } from 'react';
 import { Link } from 'react-router-dom';
 import { useScrollAnimation } from '@/hooks/useScrollAnimation';
 import ScrollTextReveal from '@/components/ScrollTextReveal';
-import S5 from '@/assets/S5.webp?w=640;960;1280&format=webp&quality=72&as=picture';
-import H3 from '@/assets/H3.webp?w=640;960;1280&format=webp&quality=72&as=picture';
-import C5 from '@/assets/C5.webp?w=640;960;1280&format=webp&quality=72&as=picture';
-import B4 from '@/assets/B4.webp?w=640;960;1280&format=webp&quality=72&as=picture';
-import M3 from '@/assets/M3.webp?w=640;960;1280&format=webp&quality=72&as=picture';
-import Pack2 from '@/assets/Pack2.webp?w=640;960;1280&format=webp&quality=72&as=picture';
+import LazyImage from '@/components/LazyImage';
+import S5 from '@/assets/S5.webp?w=640;960;1280&format=avif;webp&quality=72&as=picture';
+import H3 from '@/assets/H3.webp?w=640;960;1280&format=avif;webp&quality=72&as=picture';
+import C5 from '@/assets/C5.webp?w=640;960;1280&format=avif;webp&quality=72&as=picture';
+import B4 from '@/assets/B4.webp?w=640;960;1280&format=avif;webp&quality=72&as=picture';
+import M3 from '@/assets/M3.webp?w=640;960;1280&format=avif;webp&quality=72&as=picture';
+import Pack2 from '@/assets/Pack2.webp?w=640;960;1280&format=avif;webp&quality=72&as=picture';
 
 const stages = [
   {
@@ -215,18 +216,12 @@ const ProcessSection = () => {
                         }}
                       />
                     ) : (
-                      // Full-bleed panel: width variants let the browser pick one for
-                      // the viewport instead of always fetching the largest file.
-                      <img
-                        src={stage.image.img.src}
-                        srcSet={stage.image.sources.webp}
-                        sizes="100vw"
-                        width={stage.image.img.w}
-                        height={stage.image.img.h}
+                      <LazyImage
+                        image={stage.image}
                         alt={stage.title}
+                        sizes="100vw"
+                        priority={i < 1}
                         className="w-full h-full object-cover"
-                        loading={i < 2 ? 'eager' : 'lazy'}
-                        decoding="async"
                         style={{
                           transform: `scale(${scale})`,
                           transition: 'transform 0.1s linear',

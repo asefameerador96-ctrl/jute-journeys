@@ -2,21 +2,22 @@ import { useScrollAnimation } from '@/hooks/useScrollAnimation';
 import ScrollTextReveal from '@/components/ScrollTextReveal';
 import { useRef, useEffect, useState } from 'react';
 import { X, ChevronLeft, ChevronRight } from 'lucide-react';
-import g1 from '@/assets/gallery/g1.webp?w=560;900;1400&format=webp&quality=72&as=picture';
-import g2 from '@/assets/gallery/g2.webp?w=560;900;1400&format=webp&quality=72&as=picture';
-import g3 from '@/assets/gallery/g3.webp?w=560;900;1400&format=webp&quality=72&as=picture';
-import g4 from '@/assets/gallery/g4.webp?w=560;900;1400&format=webp&quality=72&as=picture';
-import g5 from '@/assets/gallery/g5.webp?w=560;900;1400&format=webp&quality=72&as=picture';
-import g6 from '@/assets/gallery/g6.webp?w=560;900;1400&format=webp&quality=72&as=picture';
-import g7 from '@/assets/gallery/g7.webp?w=560;900;1400&format=webp&quality=72&as=picture';
-import g8 from '@/assets/gallery/g8.webp?w=560;900;1400&format=webp&quality=72&as=picture';
-import g9 from '@/assets/gallery/g9.webp?w=560;900;1400&format=webp&quality=72&as=picture';
-import g10 from '@/assets/gallery/g10.webp?w=560;900;1400&format=webp&quality=72&as=picture';
-import g11 from '@/assets/gallery/g11.webp?w=560;900;1400&format=webp&quality=72&as=picture';
-import g12 from '@/assets/gallery/g12.webp?w=560;900;1400&format=webp&quality=72&as=picture';
-import g13 from '@/assets/gallery/g13.webp?w=560;900;1400&format=webp&quality=72&as=picture';
-import g14 from '@/assets/gallery/g14.webp?w=560;900;1400&format=webp&quality=72&as=picture';
-import g15 from '@/assets/gallery/g15.webp?w=560;900;1400&format=webp&quality=72&as=picture';
+import LazyImage from '@/components/LazyImage';
+import g1 from '@/assets/gallery/g1.webp?w=560;900;1400&format=avif;webp&quality=72&as=picture';
+import g2 from '@/assets/gallery/g2.webp?w=560;900;1400&format=avif;webp&quality=72&as=picture';
+import g3 from '@/assets/gallery/g3.webp?w=560;900;1400&format=avif;webp&quality=72&as=picture';
+import g4 from '@/assets/gallery/g4.webp?w=560;900;1400&format=avif;webp&quality=72&as=picture';
+import g5 from '@/assets/gallery/g5.webp?w=560;900;1400&format=avif;webp&quality=72&as=picture';
+import g6 from '@/assets/gallery/g6.webp?w=560;900;1400&format=avif;webp&quality=72&as=picture';
+import g7 from '@/assets/gallery/g7.webp?w=560;900;1400&format=avif;webp&quality=72&as=picture';
+import g8 from '@/assets/gallery/g8.webp?w=560;900;1400&format=avif;webp&quality=72&as=picture';
+import g9 from '@/assets/gallery/g9.webp?w=560;900;1400&format=avif;webp&quality=72&as=picture';
+import g10 from '@/assets/gallery/g10.webp?w=560;900;1400&format=avif;webp&quality=72&as=picture';
+import g11 from '@/assets/gallery/g11.webp?w=560;900;1400&format=avif;webp&quality=72&as=picture';
+import g12 from '@/assets/gallery/g12.webp?w=560;900;1400&format=avif;webp&quality=72&as=picture';
+import g13 from '@/assets/gallery/g13.webp?w=560;900;1400&format=avif;webp&quality=72&as=picture';
+import g14 from '@/assets/gallery/g14.webp?w=560;900;1400&format=avif;webp&quality=72&as=picture';
+import g15 from '@/assets/gallery/g15.webp?w=560;900;1400&format=avif;webp&quality=72&as=picture';
 
 // Gallery slides render at 75vw on phones and 28vw on desktop, so a 1920px file was
 // roughly four times the pixels a phone can show. The variants let the browser pick.
@@ -141,16 +142,12 @@ const Gallery = () => {
                     aria-label={`View ${img.alt} full size`}
                   >
                     <div className="w-full h-[45vh] md:h-[60vh] flex items-center justify-center">
-                      <img
-                        src={img.src.img.src}
-                        srcSet={img.src.sources.webp}
-                        sizes={SIZES}
-                        width={img.src.img.w}
-                        height={img.src.img.h}
+                      <LazyImage
+                        image={img.src}
                         alt={img.alt}
+                        sizes={SIZES}
+                        priority={i < 2}
                         className="max-w-full max-h-full w-auto h-auto object-contain transition-transform duration-700 ease-out group-hover:scale-105"
-                        loading="lazy"
-                        decoding="async"
                       />
                     </div>
                     <div className="absolute inset-0 bg-primary/0 group-hover:bg-primary/20 transition-colors duration-500 pointer-events-none" />
